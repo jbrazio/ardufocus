@@ -17,6 +17,9 @@
  *
  */
 
+// Some code was inspired bt the HotStepper Arduino library
+// (c) Ben Pirt <https://github.com/bjpirt>
+
 #ifndef __ULN2003_H__
 #define __ULN2003_H__
 
@@ -95,10 +98,9 @@ private:
     uint8_t output = 0;
     for (char i = 0; i < 8; i++) {
       if ((mask & 1)) {
-        //We should use this pin
-        if (input &1) output |= 0b10000000;
-        else output &= 0b01111111;
-
+        // We should use this pin
+        if (input & 1) output |= 0b10000000;
+        else           output &= 0b01111111;
         input >>= 1;
       }
 
