@@ -13,13 +13,14 @@ After buying the CCD, filter wheel and filters I was broke but still wanted to h
 # Hardware
 It was built on top of a standard ATmega 328 Arduino such as UNO, Pro or Nano; currently it does not support the Mega or any other ARM based board.
 
-Note: schematic not yet available.
-
+## A4988 driver with a Bipolar motor
+![Bipolar breadboard schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/schematic-bipolar_bb.jpg)
+[Download the schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/schematic-bipolar_schem.jpg)
 
 # Design Goals
 
 ## 1. Moonlite compatible
-This was a very important part of the design as I didn't want to spend time and effort dealing with ASCOM and INDI drivers, the Moonlite focuser is a well known, and reputable rock solid focuser. The serial protocol used by them was easily reversed engineered (plain ASCII) and most of it was already documented on the Internet.
+This was a very important part of the design as I didn't want to spend time and effort dealing with ASCOM and INDI drivers, the Moonlite focuser is a well known, reputable rock solid focuser. The serial protocol used by them was easily reversed engineered (plain ASCII) and most of it was already documented on the Internet.
 
 ## 2. Cheap
 Another big point was to made it as cheap as possible recurring to as few parts as needed. That's the reason why the 28BYJ-48 stepper motor was chosen, out-of-the-box using the ULN2003 gives you a really cheap (less than 2€) focuser for medium loads (380gcm). If you require the focuser to driver heavier loads (800gcm) then the motor itself can be modded into a Bipolar stepper motor and driven by the A4988 step stick which will cost you less than 1€.
