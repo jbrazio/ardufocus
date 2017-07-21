@@ -36,6 +36,15 @@ required.
 It was built on top of a standard ATmega 328 Arduino such as UNO, Pro or Nano; currently it does not
 support the Mega or any other ARM based board.
 
+## 3D printed parts
+To download and print instructions for the 3D printed parts have a look at the [Thing #2446069][2446069].
+
+[2446069]: https://www.thingiverse.com/thing:2446069
+
+![ED80 gear](https://github.com/jbrazio/ardufocus/blob/master/doc/object-focuser-ed80.png)
+![28byj-48 pinion](https://github.com/jbrazio/ardufocus/blob/master/doc/object-focuser-28byj-48.png)
+![Skywatcher focuser part](https://github.com/jbrazio/ardufocus/blob/master/doc/object-focuser-skywatcher-v4.png)
+
 ## A4988 driver with a Bipolar motor
 ![Bipolar breadboard schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/schematic-bipolar_bb.jpg)
 [Download the schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/schematic-bipolar_schem.jpg)
