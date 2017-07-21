@@ -36,6 +36,17 @@ required.
 It was built on top of a standard ATmega 328 Arduino such as UNO, Pro or Nano; currently it does not
 support the Mega or any other ARM based board.
 
+## BOM
+
+- 1x Arduino Nano
+- 1x A4988 Stepper Motor Driver Module
+- 1x Electrolytic capacitor 10uF
+- 1x NTC 10K 5%
+- 1x Resistor 1/4W 10K
+- 1x DC Power connector (male, female pair)
+- 1x DB9 connector (male, female pair)
+- 1x 28BYJ-48 Stepper motor
+
 ## 3D printed parts
 To download and print instructions for the 3D printed parts have a look at the [Thing #2446069][2446069].
 
