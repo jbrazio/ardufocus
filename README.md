@@ -1,5 +1,5 @@
 # Ardufocus
-Ardufocus is a full open source [Moonlite][moonlite] focuser clone.
+Ardufocus is a full open source [Moonlite][moonlite] compatible focuser.
 
 The source is still under heavy development so things move around a bit.
 
