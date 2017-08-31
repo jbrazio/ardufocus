@@ -24,8 +24,6 @@
 #include "struct.h"
 #include "lookuptables.h"
 
-// total movement 37300
-
 class stepper
 {
 protected:
@@ -119,13 +117,21 @@ public:
       // Move the focus point out
       if (position.target > position.current) {
         ++position.current;
-        step_ccw();
+        #ifdef INVERT_MOTOR_DIR
+          step_cw();
+        #else
+          step_ccw();
+        #endif
       }
 
       // Move the focus point in
       else if (position.target < position.current) {
         --position.current;
-        step_cw();
+        #ifdef INVERT_MOTOR_DIR
+          step_ccw();
+        #else
+          step_cw();
+        #endif
       }
 
       // Stop movement

@@ -38,6 +38,10 @@
 #define USE_A4988_DRIVER
 //#define USE_ULN2003_DRIVER
 
+// Activate the following directive if you'd like to invert the motor rotation
+// changing the focus direction.
+#define INVERT_MOTOR_DIR
+
 
 // ----------------------------------------------------------------------------
 // SERIAL PORT configuration --------------------------------------------------
