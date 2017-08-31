@@ -30,11 +30,14 @@ class a4988: public stepper
 {
 protected:
   const stepper_pin_t output;
+  volatile bool idle;
 
 public:
   inline a4988(uint8_t const& dir, uint8_t const& step, uint8_t const& sleep, uint8_t const& ms1)
     : output({ NOT_A_PIN, ms1, NOT_A_PIN, NOT_A_PIN, NOT_A_PIN, sleep, step, dir })
   {
+    idle = true;
+
     pinMode(output.ms1,       OUTPUT);
     pinMode(output.sleep,     OUTPUT);
     pinMode(output.step,      OUTPUT);
@@ -50,6 +53,8 @@ public:
                uint8_t const& reset, uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
     : output({ ena, ms1, ms2, ms3, reset, sleep, step, dir })
   {
+    idle = true;
+
     pinMode(output.enable,    OUTPUT);
     pinMode(output.ms1,       OUTPUT);
     pinMode(output.ms2,       OUTPUT);
@@ -71,6 +76,7 @@ public:
 
   inline void halt()
   {
+    idle = true;
     stepper::halt();
     digitalWrite(output.sleep, LOW);
   }
@@ -102,11 +108,16 @@ public:
 private:
   inline void step()
   {
-    digitalWrite(output.sleep, HIGH);
-    __asm__ __volatile__ ("nop"); // busy wait
+    if (idle) {
+      digitalWrite(output.sleep, HIGH);
+      __asm__ __volatile__ ("nop"); // busy wait
+    }
+
     digitalWrite(output.step, HIGH);
     __asm__ __volatile__ ("nop"); // busy wait
+
     digitalWrite(output.step, LOW);
+    __asm__ __volatile__ ("nop"); // busy wait
   }
 };
 
