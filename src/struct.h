@@ -31,9 +31,15 @@ struct serial_buffer_t
 
 struct stepper_position_t
 {
-  uint16_t current;
-  uint16_t target;
   bool moving;
+
+  uint16_t current,
+           target,
+           last;
+
+  uint16_t delta,
+           accelin,
+           accelout;
 };
 
 struct stepper_pin_t

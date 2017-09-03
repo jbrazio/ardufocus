@@ -42,6 +42,11 @@
 // changing the focus direction.
 #define INVERT_MOTOR_DIR
 
+// When active ardufocus will apply a trapezoidal acceleration profile to the
+// motor's speed, this feature is EXPERIMENTAL. The objective is to help the
+// system to cope with heavier focuser loads such as FF + FW + CCD combos.
+//#define USE_LINEAR_ACCEL
+
 
 // ----------------------------------------------------------------------------
 // SERIAL PORT configuration --------------------------------------------------

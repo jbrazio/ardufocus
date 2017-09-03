@@ -29,7 +29,7 @@ class stepper
 protected:
   uint8_t mode = 0x00;
   volatile uint16_t speed = 2;
-  volatile stepper_position_t position = { 0, 0, false };
+  volatile stepper_position_t position = { false, 0, 0, 0, 0, 0, 0};
 
 public:
   inline bool is_moving()
@@ -55,7 +55,8 @@ public:
   inline void set_current_position(const uint16_t& target)
   {
     cli();
-    position.current = position.target = target;
+    position.current  = target;
+    position.target   = target;
     sei();
   }
 
@@ -79,40 +80,77 @@ public:
   inline void set_target_position(const uint16_t& target)
   {
     cli();
+
     position.target = target;
+
+    #ifdef USE_LINEAR_ACCEL
+      position.last = position.current;
+
+      if (position.target > position.current) {
+        position.delta = position.target - position.last;
+      } else {
+        position.delta = position.last - position.target;
+      }
+
+      position.accelin  = 100;
+
+      if (position.delta < 200 ) {
+        position.accelin = position.delta >> 1;
+      }
+
+      position.accelout = position.delta - position.accelin;
+    #endif
+
     sei();
   }
 
   inline void tick()
   {
     if (position.moving) {
+      // Set the stepping frequency
       switch(speed) {
         case 1:
-          OCR1A = 0x7D; // 500 Hz
+          OCR1A = lookup::step_freq_table[0]; // 500 Hz
           break;
 
         case 2:
-          OCR1A = 0xFA; // 250 Hz
+          OCR1A = lookup::step_freq_table[1]; // 250 Hz
           break;
 
         case 4:
-          OCR1A = 0x1F4; // 125 Hz
+          OCR1A = lookup::step_freq_table[2]; // 125 Hz
           break;
 
         case 8:
-          OCR1A = 0x3E0; // 63 Hz
+          OCR1A = lookup::step_freq_table[3]; // 63 Hz
           break;
 
         case 16:
-          OCR1A = 0x7A1; // 32 Hz
+          OCR1A = lookup::step_freq_table[4]; // 32 Hz
           break;
 
         case 32:
-          OCR1A = 0xF42; // 16 Hz
+          OCR1A = lookup::step_freq_table[5]; // 16 Hz
           break;
 
         default: break;
       }
+
+      #ifdef USE_LINEAR_ACCEL
+        // Calculates the current relative position
+        const uint16_t pos = (position.target < position.current)
+          ? position.last - position.current
+          : position.current - position.last;
+
+        // Acceleration control
+        if (pos <= position.accelin) {
+          OCR1A = map(pos, 0, position.accelin, lookup::step_freq_table[5], OCR1A);
+        }
+
+        else if (pos >= position.accelout) {
+          OCR1A = map(pos, position.accelout, position.delta, OCR1A, lookup::step_freq_table[5]);
+        }
+      #endif
 
       // Move the focus point out
       if (position.target > position.current) {

@@ -96,12 +96,24 @@ public:
   inline void step_cw()
   {
     digitalWrite(output.direction, HIGH);
+
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+
     step();
   }
 
   inline void step_ccw()
   {
     digitalWrite(output.direction, LOW);
+
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+
     step();
   }
 
@@ -110,14 +122,18 @@ private:
   {
     if (idle) {
       digitalWrite(output.sleep, HIGH);
-      __asm__ __volatile__ ("nop"); // busy wait
+
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
     }
 
     digitalWrite(output.step, HIGH);
-    __asm__ __volatile__ ("nop"); // busy wait
+    delayMicroseconds(2);
 
     digitalWrite(output.step, LOW);
-    __asm__ __volatile__ ("nop"); // busy wait
+    delayMicroseconds(2);
   }
 };
 
