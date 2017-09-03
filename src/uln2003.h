@@ -27,17 +27,12 @@
 #include "struct.h"
 #include "lookuptables.h"
 
-// total movement 37300
-
 class uln2003: public stepper
 {
 protected:
   const uint8_t pinmask;
   uint8_t* const port;
-
   volatile int8_t phase = 0;
-  volatile uint16_t speed = 2;
-  volatile stepper_position_t position = { 0, 0, false };
 
 public:
   inline uln2003(uint8_t m, volatile uint8_t* p)
