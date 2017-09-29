@@ -63,18 +63,20 @@ public:
     // not implemented
   }
 
-  inline void step_cw()
+  inline bool step_cw()
   {
     step();
     ++phase;
     if (phase > (lookup::full_step_table_sz -1)) { phase = 0; }
+    return true;
   }
 
-  inline void step_ccw()
+  inline bool step_ccw()
   {
     step();
     --phase;
     if (phase < 0) { phase = (lookup::full_step_table_sz -1); }
+    return true;
   }
 
 private:

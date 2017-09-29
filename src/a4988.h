@@ -30,14 +30,11 @@ class a4988: public stepper
 {
 protected:
   const stepper_pin_t output;
-  volatile bool idle;
 
 public:
   inline a4988(uint8_t const& dir, uint8_t const& step, uint8_t const& sleep, uint8_t const& ms1)
     : output({ NOT_A_PIN, ms1, NOT_A_PIN, NOT_A_PIN, NOT_A_PIN, sleep, step, dir })
   {
-    idle = true;
-
     pinMode(output.ms1,       OUTPUT);
     pinMode(output.sleep,     OUTPUT);
     pinMode(output.step,      OUTPUT);
@@ -45,7 +42,7 @@ public:
 
     digitalWrite(output.ms1,        LOW);
     digitalWrite(output.sleep,      LOW);
-    digitalWrite(output.step,       LOW);
+    digitalWrite(output.step,       HIGH);
     digitalWrite(output.direction,  LOW);
   }
 
@@ -53,8 +50,6 @@ public:
                uint8_t const& reset, uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
     : output({ ena, ms1, ms2, ms3, reset, sleep, step, dir })
   {
-    idle = true;
-
     pinMode(output.enable,    OUTPUT);
     pinMode(output.ms1,       OUTPUT);
     pinMode(output.ms2,       OUTPUT);
@@ -70,14 +65,14 @@ public:
     digitalWrite(output.ms3,        LOW);
     digitalWrite(output.reset,      HIGH);
     digitalWrite(output.sleep,      LOW);
-    digitalWrite(output.step,       LOW);
+    digitalWrite(output.step,       HIGH);
     digitalWrite(output.direction,  LOW);
   }
 
   inline void halt()
   {
-    idle = true;
     stepper::halt();
+    digitalWrite(output.step, HIGH);
     digitalWrite(output.sleep, LOW);
   }
 
@@ -93,34 +88,42 @@ public:
     mode = 0xFF;
   }
 
-  inline void step_cw()
+  inline bool step_cw()
   {
-    digitalWrite(output.direction, HIGH);
+    if (digitalRead(output.direction) == LOW)
+    {
+      digitalWrite(output.step, HIGH);
+      digitalWrite(output.direction, HIGH);
 
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    }
 
-    step();
+    return step();
   }
 
-  inline void step_ccw()
+  inline bool step_ccw()
   {
-    digitalWrite(output.direction, LOW);
+    if (digitalRead(output.direction) == HIGH)
+    {
+      digitalWrite(output.step, HIGH);
+      digitalWrite(output.direction, LOW);
 
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-    __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+    }
 
-    step();
+    return step();
   }
 
 private:
-  inline void step()
+  inline bool step()
   {
-    if (idle) {
+    if (! digitalRead(output.sleep)) {
       digitalWrite(output.sleep, HIGH);
 
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
@@ -129,11 +132,22 @@ private:
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
     }
 
-    digitalWrite(output.step, HIGH);
-    delayMicroseconds(2);
+    /*
+     * The A4988 driver will physically step the motor when
+     * transitioning from high to low thus the boolean return
+     * value represents if the step "happen" and only then the
+     * internal position counter will be updated.
+     */
 
-    digitalWrite(output.step, LOW);
-    delayMicroseconds(2);
+    if (digitalRead(output.step)) {
+      digitalWrite(output.step, LOW);
+      return true;
+    }
+
+    else {
+      digitalWrite(output.step, HIGH);
+      return false;
+    }
   }
 };
 

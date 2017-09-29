@@ -29,7 +29,7 @@ class stepper
 protected:
   uint8_t mode = 0x00;
   volatile uint16_t speed = 2;
-  volatile stepper_position_t position = { false, 0, 0, 0, 0, 0, 0};
+  volatile stepper_position_t position = { false, 0, 0, 0, 0, 0, 0 };
 
 public:
   inline bool is_moving()
@@ -92,10 +92,10 @@ public:
         position.delta = position.last - position.target;
       }
 
-      position.accelin  = 100;
-
       if (position.delta < 200 ) {
         position.accelin = position.delta >> 1;
+      } else {
+        position.accelin = position.delta >> 6;
       }
 
       position.accelout = position.delta - position.accelin;
@@ -136,6 +136,11 @@ public:
         default: break;
       }
 
+      #ifdef USE_A4988_DRIVER
+        // Double the interrupt rate to archive 50% duty cycle
+        OCR1A = (uint16_t) (OCR1A >>1);
+      #endif
+
       #ifdef USE_LINEAR_ACCEL
         // Calculates the current relative position
         const uint16_t pos = (position.target < position.current)
@@ -143,33 +148,38 @@ public:
           : position.current - position.last;
 
         // Acceleration control
+        uint16_t min = lookup::step_freq_table[5],
+                 max = OCR1A;
+
         if (pos <= position.accelin) {
-          OCR1A = map(pos, 0, position.accelin, lookup::step_freq_table[5], OCR1A);
+          OCR1A = map(pos, 0, position.accelin, min, max);
         }
 
         else if (pos >= position.accelout) {
-          OCR1A = map(pos, position.accelout, position.delta, OCR1A, lookup::step_freq_table[5]);
+          OCR1A = map(pos, position.accelout, position.delta, max, min);
         }
       #endif
 
       // Move the focus point out
       if (position.target > position.current) {
-        ++position.current;
-        #ifdef INVERT_MOTOR_DIR
-          step_cw();
-        #else
-          step_ccw();
-        #endif
+        if (
+          #ifdef INVERT_MOTOR_DIR
+            step_cw()
+          #else
+            step_ccw()
+          #endif
+        ) { ++position.current; }
       }
 
       // Move the focus point in
       else if (position.target < position.current) {
-        --position.current;
-        #ifdef INVERT_MOTOR_DIR
-          step_ccw();
-        #else
-          step_cw();
-        #endif
+        if (
+          #ifdef INVERT_MOTOR_DIR
+            step_ccw()
+          #else
+            step_cw()
+          #endif
+        ) { --position.current; }
       }
 
       // Stop movement
@@ -192,8 +202,8 @@ public:
   virtual inline void set_full_step() { ; }
   virtual inline void set_half_step() { ; }
 
-  virtual inline void step_cw()  { ; }
-  virtual inline void step_ccw() { ; }
+  virtual inline bool step_cw()  { return false; }
+  virtual inline bool step_ccw() { return false; }
 };
 
 #endif

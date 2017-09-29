@@ -35,7 +35,7 @@ namespace lookup
   const uint8_t  step_freq_table_sz = 8;
   const uint16_t step_freq_table[step_freq_table_sz] PROGMEM = {
     0x7D, 0xFA, 0x1F4, 0x3E0, 0x7A1, 0xF42, 0x1E84, 0x3D09
-  // 500,   250,  125,    63,    32,    16       8       4Hz
+  // 500,  250,   125,    63,    32,    16       8       4Hz
   };
 }
 
