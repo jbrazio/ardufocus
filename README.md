@@ -48,7 +48,8 @@ support the Mega or any other ARM based board.
 - 1x 28BYJ-48 Stepper motor
 
 ## 3D printed parts
-To download and print instructions for the 3D printed parts have a look at the [Thing #2446069][2446069].
+To download and print instructions for the 3D printed parts have a look at the
+[Thing #2446069][2446069].
 
 [2446069]: https://www.thingiverse.com/thing:2446069
 
@@ -72,7 +73,17 @@ To download and print instructions for the 3D printed parts have a look at the [
 //#define USE_ULN2003_DRIVER
 ```
 
+#### Drivers
+Ardufocus is 100% compatible with the Moonlite focuser protocol thus the original single-motor
+drivers can be used for manual control of the unit, if you need to integrate with SGP, APT or any
+other ASCOM based software then the universal ASCOM driver should be installed.
+
+- [Moonlite's manual focus control](https://focuser.com/media/Downloads/MoonLite_Software/NonAscom/MoonliteSingleFocuser_v1.4.zip)
+- [Moonlite's Universal ASCOM driver](https://focuser.com/media/Downloads/MoonLite_Software/Ascom/MoonLite%20DRO%20Setup.zip)
+
 #### Sequence Generator Pro
+This is an quick example how to setup SGP to work with Ardufocus.
+
 ![SGP Equipament Profile](https://github.com/jbrazio/ardufocus/blob/master/doc/sgp-focus-01.jpg)
 ![SGP Auto Focus settings](https://github.com/jbrazio/ardufocus/blob/master/doc/sgp-focus-02.jpg)
 ![SGP Filter settings](https://github.com/jbrazio/ardufocus/blob/master/doc/sgp-focus-03.jpg)
