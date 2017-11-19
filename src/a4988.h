@@ -79,12 +79,16 @@ public:
   inline void set_full_step()
   {
     digitalWrite(output.ms1, LOW);
+    digitalWrite(output.ms2, LOW);
+    digitalWrite(output.ms3, LOW);
     mode = 0x00;
   }
 
   inline void set_half_step()
   {
     digitalWrite(output.ms1, HIGH);
+    digitalWrite(output.ms2, LOW);
+    digitalWrite(output.ms3, LOW);
     mode = 0xFF;
   }
 
