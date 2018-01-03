@@ -83,7 +83,15 @@ Have a look at [Thing #2446069][2446069] to download the latest version and read
 [2446069]: https://www.thingiverse.com/thing:2446069
 
 ### Controller box
-Missing section.
+![Image](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/object-focuser-box-bottom.png)
+![Image](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/object-focuser-box-top.png)
+
+Download objects:
+- [Box bottom]
+- [Box top]
+
+[Box bottom]: https://www.thingiverse.com/download:4516795
+[Box top]: https://www.thingiverse.com/download:4516796
 
 ### Skywatcher ED80
 I have designed the required mechanical parts to attach a 28BYJ-48 stepper to the Skywatcher ED80 telescope.
