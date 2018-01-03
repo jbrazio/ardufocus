@@ -23,34 +23,36 @@
 #ifndef __ULN2003_H__
 #define __ULN2003_H__
 
-#include "ardufocus.h"
-#include "struct.h"
-#include "lookuptables.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "stepper.h"
+#include "lookuptable.h"
 
 class uln2003: public stepper
 {
 protected:
-  const uint8_t pinmask;
-  uint8_t* const port;
-  volatile int8_t phase = 0;
+  const uint8_t m_pinmask;
+  uint8_t* const m_port;
+  volatile int8_t m_phase = 0;
 
 public:
   inline uln2003(uint8_t m, volatile uint8_t* p)
-    : pinmask(m), port((uint8_t*) p)
+    : m_pinmask(m), m_port((uint8_t*) p)
   {
-    if      (port == &PORTB) DDRB |= pinmask;
-    else if (port == &PORTC) DDRC |= pinmask;
-    else if (port == &PORTD) DDRD |= pinmask;
+    if      (m_port == &PORTB) DDRB |= m_pinmask;
+    else if (m_port == &PORTC) DDRC |= m_pinmask;
+    else if (m_port == &PORTD) DDRD |= m_pinmask;
   }
 
   inline void halt()
   {
     stepper::halt();
 
-    uint8_t output = (uint8_t)* port;
-    output &= ~pinmask;
-    output |= pad(0x00, pinmask);
-    *port = output;
+    uint8_t output = (uint8_t)* m_port;
+    output &= ~m_pinmask;
+    output |= pad(0x00, m_pinmask);
+    *m_port = output;
   }
 
   inline void set_full_step()
@@ -66,27 +68,27 @@ public:
   inline bool step_cw()
   {
     step();
-    ++phase;
-    if (phase > (lookup::full_step_table_sz -1)) { phase = 0; }
+    ++m_phase;
+    if (m_phase > (lookup::full_step_table_sz -1)) { m_phase = 0; }
     return true;
   }
 
   inline bool step_ccw()
   {
     step();
-    --phase;
-    if (phase < 0) { phase = (lookup::full_step_table_sz -1); }
+    --m_phase;
+    if (m_phase < 0) { m_phase = (lookup::full_step_table_sz -1); }
     return true;
   }
 
 private:
   inline void step()
   {
-    const uint8_t next_step = pgm_read_byte_near(lookup::full_step_table + phase);
-    uint8_t output = (uint8_t)* port;
-    output &= ~pinmask;
-    output |= pad(next_step, pinmask);
-    *port = output;
+    const uint8_t next_step = pgm_read_byte_near(lookup::full_step_table + m_phase);
+    uint8_t output = (uint8_t)* m_port;
+    output &= ~m_pinmask;
+    output |= pad(next_step, m_pinmask);
+    *m_port = output;
   }
 
 private:
@@ -95,15 +97,14 @@ private:
     uint8_t output = 0;
     for (char i = 0; i < 8; i++) {
       if ((mask & 1)) {
-        // We should use this pin
-        if (input & 1) output |= 0b10000000;
-        else           output &= 0b01111111;
+        if (input & 1) output |= 0x80;
+        else output           &= 0x7f;
         input >>= 1;
       }
 
       if (i < 7) {
         output >>= 1;
-        mask >>= 1;
+        mask   >>= 1;
       }
     }
     return output;

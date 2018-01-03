@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,95 +20,98 @@
 #ifndef __STEPPER_H__
 #define __STEPPER_H__
 
-#include "ardufocus.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "macro.h"
 #include "struct.h"
-#include "lookuptables.h"
+#include "lookuptable.h"
 
 class stepper
 {
 protected:
-  uint8_t mode = 0x00;
-  volatile uint16_t speed = 2;
-  volatile stepper_position_t position = { false, 0, 0, 0, 0, 0, 0 };
+  uint8_t m_mode = 0x00;
+  volatile uint16_t m_speed = 2;
+  volatile stepper_position_t m_position = { false, 0, 0, 0, 0, 0, 0 };
 
 public:
   inline bool is_moving()
   {
-    cli();
-    const bool b = (position.moving);
-    sei();
+    CRITICAL_SECTION_START
+    const bool b = (m_position.moving);
+    CRITICAL_SECTION_END
     return b;
   }
 
   inline void move()
   {
-    cli();
-    position.moving = true;
-    sei();
+    CRITICAL_SECTION_START
+    m_position.moving = true;
+    CRITICAL_SECTION_END
   }
 
   inline uint16_t get_current_position()
   {
-    return position.current;
+    return m_position.current;
   }
 
   inline void set_current_position(const uint16_t& target)
   {
-    cli();
-    position.current  = target;
-    position.target   = target;
-    sei();
+    CRITICAL_SECTION_START
+    m_position.current  = target;
+    m_position.target   = target;
+    CRITICAL_SECTION_END
   }
 
   inline uint16_t get_speed()
   {
-    return speed;
+    return m_speed;
   }
 
   inline void set_speed(const uint16_t& target)
   {
-    cli();
-    speed = target;
-    sei();
+    CRITICAL_SECTION_START
+    m_speed = target;
+    CRITICAL_SECTION_END
   }
 
   inline uint16_t get_target_position()
   {
-    return position.target;
+    return m_position.target;
   }
 
   inline void set_target_position(const uint16_t& target)
   {
-    cli();
+    CRITICAL_SECTION_START
 
-    position.target = target;
+    m_position.target = target;
 
     #ifdef USE_LINEAR_ACCEL
-      position.last = position.current;
+      m_position.last = m_position.current;
 
-      if (position.target > position.current) {
-        position.delta = position.target - position.last;
+      if (m_position.target > m_position.current) {
+        m_position.delta = m_position.target - m_position.last;
       } else {
-        position.delta = position.last - position.target;
+        m_position.delta = m_position.last - m_position.target;
       }
 
-      if (position.delta < 200 ) {
-        position.accelin = position.delta >> 1;
+      if (m_position.delta < 200 ) {
+        m_position.accelin = m_position.delta >> 1;
       } else {
-        position.accelin = position.delta >> 6;
+        m_position.accelin = m_position.delta >> 6;
       }
 
-      position.accelout = position.delta - position.accelin;
+      m_position.accelout = m_position.delta - m_position.accelin;
     #endif
 
-    sei();
+    CRITICAL_SECTION_END
   }
 
   inline void tick()
   {
-    if (position.moving) {
+    if (m_position.moving) {
       // Set the stepping frequency
-      switch(speed) {
+      switch(m_speed) {
         case 1:
           OCR1A = lookup::step_freq_table[0]; // 500 Hz
           break;
@@ -143,43 +146,43 @@ public:
 
       #ifdef USE_LINEAR_ACCEL
         // Calculates the current relative position
-        const uint16_t pos = (position.target < position.current)
-          ? position.last - position.current
-          : position.current - position.last;
+        const uint16_t pos = (m_position.target < m_position.current)
+          ? m_position.last - m_position.current
+          : m_position.current - m_position.last;
 
         // Acceleration control
         uint16_t min = lookup::step_freq_table[5],
                  max = OCR1A;
 
-        if (pos <= position.accelin) {
-          OCR1A = map(pos, 0, position.accelin, min, max);
+        if (pos <= m_position.accelin) {
+          OCR1A = map(pos, 0, m_position.accelin, min, max);
         }
 
-        else if (pos >= position.accelout) {
-          OCR1A = map(pos, position.accelout, position.delta, max, min);
+        else if (pos >= m_position.accelout) {
+          OCR1A = map(pos, m_position.accelout, m_position.delta, max, min);
         }
       #endif
 
       // Move the focus point out
-      if (position.target > position.current) {
+      if (m_position.target > m_position.current) {
         if (
           #ifdef INVERT_MOTOR_DIR
             step_cw()
           #else
             step_ccw()
           #endif
-        ) { ++position.current; }
+        ) { ++m_position.current; }
       }
 
       // Move the focus point in
-      else if (position.target < position.current) {
+      else if (m_position.target < m_position.current) {
         if (
           #ifdef INVERT_MOTOR_DIR
             step_ccw()
           #else
             step_cw()
           #endif
-        ) { --position.current; }
+        ) { --m_position.current; }
       }
 
       // Stop movement
@@ -189,14 +192,14 @@ public:
 
   virtual inline void halt()
   {
-    cli();
-    position.target = position.current;
-    position.moving = false;
-    sei();
+    CRITICAL_SECTION_START
+    m_position.target = m_position.current;
+    m_position.moving = false;
+    CRITICAL_SECTION_END
   }
 
   virtual inline uint8_t get_step_mode() {
-    return mode;
+    return m_mode;
   }
 
   virtual inline void set_full_step() { ; }

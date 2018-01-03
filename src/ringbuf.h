@@ -1,5 +1,5 @@
 /**
- * Ardufocus - Moonlite compatible focuser
+ * Circular Queue - Implementation of the classic ring buffer data structure
  * Copyright (C) 2017 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,16 +17,19 @@
  *
  */
 
-#ifndef __CIRCULARQUEUE_H__
-#define __CIRCULARQUEUE_H__
+#ifndef __RINGBUF_H__
+#define __RINGBUF_H__
 
-#include "ardufocus.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <avr/interrupt.h>
+#include "macro.h"
 
 /**
  * @brief   Circular Queue class
  * @details Implementation of the classic ring buffer data structure
  */
-template<typename T, uint8_t N> class ringbuf
+template<typename T, uint8_t N> class Ringbuf
 {
 private:
   /**
@@ -47,11 +50,7 @@ public:
    *          of item this queue will handle and N defines the maximum number of
    *          items that can be stored on the queue.
    */
-  ringbuf()
-  {
-    m_buffer.head = 0;
-    m_buffer.tail = 0;
-  }
+  Ringbuf() { reset(); }
 
   /**
    * @brief   Adds an item to the queue
@@ -62,9 +61,13 @@ public:
    */
   bool enqueue(T const &item)
   {
-    if (full()) { return false; }
-    m_buffer.queue[m_buffer.tail] = item;
-    m_buffer.tail = (m_buffer.tail +1) % N;
+    if (full()) return false;
+
+    CRITICAL_SECTION_START
+      m_buffer.queue[m_buffer.tail] = item;
+      m_buffer.tail = (m_buffer.tail +1) % N;
+    CRITICAL_SECTION_END
+
     return true;
   }
 
@@ -91,6 +94,22 @@ public:
   inline T peek() { return m_buffer.queue[m_buffer.head]; }
 
   /**
+   * @brief   Reset the queue position
+   * @details The head and tail pointer will be reset to the start position thus
+   *          the queue will become empty. Please be aware that the data will not
+   *          be removed from memory.
+   * @return  true if the operation was successful
+   */
+  bool reset()
+  {
+    CRITICAL_SECTION_START
+      m_buffer.head = 0;
+      m_buffer.tail = 0;
+    CRITICAL_SECTION_END
+    return true;
+  }
+
+  /**
    * @brief   Gets the number of elements on the queue
    * @details Returns the number of elements in the underlying container,
    *          that is, the number of elements in queue[].
@@ -106,9 +125,13 @@ public:
    */
   T dequeue()
   {
-    if (empty()) { return T(); }
-    const T item = m_buffer.queue[m_buffer.head];
-    m_buffer.head = (m_buffer.head +1) % N;
+    if (empty()) return T();
+
+    CRITICAL_SECTION_START
+      const T item = m_buffer.queue[m_buffer.head];
+      m_buffer.head = (m_buffer.head +1) % N;
+    CRITICAL_SECTION_END
+
     return item;
   }
 };

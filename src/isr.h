@@ -17,14 +17,19 @@
  *
  */
 
-#include "isr.h"
+#ifndef __ISR_H__
+#define __ISR_H__
 
-/**
- * @brief Timer1 interrupt handler
- * @details
- *
- */
-ISR(TIMER1_COMPA_vect)
-{
-  g_motor1.tick();
-}
+#include <stdint.h>
+#include <stdlib.h>
+
+#include <avr/interrupt.h>
+
+#include "version.h"
+#include "config.h"
+#include "analog.h"
+#include "conditionals.h"
+
+extern MOTOR_DRIVER g_motor1;
+
+#endif

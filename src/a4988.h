@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,84 +20,114 @@
 #ifndef __A4988_H__
 #define __A4988_H__
 
-#include "ardufocus.h"
-#include "struct.h"
-#include "stepper.h"
+#include <stdint.h>
+#include <stdlib.h>
 
-// total movement 37300
+#include "stepper.h"
+#include "io.h"
 
 class a4988: public stepper
 {
 protected:
   const stepper_pin_t output;
 
+  uint8_t m_step      = HIGH,
+          m_sleep     = LOW,
+          m_direction = LOW;
+
 public:
   inline a4988(uint8_t const& dir, uint8_t const& step, uint8_t const& sleep, uint8_t const& ms1)
     : output({ NOT_A_PIN, ms1, NOT_A_PIN, NOT_A_PIN, NOT_A_PIN, sleep, step, dir })
   {
-    pinMode(output.ms1,       OUTPUT);
-    pinMode(output.sleep,     OUTPUT);
-    pinMode(output.step,      OUTPUT);
-    pinMode(output.direction, OUTPUT);
+    IO::set_as_output(output.ms1);
+    IO::set_as_output(output.sleep);
+    IO::set_as_output(output.step);
+    IO::set_as_output(output.direction);
 
-    digitalWrite(output.ms1,        LOW);
-    digitalWrite(output.sleep,      LOW);
-    digitalWrite(output.step,       HIGH);
-    digitalWrite(output.direction,  LOW);
+    IO::write(output.ms1,        LOW);
+    IO::write(output.sleep,      LOW);
+    IO::write(output.step,       HIGH);
+    IO::write(output.direction,  LOW);
+  }
+
+  inline a4988(uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
+               uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
+    : output({ NOT_A_PIN, ms1, ms2, ms3, NOT_A_PIN, sleep, step, dir })
+  {
+    IO::set_as_output(output.ms1);
+    IO::set_as_output(output.ms2);
+    IO::set_as_output(output.ms3);
+    IO::set_as_output(output.sleep);
+    IO::set_as_output(output.step);
+    IO::set_as_output(output.direction);
+
+    IO::write(output.ms1,        LOW);
+    IO::write(output.ms2,        LOW);
+    IO::write(output.ms3,        LOW);
+    IO::write(output.sleep,      LOW);
+    IO::write(output.step,       HIGH);
+    IO::write(output.direction,  LOW);
   }
 
   inline a4988(uint8_t const& ena, uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
                uint8_t const& reset, uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
     : output({ ena, ms1, ms2, ms3, reset, sleep, step, dir })
   {
-    pinMode(output.enable,    OUTPUT);
-    pinMode(output.ms1,       OUTPUT);
-    pinMode(output.ms2,       OUTPUT);
-    pinMode(output.ms3,       OUTPUT);
-    pinMode(output.reset,     OUTPUT);
-    pinMode(output.sleep,     OUTPUT);
-    pinMode(output.step,      OUTPUT);
-    pinMode(output.direction, OUTPUT);
+    IO::set_as_output(output.enable);
+    IO::set_as_output(output.ms1);
+    IO::set_as_output(output.ms2);
+    IO::set_as_output(output.ms3);
+    IO::set_as_output(output.reset);
+    IO::set_as_output(output.sleep);
+    IO::set_as_output(output.step);
+    IO::set_as_output(output.direction);
 
-    digitalWrite(output.enable,     LOW);
-    digitalWrite(output.ms1,        LOW);
-    digitalWrite(output.ms2,        LOW);
-    digitalWrite(output.ms3,        LOW);
-    digitalWrite(output.reset,      HIGH);
-    digitalWrite(output.sleep,      LOW);
-    digitalWrite(output.step,       HIGH);
-    digitalWrite(output.direction,  LOW);
+    IO::write(output.enable,     LOW);
+    IO::write(output.ms1,        LOW);
+    IO::write(output.ms2,        LOW);
+    IO::write(output.ms3,        LOW);
+    IO::write(output.reset,      HIGH);
+    IO::write(output.sleep,      LOW);
+    IO::write(output.step,       HIGH);
+    IO::write(output.direction,  LOW);
   }
 
   inline void halt()
   {
     stepper::halt();
-    digitalWrite(output.step, HIGH);
-    digitalWrite(output.sleep, LOW);
+
+    m_step = HIGH;
+    IO::write(output.step, HIGH);
+
+    m_sleep = LOW;
+    IO::write(output.sleep, LOW);
   }
 
   inline void set_full_step()
   {
-    digitalWrite(output.ms1, LOW);
-    digitalWrite(output.ms2, LOW);
-    digitalWrite(output.ms3, LOW);
-    mode = 0x00;
+    m_mode = 0x00;
+    IO::write(output.ms1, LOW);
+    IO::write(output.ms2, LOW);
+    IO::write(output.ms3, LOW);
   }
 
   inline void set_half_step()
   {
-    digitalWrite(output.ms1, HIGH);
-    digitalWrite(output.ms2, LOW);
-    digitalWrite(output.ms3, LOW);
-    mode = 0xFF;
+    m_mode = 0xFF;
+    IO::write(output.ms1, HIGH);
+    IO::write(output.ms2, LOW);
+    IO::write(output.ms3, LOW);
   }
 
   inline bool step_cw()
   {
-    if (digitalRead(output.direction) == LOW)
+    if (m_direction == LOW)
     {
-      digitalWrite(output.step, HIGH);
-      digitalWrite(output.direction, HIGH);
+      m_step = HIGH;
+      IO::write(output.step, HIGH);
+
+      m_direction = HIGH;
+      IO::write(output.direction, HIGH);
 
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
@@ -110,10 +140,13 @@ public:
 
   inline bool step_ccw()
   {
-    if (digitalRead(output.direction) == HIGH)
+    if (m_direction == HIGH)
     {
-      digitalWrite(output.step, HIGH);
-      digitalWrite(output.direction, LOW);
+      m_step = HIGH;
+      IO::write(output.step, HIGH);
+
+      m_direction = LOW;
+      IO::write(output.direction, LOW);
 
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
@@ -127,8 +160,9 @@ public:
 private:
   inline bool step()
   {
-    if (! digitalRead(output.sleep)) {
-      digitalWrite(output.sleep, HIGH);
+    if (! m_sleep) {
+      m_sleep = HIGH;
+      IO::write(output.sleep, HIGH);
 
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
       __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
@@ -143,13 +177,15 @@ private:
      * internal position counter will be updated.
      */
 
-    if (digitalRead(output.step)) {
-      digitalWrite(output.step, LOW);
+    if (m_step) {
+      m_step = LOW;
+      IO::write(output.step, LOW);
       return true;
     }
 
     else {
-      digitalWrite(output.step, HIGH);
+      m_step = HIGH;
+      IO::write(output.step, HIGH);
       return false;
     }
   }

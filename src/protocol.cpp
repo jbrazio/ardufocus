@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,26 @@
  *
  */
 
-#include "ardufocus.h"
+#include "protocol.h"
 
-void cmd::process(const char* buffer)
+void protocol::process(const char *cmd)
 {
   char str[6];
   memset(&str, 0, sizeof(str));
 
-  switch (buffer[0]) {
+  switch (cmd[0]) {
     case 'C': // Start temperature conversion
-      ADMUX  = 0x00;
-      ADCSRA |= bit(ADSC) | bit(ADIE);
+      Analog::read(THERMISTOR_ADC_CHANNEL);
       break;
 
     case 'F':
-      switch(buffer[1]) {
+      switch(cmd[1]) {
         case 'G': // Start a Motor 1 move
-          motor1.move();
+          g_motor1.move();
           break;
 
         case 'Q': // Halt motor 1 move
-          motor1.halt();
+          g_motor1.halt();
           break;
 
         default: break;
@@ -45,46 +44,46 @@ void cmd::process(const char* buffer)
       break;
 
     case 'G':
-      switch(buffer[1]) {
+      switch(cmd[1]) {
         case 'B': // Get the backlight value
-          serial::print::string("00#");
+          Log::PGM(PSTR("00#"));
           break;
 
         case 'C': // Get temperature coefficient
-          serial::print::string("02#");
+          Log::PGM(PSTR("02#"));
           break;
 
         case 'D': // Get the motor 1 speed
-          sprintf(str, "%02x#", motor1.get_speed());
-          serial::print::string(str);
+          sprintf(str, "%02x#", g_motor1.get_speed());
+          Log::string(str);
           break;
 
         case 'H': // Get the motor 1 step
-          sprintf(str, "%02x#", motor1.get_step_mode());
-          serial::print::string(str);
+          sprintf(str, "%02x#", g_motor1.get_step_mode());
+          Log::string(str);
           break;
 
         case 'I': // Get the motor 1 status
-          serial::print::string((motor1.is_moving()) ? "01#" : "00#");
+          Log::string((g_motor1.is_moving()) ? "01#" : "00#");
           break;
 
         case 'N': // Get the new motor 1 position
-          sprintf(str, "%04x#", motor1.get_target_position());
-          serial::print::string(str);
+          sprintf(str, "%04x#", g_motor1.get_target_position());
+          Log::string(str);
           break;
 
         case 'P': // Get current motor 1 positon
-          sprintf(str, "%04x#", motor1.get_current_position());
-          serial::print::string(str);
+          sprintf(str, "%04x#", g_motor1.get_current_position());
+          Log::string(str);
           break;
 
         case 'T': // Get the current temperature
-          sprintf(str, "%04x#", static_cast<int16_t>(utils::steinhart(temp())) << 1);
-          serial::print::string(str);
+          sprintf(str, "%04x#", static_cast<int16_t>(util::steinhart(g_ambient)) << 1);
+          Log::string(str);
           break;
 
         case 'V': // Get firmware version
-          serial::print::string(ARDUFOCUS_VERSION "#");
+          Log::PGM(PSTR("01#"));
           break;
 
         default: break;
@@ -92,7 +91,7 @@ void cmd::process(const char* buffer)
       break;
 
     case 'P':
-      switch(buffer[1]) {
+      switch(cmd[1]) {
         case 'B': // Adjust Blue backlight brightness
         case 'C': // Adjust LCD contrast
         case 'G': // Adjust Green backlight brightness
@@ -110,28 +109,28 @@ void cmd::process(const char* buffer)
       break;
 
     case 'S':
-      switch(buffer[1]) {
+      switch(cmd[1]) {
         case 'D': // Set the motor 1 speed
-          strncpy(str, buffer + 2, 2);
-          motor1.set_speed(utils::hexstr2long(str));
+          strncpy(str, cmd + 2, 2);
+          g_motor1.set_speed(util::hexstr2long(str));
           break;
 
         case 'F': // Set motor 1 to full step
-          motor1.set_full_step();
+          g_motor1.set_full_step();
           break;
 
         case 'H': // Set motor 1 to half step
-          motor1.set_half_step();
+          g_motor1.set_half_step();
           break;
 
         case 'N': // Set the new motor 1 position
-          strncpy(str, buffer + 2, 4);
-          motor1.set_target_position(utils::hexstr2long(str));
+          strncpy(str, cmd + 2, 4);
+          g_motor1.set_target_position(util::hexstr2long(str));
           break;
 
         case 'P': // Set current motor 1 positon
-          strncpy(str, buffer + 2, 4);
-          motor1.set_current_position(utils::hexstr2long(str));
+          strncpy(str, cmd + 2, 4);
+          g_motor1.set_current_position(util::hexstr2long(str));
           break;
 
         default: break;
@@ -146,5 +145,5 @@ void cmd::process(const char* buffer)
     default:
       // do nothing
       break;
-  }
+  };
 }

@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,15 @@
  *
  */
 
-#ifndef __STRINGS_H__
-#define __STRINGS_H__
+#ifndef __CONDITIONALS_H__
+#define __CONDITIONALS_H__
 
-#include "ardufocus.h"
-
-// Special characters
-const char string_colon   [] PROGMEM = { 0x3a, 0x00 };
-const char string_comma   [] PROGMEM = { 0x2c, 0x00 };
-const char string_eol     [] PROGMEM = { 0x0a, 0x00 };
-const char string_minus   [] PROGMEM = { 0x2d, 0x00 };
-const char string_percent [] PROGMEM = { 0x25, 0x00 };
-const char string_space   [] PROGMEM = { 0x20, 0x00 };
-const char string_zero    [] PROGMEM = { 0x30, 0x00 };
+#ifdef USE_ULN2003_DRIVER
+  #include "uln2003.h"
+  #define MOTOR_DRIVER uln2003
+#else
+  #include "a4988.h"
+  #define MOTOR_DRIVER a4988
+#endif
 
 #endif

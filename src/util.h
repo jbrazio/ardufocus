@@ -17,14 +17,20 @@
  *
  */
 
-#include "isr.h"
+#ifndef __UTIL_H__
+#define __UTIL_H__
 
-/**
- * @brief Timer1 interrupt handler
- * @details
- *
- */
-ISR(TIMER1_COMPA_vect)
+#include <stdint.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include "config.h"
+#include "macro.h"
+
+namespace util
 {
-  g_motor1.tick();
-}
+  float steinhart(const uint16_t& raw);
+  uint16_t hexstr2long(const char* str);
+};
+
+#endif

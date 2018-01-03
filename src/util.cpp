@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,40 +17,9 @@
  *
  */
 
-#include "ardufocus.h"
+#include "util.h"
 
-millis_t utils::millis()
-{
-  #ifdef ARDUINO
-    return ::millis();
-  #else
-    unsigned long m;
-    uint8_t oldSREG = SREG;
-
-    // disable interrupts while we read timer0_millis or we might get an
-    // inconsistent value (e.g. in the middle of a write to timer0_millis)
-    cli();
-
-    m = timer0_millis;
-    SREG = oldSREG;
-    return m;
-  #endif
-}
-
-void utils::delay(uint32_t ms)
-{
-  uint32_t start = micros();
-
-  while (ms > 0) {
-    wdt_reset();
-    while (ms > 0 && (micros() - start) >= 1000) {
-      ms--;
-      start += 1000;
-    }
-  }
-}
-
-float utils::steinhart(const uint16_t& raw)
+float util::steinhart(const uint16_t& raw)
 {
   float ret = constrain(raw, 1, 1022);
   ret  = THERMISTOR_SERIESRESISTOR / (1023.0 / ret - 1);  // convert raw to ohms
@@ -63,7 +32,7 @@ float utils::steinhart(const uint16_t& raw)
   return ret;
 }
 
-uint16_t utils::hexstr2long(const char* str)
+uint16_t util::hexstr2long(const char* str)
 {
   uint16_t n = 0;
   n = strtol(str, NULL, 16);

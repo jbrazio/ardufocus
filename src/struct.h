@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,14 +20,8 @@
 #ifndef __STRUCT_H__
 #define __STRUCT_H__
 
-#include "ardufocus.h"
-#include "ringbuf.h"
-
-struct serial_buffer_t
-{
-  ringbuf<uint8_t, SERIAL_RX_BUFFER_SIZE> rx;
-  ringbuf<uint8_t, SERIAL_TX_BUFFER_SIZE> tx;
-};
+#include <stdint.h>
+#include <stdlib.h>
 
 struct stepper_position_t
 {

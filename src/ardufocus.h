@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,31 @@
  *
  */
 
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef __ARDUFOCUS_H__
+#define __ARDUFOCUS_H__
 
-#include "ardufocus.h"
-#include "types.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <math.h>
 
-namespace utils
-{
-  millis_t millis();
-  void     delay(uint32_t ms);
-  float    steinhart(const uint16_t& raw);
-  uint16_t hexstr2long(const char* str);
-};
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>
+#include <avr/wdt.h>
+
+#include "version.h"
+#include "config.h"
+
+#include "serial.h"
+#include "log.h"
+#include "analog.h"
+#include "protocol.h"
+
+#include "conditionals.h"
+
+// --------------------------------------------------------------------------
+// Globals ------------------------------------------------------------------
+// --------------------------------------------------------------------------
+extern float g_ambient;
+extern MOTOR_DRIVER g_motor1;
 
 #endif

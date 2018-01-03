@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2018 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,24 @@
  *
  */
 
-#ifndef __TYPES_H__
-#define __TYPES_H__
+#ifndef __SERIAL_PROTOCOL_H__
+#define __SERIAL_PROTOCOL_H__
 
-typedef uint8_t  flag_t;
-typedef uint32_t millis_t;
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "log.h"
+#include "util.h"
+#include "analog.h"
+#include "conditionals.h"
+
+extern float g_ambient;
+extern MOTOR_DRIVER g_motor1;
+
+namespace protocol
+{
+  void process(const char*);
+};
 
 #endif

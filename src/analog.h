@@ -17,46 +17,53 @@
  *
  */
 
-#ifndef __SERIAL_H__
-#define __SERIAL_H__
+#ifndef __ADC_H__
+#define __ADC_H__
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "config.h"
+#include <avr/interrupt.h>
+
 #include "macro.h"
-#include "ringbuf.h"
+#include "log.h"
 
-class Serial
+extern float g_ambient;
+
+class Analog
 {
   /**
    * Disable the creation of an instance of this object.
    * This class should be used as a static class.
    */
   private:
-     Serial() {;}
-    ~Serial() {;}
-
-  protected:
-    typedef void (*callbackfunc_t)(const char*);
+     Analog() {;}
+    ~Analog() {;}
 
   public:
     // Being a bit lazy here, this buffer should be private to the class
     // and have a set of wrappers around it.. adding it to the TODO list.
     static struct buffer_t
     {
-      Ringbuf<char, 16u> rx;
-      Ringbuf<char, 64u> tx;
+      uint8_t  n;
+      uint8_t  chan;
+      uint16_t raw[128];
     } s_buffer;
 
   public:
-    static bool available();
-    static char read();
-    static void flush();
-    static void process(callbackfunc_t);
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     */
+    static void read(const uint8_t&);
+
+    /**
+     * @brief [brief description]
+     * @details [long description]
+     *
+     */
     static void setup();
-    static void write(const char&);
 };
 
 #endif
