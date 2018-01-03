@@ -141,7 +141,7 @@ To use this configuration you must edit the `config.h` file:
 ![Unipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-unipolar_bb.png)
 [Download the unipolar schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-unipolar_schem.png)
 
-To use this configuration you must edit the `ardufocus.h` file:
+To use this configuration you must edit the `config.h` file:
 ``` cpp
 // You should only enable *ONE* of the following drivers
 // The ULN2003 shall be used with the unmodded version of 28BYJ-48 or any other
