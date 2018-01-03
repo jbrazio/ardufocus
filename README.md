@@ -2,8 +2,6 @@
 
 [![Donate](https://img.shields.io/badge/donate-a_beer-red.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D5XZ7QFLP8LXE) [![Build Status](https://travis-ci.org/jbrazio/ardufocus.svg?branch=master)](https://travis-ci.org/jbrazio/ardufocus) [![GitHub issues](https://img.shields.io/github/issues/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/issues) [![GitHub stars](https://img.shields.io/github/stars/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/stargazers) [![GitHub forks](https://img.shields.io/github/forks/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/network) [![Download beta](https://img.shields.io/badge/download-latest_beta-yellow.svg)](https://github.com/jbrazio/ardufocus/archive/master.zip)
 
-
-
 Ardufocus is a full open source [Moonlite][moonlite] compatible automatic focus controller.
 The source is still under heavy development so things move around a bit.
 
@@ -43,7 +41,8 @@ I have no issues driving an ASI1600MMC-Cool with a ZWO EFW8 and a 0.85x field fl
 
 Common components:
 - 1x [Arduino Nano]
-- 1x [Electrolytic capacitor 10uF]
+- 1x [Electrolytic capacitor 10uF 25V]
+- 1x [Electrolytic capacitor 100uF 50V]
 - 1x [NTC 10K]
 - 1x [Resistor 1/4W 10K]
 - 1x [DC Power connector] (male, female pair)
@@ -63,7 +62,8 @@ To connect your controller box to the motor you have two main options, either yo
 - 1x [GX12-4] or [GX12-5] connector (male, female pair): This will allow the cable to be connected to the controller box.
 
 [Arduino Nano]: https://www.banggood.com/3Pcs-ATmega328P-Arduino-Compatible-Nano-V3-Improved-Version-No-Cable-p-1047429.html?p=6K0304655364201407WG
-[Electrolytic capacitor 10uF]: https://www.banggood.com/10Pcs-50V-2200UF-16-X-25mm-Electrolytic-Capacitor-p-1019934.html?p=6K0304655364201407WG
+[Electrolytic capacitor 10uF 25V]: https://www.banggood.com/100pcs-0_1uF-100uF-10V-50V-10Value-Electrolytic-Capacitor-Assortment-Kit-Set-p-1085572.html?p=6K0304655364201407WG
+[Electrolytic capacitor 100uF 50V]:https://www.banggood.com/120pcs-15-Value-50V-Electrolytic-Capacitor-1UF-2200UF-Assortment-Kit-p-1073956.html?p=6K0304655364201407WG
 [NTC 10K]: https://www.banggood.com/10pcs-NTC-Thermistor-Temperature-Sensor-10K-OHM-MF52-103-3435-1-p-932790.html?p=6K0304655364201407WG
 [Resistor 1/4W 10K]: https://www.banggood.com/Wholesale-600pcs-30-Kinds-Value-Metal-Film-Resistor-Assorted-Kit-20pcs-Each-Value-p-53320.html?p=6K0304655364201407WG
 [DC Power connector]: https://www.banggood.com/1Pc-DC-Power-Jack-Socket-Power-Outlet-Power-Socket-Female-Panel-Mount-Connector-p-1177643.html?p=6K0304655364201407WG
@@ -106,11 +106,16 @@ Download objects:
 
 ## Schematic and wiring
 
+### THIS IS AN IMPORTANT NOTICE
+The wiring of the focuser has changed since commit [8375767], you should remove any physical conections between the **AREF** and the **3.3V** pin, not doing so may damage your board.
+
+[8375767]: https://github.com/jbrazio/ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
+
 ### A4988 driver with a Bipolar motor
 ![Bipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_bb.png)
 [Download the bipolar schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_schem.png)
 
-To use this configuration you must edit the `ardufocus.h` file:
+To use this configuration you must edit the `config.h` file:
 ``` cpp
 // You should only enable *ONE* of the following drivers
 // The ULN2003 shall be used with the unmodded version of 28BYJ-48 or any other
