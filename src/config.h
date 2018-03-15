@@ -59,13 +59,17 @@
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
-#define INVERT_MOTOR_DIR
+//#define INVERT_MOTOR_DIR
 
 // When active ardufocus will apply a trapezoidal acceleration profile to the
 // motor's speed, this feature is EXPERIMENTAL. The objective is to help the
 // system to cope with heavier focuser loads such as FF + FW + CCD combos.
 //#define USE_LINEAR_ACCEL
 
+// When active ardufocus will cut the stepper motor motor when idle, in theory
+// this could lead to less accuracy betwen movements but will keep the motor
+// cool. When disabling this flag make sure your motor does not overheat.
+#define MOTOR_SLEEP_WHEN_IDLE
 
 // ----------------------------------------------------------------------------
 // Temperature sensor configuration -------------------------------------------

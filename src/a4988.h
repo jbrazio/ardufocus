@@ -45,9 +45,15 @@ public:
     IO::set_as_output(output.direction);
 
     IO::write(output.ms1,        LOW);
-    IO::write(output.sleep,      LOW);
-    IO::write(output.step,       HIGH);
+    IO::write(output.step,       LOW);
     IO::write(output.direction,  LOW);
+
+    #ifdef MOTOR_SLEEP_WHEN_IDLE
+      IO::write(output.sleep, LOW);
+    #else
+      m_sleep = HIGH;
+      IO::write(output.sleep, HIGH);
+    #endif
   }
 
   inline a4988(uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
@@ -64,9 +70,15 @@ public:
     IO::write(output.ms1,        LOW);
     IO::write(output.ms2,        LOW);
     IO::write(output.ms3,        LOW);
-    IO::write(output.sleep,      LOW);
-    IO::write(output.step,       HIGH);
+    IO::write(output.step,       LOW);
     IO::write(output.direction,  LOW);
+
+    #ifdef MOTOR_SLEEP_WHEN_IDLE
+      IO::write(output.sleep, LOW);
+    #else
+      m_sleep = HIGH;
+      IO::write(output.sleep, HIGH);
+    #endif
   }
 
   inline a4988(uint8_t const& ena, uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
@@ -87,20 +99,28 @@ public:
     IO::write(output.ms2,        LOW);
     IO::write(output.ms3,        LOW);
     IO::write(output.reset,      HIGH);
-    IO::write(output.sleep,      LOW);
-    IO::write(output.step,       HIGH);
+    IO::write(output.step,       LOW);
     IO::write(output.direction,  LOW);
+
+    #ifdef MOTOR_SLEEP_WHEN_IDLE
+      IO::write(output.sleep, LOW);
+    #else
+      m_sleep = HIGH;
+      IO::write(output.sleep, HIGH);
+    #endif
   }
 
   inline void halt()
   {
     stepper::halt();
 
-    m_step = HIGH;
-    IO::write(output.step, HIGH);
+    m_step = LOW;
+    IO::write(output.step, LOW);
 
-    m_sleep = LOW;
-    IO::write(output.sleep, LOW);
+    #ifdef MOTOR_SLEEP_WHEN_IDLE
+      m_sleep = LOW;
+      IO::write(output.sleep, LOW);
+    #endif
   }
 
   inline void set_full_step()
@@ -109,6 +129,13 @@ public:
     IO::write(output.ms1, LOW);
     IO::write(output.ms2, LOW);
     IO::write(output.ms3, LOW);
+
+    // Delay 4 cycles: 250 ns at 16 MHz
+    asm volatile (
+        "    rjmp 1f" "\n"
+        "1:  rjmp 2f" "\n"
+        "2:"  "\n"
+    );
   }
 
   inline void set_half_step()
@@ -117,22 +144,28 @@ public:
     IO::write(output.ms1, HIGH);
     IO::write(output.ms2, LOW);
     IO::write(output.ms3, LOW);
+
+    // Delay 4 cycles: 250 ns at 16 MHz
+    asm volatile (
+        "    rjmp 1f" "\n"
+        "1:  rjmp 2f" "\n"
+        "2:"  "\n"
+    );
   }
 
   inline bool step_cw()
   {
     if (m_direction == LOW)
     {
-      m_step = HIGH;
-      IO::write(output.step, HIGH);
-
       m_direction = HIGH;
       IO::write(output.direction, HIGH);
 
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      // Delay 4 cycles: 250 ns at 16 MHz
+      asm volatile (
+          "    rjmp 1f" "\n"
+          "1:  rjmp 2f" "\n"
+          "2:"  "\n"
+      );
     }
 
     return step();
@@ -142,16 +175,15 @@ public:
   {
     if (m_direction == HIGH)
     {
-      m_step = HIGH;
-      IO::write(output.step, HIGH);
-
       m_direction = LOW;
       IO::write(output.direction, LOW);
 
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      // Delay 4 cycles: 250 ns at 16 MHz
+      asm volatile (
+          "    rjmp 1f" "\n"
+          "1:  rjmp 2f" "\n"
+          "2:"  "\n"
+      );
     }
 
     return step();
@@ -160,15 +192,19 @@ public:
 private:
   inline bool step()
   {
+    #ifdef MOTOR_SLEEP_WHEN_IDLE
     if (! m_sleep) {
       m_sleep = HIGH;
       IO::write(output.sleep, HIGH);
 
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
-      __asm__ __volatile__ ("nop\n\t"); // 62.5ns wait
+      // Delay 4 cycles: 250 ns at 16 MHz
+      asm volatile (
+          "    rjmp 1f" "\n"
+          "1:  rjmp 2f" "\n"
+          "2:"  "\n"
+      );
     }
+    #endif
 
     /*
      * The A4988 driver will physically step the motor when
@@ -180,12 +216,30 @@ private:
     if (m_step) {
       m_step = LOW;
       IO::write(output.step, LOW);
+
+      // Delay 16 cycles: 1us at 16 MHz
+      asm volatile (
+          "    ldi  r18, 5" "\n"
+          "1:  dec  r18"  "\n"
+          "    brne 1b" "\n"
+          "    nop" "\n"
+      );
+
       return true;
     }
 
     else {
       m_step = HIGH;
       IO::write(output.step, HIGH);
+
+      // Delay 16 cycles: 1us at 16 MHz
+      asm volatile (
+          "    ldi  r18, 5" "\n"
+          "1:  dec  r18"  "\n"
+          "    brne 1b" "\n"
+          "    nop" "\n"
+      );
+
       return false;
     }
   }
