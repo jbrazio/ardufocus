@@ -142,6 +142,13 @@ void protocol::process(const char *cmd)
       // !!! NOT IMPLEMENTED
       break;
 
+    #ifdef ENABLE_REMOTE_RESET
+    case 'Z': // Remote reset the micro controller
+      wdt_disable();
+      wdt_enable(WDTO_15MS);
+      while (true) { /* loop */ }
+    #endif
+
     default:
       // do nothing
       break;

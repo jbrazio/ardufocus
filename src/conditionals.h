@@ -28,4 +28,8 @@
   #define MOTOR_DRIVER a4988
 #endif
 
+#ifdef ENABLE_REMOTE_RESET
+  #warning Remote reset is enabled, make sure your bootloader is updated
+#endif
+
 #endif

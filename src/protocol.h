@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <avr/wdt.h>
+
 #include "log.h"
 #include "util.h"
 #include "analog.h"

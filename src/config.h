@@ -33,6 +33,18 @@
 //
 // [8375767]: https://github.com/jbrazio/ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
 
+// ----------------------------------------------------------------------------
+// Remote reset ---------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// Remote reset is a non standard feature added to the Moonlite protocol which
+// allows you to reset the micro controller inside the focuser. Please test
+// this feature on your bench before deploying on the field. For this feature
+// to work the default bootloader must be changed otherwise the uC will enter
+// in a infinite loop state. For more information visit the [bug report].
+//
+// [bug report]: https://github.com/arduino/Arduino/issues/4492
+//#define ENABLE_REMOTE_RESET
 
 // ----------------------------------------------------------------------------
 // Motor driver configuration -------------------------------------------------
@@ -66,7 +78,7 @@
 // system to cope with heavier focuser loads such as FF + FW + CCD combos.
 //#define USE_LINEAR_ACCEL
 
-// When active ardufocus will cut the stepper motor motor when idle, in theory
+// When active ardufocus will cut the stepper motor current when idle, in theory
 // this could lead to less accuracy betwen movements but will keep the motor
 // cool. When disabling this flag make sure your motor does not overheat.
 #define MOTOR_SLEEP_WHEN_IDLE
