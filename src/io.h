@@ -41,19 +41,19 @@ class IO
 
   public:
     static inline void set_as_input(const uint8_t &pin) {
-      const uint8_t mask = pgm_read_word(&pin_map[pin][4]);
-      volatile uint8_t *mode  = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][0]) );
-      volatile uint8_t *state = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][1]) );
+      const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
+      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_DIR]));
+      volatile uint8_t *port = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_OUTPUT]));
 
       CRITICAL_SECTION_START
-      *mode  &= ~mask;
-      *state &= ~mask;
+      *mode &= ~mask;
+      *port &= ~mask;
       CRITICAL_SECTION_END
     }
 
     static inline void set_as_output(const uint8_t &pin) {
-      const uint8_t mask = pgm_read_word(&pin_map[pin][4]);
-      volatile uint8_t *mode = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][0]) );
+      const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
+      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_DIR]));
 
       CRITICAL_SECTION_START
       *mode |= mask;
@@ -61,50 +61,29 @@ class IO
     }
 
     static inline void write(const uint8_t &pin, const uint8_t &value) {
-      PORTD ^= bit(6);
-      const uint8_t timer = pgm_read_byte(&pin_map[pin][3]);
-      PORTD ^= bit(6);
+      const uint8_t timer = pgm_read_byte(&pin_map[pin][PM_TIMER]);
 
       // Deals with digital signals i.e. LOW and HIGH
       if(value == LOW || value == HIGH) {
 
-        const uint8_t mask = pgm_read_word(&pin_map[pin][4]);
-        volatile uint8_t *state = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][1]) );
+        const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
+        volatile uint8_t *port = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][PM_OUTPUT]) );
 
         // Turns off any active PWM output on the pin
         switch(timer)
         {
-          case TIMER0A: // timer 0, channel A
-            cbi(TCCR0A, COM0A1);
-            break;
-
-          case TIMER0B: // timer 0, channel B
-            cbi(TCCR0A, COM0B1);
-            break;
-
-          case TIMER1A: // timer 1, channel A
-            cbi(TCCR1A, COM1A1);
-            break;
-
-          case TIMER1B: // timer 1, channel B
-            cbi(TCCR1A, COM1B1);
-            break;
-
-          case TIMER2A: // timer 2, channel A
-            cbi(TCCR2A, COM2A1);
-            break;
-
-          case TIMER2B: // timer 2, channel B
-            cbi(TCCR2A, COM2B1);
-            break;
-
-          default:
-            ;
+          case TIMER0A: cbi(TCCR0A, COM0A1); break; // timer 0, channel A
+          case TIMER0B: cbi(TCCR0A, COM0B1); break; // timer 0, channel B
+          case TIMER1A: cbi(TCCR1A, COM1A1); break; // timer 1, channel A
+          case TIMER1B: cbi(TCCR1A, COM1B1); break; // timer 1, channel B
+          case TIMER2A: cbi(TCCR2A, COM2A1); break; // timer 2, channel A
+          case TIMER2B: cbi(TCCR2A, COM2B1); break; // timer 2, channel B
+          default: ;
         }
 
         CRITICAL_SECTION_START
-        if(value == LOW) { *state &= ~mask; }
-        else { *state |= mask; }
+        if(value == LOW) { *port &= ~mask; }
+        else { *port |= mask; }
         CRITICAL_SECTION_END
       }
 
@@ -112,41 +91,39 @@ class IO
       else {
         switch(timer)
         {
-          case TIMER0A: // timer 0, channel A
-            sbi(TCCR0A, COM0A1);
-            OCR0A = value;
-            break;
-
-          case TIMER0B: // timer 0, channel B
-            sbi(TCCR0A, COM0B1);
-            OCR0B = value;
-            break;
-
-          case TIMER1A: // timer 1, channel A
-            sbi(TCCR1A, COM1A1);
-            OCR1A = value;
-            break;
-
-          case TIMER1B: // timer 1, channel B
-            sbi(TCCR1A, COM1B1);
-            OCR1B = value;
-            break;
-
-          case TIMER2A: // timer 2, channel A
-            sbi(TCCR2A, COM2A1);
-            OCR2A = value;
-            break;
-
-          case TIMER2B: // timer 2, channel B
-            sbi(TCCR2A, COM2B1);
-            OCR2B = value;
-            break;
-
-          default:
-            // fallbacks to digital mode when pin is not PWM capable
-            write(pin, (value < 128) ? 0 : 255);
+          case TIMER0A: sbi(TCCR0A, COM0A1); OCR0A = value; break; // timer 0, channel A
+          case TIMER0B: sbi(TCCR0A, COM0B1); OCR0B = value; break; // timer 0, channel B
+          case TIMER1A: sbi(TCCR1A, COM1A1); OCR1A = value; break; // timer 1, channel A
+          case TIMER1B: sbi(TCCR1A, COM1B1); OCR1B = value; break; // timer 1, channel B
+          case TIMER2A: sbi(TCCR2A, COM2A1); OCR2A = value; break; // timer 2, channel A
+          case TIMER2B: sbi(TCCR2A, COM2B1); OCR2B = value; break; // timer 2, channel B
+          default: write(pin, (value < 128) ? 0 : 255); // fallbacks to digital mode
         }
       }
+    }
+
+    static inline uint8_t read(const uint8_t &pin) {
+        const uint8_t     mask  = pgm_read_word(&pin_map[pin][PM_MASK]);
+        const uint8_t     timer = pgm_read_byte(&pin_map[pin][PM_TIMER]);
+        volatile uint8_t *port  = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_INPUT]));
+
+        // If the pin that support PWM output, we need to turn it off
+        // before getting a digital reading.
+        if (timer != NOTIMER) {
+          switch(timer)
+          {
+            case TIMER0A: cbi(TCCR0A, COM0A1); break; // timer 0, channel A
+            case TIMER0B: cbi(TCCR0A, COM0B1); break; // timer 0, channel B
+            case TIMER1A: cbi(TCCR1A, COM1A1); break; // timer 1, channel A
+            case TIMER1B: cbi(TCCR1A, COM1B1); break; // timer 1, channel B
+            case TIMER2A: cbi(TCCR2A, COM2A1); break; // timer 2, channel A
+            case TIMER2B: cbi(TCCR2A, COM2B1); break; // timer 2, channel B
+            default: ;
+          }
+        }
+
+        if (*port & mask) return HIGH;
+        return LOW;
     }
 };
 

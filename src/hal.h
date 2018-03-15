@@ -28,42 +28,58 @@
 #include "macro.h"
 
 #ifdef __AVR_ATmega328P__
-  #define NOTIMER 0
-  #define TIMER0A 1
-  #define TIMER0B 2
-  #define TIMER1A 3
-  #define TIMER1B 4
-  #define TIMER2A 5
-  #define TIMER2B 6
 
-  #define NOT_A_PIN  0
-  #define NOT_A_PORT 0
+  enum hal_timer_t
+  {
+    NOTIMER = 0,
+    TIMER0A,
+    TIMER0B,
+    TIMER1A,
+    TIMER1B,
+    TIMER2A,
+    TIMER2B
+  };
+
+  enum hal_pin_map_t
+  {
+    PM_DIR = 0,
+    PM_OUTPUT,
+    PM_INPUT,
+    PM_TIMER,
+    PM_MASK,
+  };
+
+  enum hal_non_existent_t
+  {
+    NOT_A_PIN = 0,
+    NOT_A_PORT = 0
+  };
 
   const uint16_t pin_map[][5] PROGMEM =
   {
-    /* pin,                mode,            output,            input,   timer,   mask */
-    /*  0 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, NOTIMER, bit(0) },
-    /*  1 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, NOTIMER, bit(1) },
-    /*  2 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, NOTIMER, bit(2) },
-    /*  3 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, TIMER2B, bit(3) },
-    /*  4 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, NOTIMER, bit(4) },
-    /*  5 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, TIMER0B, bit(5) },
-    /*  6 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, TIMER0A, bit(6) },
-    /*  7 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND, NOTIMER, bit(7) },
+    /* pin,              PM_DIR,         PM_OUTPUT,         PM_INPUT, PM_TIMER, PM_MASK */
+    /*  0 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(0) },
+    /*  1 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(1) },
+    /*  2 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(2) },
+    /*  3 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  TIMER2B,  bit(3) },
+    /*  4 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(4) },
+    /*  5 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  TIMER0B,  bit(5) },
+    /*  6 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  TIMER0A,  bit(6) },
+    /*  7 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(7) },
 
-    /*  8 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, NOTIMER, bit(0) },
-    /*  9 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, TIMER1A, bit(1) },
-    /* 10 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, TIMER1B, bit(2) },
-    /* 11 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, TIMER2A, bit(3) },
-    /* 12 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, NOTIMER, bit(4) },
-    /* 13 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB, NOTIMER, bit(5) },
+    /*  8 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  NOTIMER,  bit(0) },
+    /*  9 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  TIMER1A,  bit(1) },
+    /* 10 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  TIMER1B,  bit(2) },
+    /* 11 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  TIMER2A,  bit(3) },
+    /* 12 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  NOTIMER,  bit(4) },
+    /* 13 */ { (uint16_t) &DDRB, (uint16_t) &PORTB, (uint16_t) &PINB,  NOTIMER,  bit(5) },
 
-    /* 14 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(0) },
-    /* 15 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(1) },
-    /* 16 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(2) },
-    /* 17 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(3) },
-    /* 18 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(4) },
-    /* 19 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC, NOTIMER, bit(5) },
+    /* 14 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(0) },
+    /* 15 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(1) },
+    /* 16 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(2) },
+    /* 17 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(3) },
+    /* 18 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(4) },
+    /* 19 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(5) },
   };
 
 #else
