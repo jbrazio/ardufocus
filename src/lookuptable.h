@@ -21,6 +21,8 @@
 #ifndef __LOOKUPTABLE_H__
 #define __LOOKUPTABLE_H__
 
+#include <avr/pgmspace.h>
+
 namespace lookup
 {
   const uint8_t full_step_table_sz = 4;

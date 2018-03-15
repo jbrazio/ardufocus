@@ -20,6 +20,9 @@
 #ifndef __CONDITIONALS_H__
 #define __CONDITIONALS_H__
 
+#include "version.h"
+#include "config.h"
+
 #ifdef USE_ULN2003_DRIVER
   #include "uln2003.h"
   #define MOTOR_DRIVER uln2003

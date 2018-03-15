@@ -25,6 +25,9 @@
 
 #include <avr/pgmspace.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "serial.h"
 
 // Special characters

@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "stepper.h"
 #include "io.h"
 
@@ -31,9 +34,7 @@ class a4988: public stepper
 protected:
   const stepper_pin_t output;
 
-  uint8_t m_step      = HIGH,
-          m_sleep     = LOW,
-          m_direction = LOW;
+  uint8_t m_step = 0;
 
 public:
   inline a4988(uint8_t const& dir, uint8_t const& step, uint8_t const& sleep, uint8_t const& ms1)
@@ -51,7 +52,6 @@ public:
     #ifdef MOTOR_SLEEP_WHEN_IDLE
       IO::write(output.sleep, LOW);
     #else
-      m_sleep = HIGH;
       IO::write(output.sleep, HIGH);
     #endif
   }
@@ -76,7 +76,6 @@ public:
     #ifdef MOTOR_SLEEP_WHEN_IDLE
       IO::write(output.sleep, LOW);
     #else
-      m_sleep = HIGH;
       IO::write(output.sleep, HIGH);
     #endif
   }
@@ -105,7 +104,6 @@ public:
     #ifdef MOTOR_SLEEP_WHEN_IDLE
       IO::write(output.sleep, LOW);
     #else
-      m_sleep = HIGH;
       IO::write(output.sleep, HIGH);
     #endif
   }
@@ -114,11 +112,18 @@ public:
   {
     stepper::halt();
 
-    m_step = LOW;
+    m_step = 0;
     IO::write(output.step, LOW);
 
+    // Delay 16 cycles: 1us at 16 MHz
+    asm volatile (
+        "    ldi  r18, 5" "\n"
+        "1:  dec  r18"  "\n"
+        "    brne 1b" "\n"
+        "    nop" "\n"
+    );
+
     #ifdef MOTOR_SLEEP_WHEN_IDLE
-      m_sleep = LOW;
       IO::write(output.sleep, LOW);
     #endif
   }
@@ -155,46 +160,53 @@ public:
 
   inline bool step_cw()
   {
-    if (m_direction == LOW)
+    switch(IO::read(output.direction))
     {
-      m_direction = HIGH;
-      IO::write(output.direction, HIGH);
+      case LOW:
+        IO::write(output.direction, HIGH);
 
-      // Delay 4 cycles: 250 ns at 16 MHz
-      asm volatile (
-          "    rjmp 1f" "\n"
-          "1:  rjmp 2f" "\n"
-          "2:"  "\n"
-      );
+        // Delay 4 cycles: 250 ns at 16 MHz
+        asm volatile (
+            "    rjmp 1f" "\n"
+            "1:  rjmp 2f" "\n"
+            "2:"  "\n"
+        );
+
+      case HIGH:
+        ;
+
+      default:
+        return step();
     }
-
-    return step();
   }
 
   inline bool step_ccw()
   {
-    if (m_direction == HIGH)
+    switch(IO::read(output.direction))
     {
-      m_direction = LOW;
-      IO::write(output.direction, LOW);
+      case LOW:
+        ;
 
-      // Delay 4 cycles: 250 ns at 16 MHz
-      asm volatile (
-          "    rjmp 1f" "\n"
-          "1:  rjmp 2f" "\n"
-          "2:"  "\n"
-      );
+      case HIGH:
+        IO::write(output.direction, LOW);
+
+        // Delay 4 cycles: 250 ns at 16 MHz
+        asm volatile (
+            "    rjmp 1f" "\n"
+            "1:  rjmp 2f" "\n"
+            "2:"  "\n"
+        );
+
+      default:
+        return step();
     }
-
-    return step();
   }
 
 private:
   inline bool step()
   {
     #ifdef MOTOR_SLEEP_WHEN_IDLE
-    if (! m_sleep) {
-      m_sleep = HIGH;
+    if (! IO::read(output.sleep)) {
       IO::write(output.sleep, HIGH);
 
       // Delay 4 cycles: 250 ns at 16 MHz
@@ -208,40 +220,47 @@ private:
 
     /*
      * The A4988 driver will physically step the motor when
-     * transitioning from high to low thus the boolean return
-     * value represents if the step "happen" and only then the
-     * internal position counter will be updated.
+     * transitioning from a HIGH to LOW signal, the internal
+     * position counter should only be updated under this
+     * condition.
      */
 
-    if (m_step) {
-      m_step = LOW;
-      IO::write(output.step, LOW);
+    #ifdef COMPRESS_HALF_STEPS
+      ++m_step %= ((m_mode) ? 4 : 2);
+    #else
+      ++m_step %= 2;
+    #endif
 
-      // Delay 16 cycles: 1us at 16 MHz
-      asm volatile (
-          "    ldi  r18, 5" "\n"
-          "1:  dec  r18"  "\n"
-          "    brne 1b" "\n"
-          "    nop" "\n"
-      );
+    switch(m_step)
+    {
+      case 0:
+        IO::write(output.step, LOW);
+        break;
 
-      return true;
+      case 1:
+        IO::write(output.step, HIGH);
+        break;
+
+      #ifdef COMPRESS_HALF_STEPS
+        case 2:
+          IO::write(output.step, LOW);
+          break;
+
+        case 3:
+          IO::write(output.step, HIGH);
+          break;
+      #endif
     }
 
-    else {
-      m_step = HIGH;
-      IO::write(output.step, HIGH);
+    // Delay 16 cycles: 1us at 16 MHz
+    asm volatile (
+        "    ldi  r18, 5" "\n"
+        "1:  dec  r18"  "\n"
+        "    brne 1b" "\n"
+        "    nop" "\n"
+    );
 
-      // Delay 16 cycles: 1us at 16 MHz
-      asm volatile (
-          "    ldi  r18, 5" "\n"
-          "1:  dec  r18"  "\n"
-          "    brne 1b" "\n"
-          "    nop" "\n"
-      );
-
-      return false;
-    }
+    return (! m_step);
   }
 };
 

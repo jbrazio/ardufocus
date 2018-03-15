@@ -26,6 +26,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "stepper.h"
 #include "lookuptable.h"
 

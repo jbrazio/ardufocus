@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "macro.h"
 #include "struct.h"
 #include "lookuptable.h"

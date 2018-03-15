@@ -25,6 +25,9 @@
 
 #include <avr/interrupt.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "macro.h"
 #include "log.h"
 

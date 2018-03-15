@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "version.h"
+#include "config.h"
+
 struct stepper_position_t
 {
   bool moving;

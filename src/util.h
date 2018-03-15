@@ -24,7 +24,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "version.h"
 #include "config.h"
+
 #include "macro.h"
 
 namespace util

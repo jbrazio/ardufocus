@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "hal.h"
 #include "macro.h"
 

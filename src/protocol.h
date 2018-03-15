@@ -26,10 +26,12 @@
 
 #include <avr/wdt.h>
 
+#include "version.h"
+#include "config.h"
+
 #include "log.h"
 #include "util.h"
 #include "analog.h"
-#include "conditionals.h"
 
 extern float g_ambient;
 extern MOTOR_DRIVER g_motor1;

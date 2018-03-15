@@ -83,6 +83,14 @@
 // cool. When disabling this flag make sure your motor does not overheat.
 #define MOTOR_SLEEP_WHEN_IDLE
 
+// When active each two half-steps will increase one unit on the step counter
+// thus making distance-per-step constant between the two stepping modes, full
+// and half.
+//
+// Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
+// verify if the overall system accuracy increases.
+//#define COMPRESS_HALF_STEPS
+
 // ----------------------------------------------------------------------------
 // Temperature sensor configuration -------------------------------------------
 // ----------------------------------------------------------------------------
@@ -92,4 +100,5 @@
 #define THERMISTOR_NOMINAL_VAL    10000.0F
 #define THERMISTOR_SERIESRESISTOR 10000.0F
 
+#include "conditionals.h"
 #endif
