@@ -54,12 +54,12 @@ void protocol::process(const char *cmd)
           break;
 
         case 'D': // Get the motor 1 speed
-          sprintf(str, "%02x#", g_motor1.get_speed());
+          sprintf(str, "%02X#", g_motor1.get_speed());
           Log::string(str);
           break;
 
         case 'H': // Get the motor 1 step
-          sprintf(str, "%02x#", g_motor1.get_step_mode());
+          sprintf(str, "%02X#", g_motor1.get_step_mode());
           Log::string(str);
           break;
 
@@ -68,17 +68,17 @@ void protocol::process(const char *cmd)
           break;
 
         case 'N': // Get the new motor 1 position
-          sprintf(str, "%04x#", g_motor1.get_target_position());
+          sprintf(str, "%04X#", g_motor1.get_target_position());
           Log::string(str);
           break;
 
         case 'P': // Get current motor 1 positon
-          sprintf(str, "%04x#", g_motor1.get_current_position());
+          sprintf(str, "%04X#", g_motor1.get_current_position());
           Log::string(str);
           break;
 
         case 'T': // Get the current temperature
-          sprintf(str, "%04x#", static_cast<int16_t>(util::steinhart(g_ambient)) << 1);
+          sprintf(str, "%04X#", static_cast<int16_t>(util::steinhart(g_ambient)) << 1);
           Log::string(str);
           break;
 
