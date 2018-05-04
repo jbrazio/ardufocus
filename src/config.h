@@ -71,7 +71,7 @@
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
-//#define INVERT_MOTOR_DIR
+#define INVERT_MOTOR_DIR
 
 // When active ardufocus will apply a trapezoidal acceleration profile to the
 // motor's speed, this feature is EXPERIMENTAL. The objective is to help the
@@ -81,7 +81,7 @@
 // When active ardufocus will cut the stepper motor current when idle, in theory
 // this could lead to less accuracy betwen movements but will keep the motor
 // cool. When disabling this flag make sure your motor does not overheat.
-#define MOTOR_SLEEP_WHEN_IDLE
+//#define MOTOR_SLEEP_WHEN_IDLE
 
 // When active each two half-steps will increase one unit on the step counter
 // thus making distance-per-step constant between the two stepping modes, full
@@ -89,7 +89,7 @@
 //
 // Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
 // verify if the overall system accuracy increases.
-//#define COMPRESS_HALF_STEPS
+#define COMPRESS_HALF_STEPS
 
 // ----------------------------------------------------------------------------
 // Temperature sensor configuration -------------------------------------------
