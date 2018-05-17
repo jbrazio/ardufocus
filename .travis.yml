@@ -26,6 +26,7 @@ cache:
         - "~/.platformio"
 
 install:
+    - cd ardufocus
     - pip install -U platformio
 
 script:
