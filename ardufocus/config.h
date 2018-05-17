@@ -91,6 +91,15 @@
 // verify if the overall system accuracy increases.
 //#define COMPRESS_HALF_STEPS
 
+
+// According to the Moonlite protocol the temperature probe should only be read
+// when the command ":C#" is received but some applications, such as SGP, seems
+// not to respect this and only call the get temperature command ":GT#" which
+// means the temperature will never get updated and the last value is always
+// returned, either it is valid or not. Enabling the following option will force
+// the temperature gathering process on every temperature read command.
+// #define START_TEMP_CONVERSION_ON_EVERY_GET
+
 // ----------------------------------------------------------------------------
 // Temperature sensor configuration -------------------------------------------
 // ----------------------------------------------------------------------------

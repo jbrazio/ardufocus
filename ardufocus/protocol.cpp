@@ -78,6 +78,10 @@ void protocol::process(const char *cmd)
           break;
 
         case 'T': // Get the current temperature
+          #ifdef START_TEMP_CONVERSION_ON_EVERY_GET
+            Analog::read(THERMISTOR_ADC_CHANNEL);
+          #endif
+
           sprintf(str, "%04X#", static_cast<int16_t>(util::steinhart(g_ambient)) << 1);
           Log::string(str);
           break;
