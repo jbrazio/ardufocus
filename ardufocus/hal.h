@@ -30,36 +30,15 @@
 
 #include "macro.h"
 
-#if defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168__) || defined (__AVR_ATmega168P__)
-  enum hal_timer_t
-  {
-    NOTIMER = 0,
-    TIMER0A,
-    TIMER0B,
-    TIMER1A,
-    TIMER1B,
-    TIMER2A,
-    TIMER2B
-  };
+enum hal_register_headers_t { HALDIR, HALOUT, HALIN, HALTMR, HALPIN };
+enum hal_non_existent_t     { NOT_A_PIN = 0, NOT_A_PORT = 0 };
 
-  enum hal_pin_map_t
-  {
-    PM_DIR = 0,
-    PM_OUTPUT,
-    PM_INPUT,
-    PM_TIMER,
-    PM_MASK,
-  };
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega168P__)
 
-  enum hal_non_existent_t
-  {
-    NOT_A_PIN = 0,
-    NOT_A_PORT = 0
-  };
+  enum hal_timer_t { NOTIMER = 0, TIMER0A, TIMER0B, TIMER1A, TIMER1B, TIMER2A, TIMER2B };
 
-  const uint16_t pin_map[][5] PROGMEM =
-  {
-    /* pin,              PM_DIR,         PM_OUTPUT,         PM_INPUT, PM_TIMER, PM_MASK */
+  const uint16_t pin_map[][5] PROGMEM = {
+    /* pin,              HALDIR,         HALOUT,         HALIN, HALTMR, HALPIN */
     /*  0 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(0) },
     /*  1 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(1) },
     /*  2 */ { (uint16_t) &DDRD, (uint16_t) &PORTD, (uint16_t) &PIND,  NOTIMER,  bit(2) },
@@ -84,8 +63,11 @@
     /* 19 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(5) },
   };
 
+#elif defined (__AVR_ATmega328PB__)
+  #error FIXME
 #else
-  #error AVR ATmega328/128[P] not found, aborting
+  #error No supported platform found
+  #error Please file a bug at https://github.com/jbrazio/ardufocus/issues
 #endif
 
 #endif

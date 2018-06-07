@@ -32,6 +32,8 @@
 #define LOW 0
 #define HIGH 255
 
+typedef uint8_t pin_t;
+
 class IO
 {
   /**
@@ -44,9 +46,9 @@ class IO
 
   public:
     static inline void set_as_input(const uint8_t &pin) {
-      const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
-      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_DIR]));
-      volatile uint8_t *port = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_OUTPUT]));
+      const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
+      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALDIR]));
+      volatile uint8_t *port = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALOUT]));
 
       CRITICAL_SECTION_START
       *mode &= ~mask;
@@ -55,8 +57,8 @@ class IO
     }
 
     static inline void set_as_output(const uint8_t &pin) {
-      const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
-      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_DIR]));
+      const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
+      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALDIR]));
 
       CRITICAL_SECTION_START
       *mode |= mask;
@@ -64,13 +66,13 @@ class IO
     }
 
     static inline void write(const uint8_t &pin, const uint8_t &value) {
-      const uint8_t timer = pgm_read_byte(&pin_map[pin][PM_TIMER]);
+      const uint8_t timer = pgm_read_byte(&pin_map[pin][HALTMR]);
 
       // Deals with digital signals i.e. LOW and HIGH
       if(value == LOW || value == HIGH) {
 
-        const uint8_t     mask = pgm_read_word(&pin_map[pin][PM_MASK]);
-        volatile uint8_t *port = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][PM_OUTPUT]) );
+        const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
+        volatile uint8_t *port = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][HALOUT]) );
 
         // Turns off any active PWM output on the pin
         switch(timer)
@@ -106,9 +108,9 @@ class IO
     }
 
     static inline uint8_t read(const uint8_t &pin) {
-        const uint8_t     mask  = pgm_read_word(&pin_map[pin][PM_MASK]);
-        const uint8_t     timer = pgm_read_byte(&pin_map[pin][PM_TIMER]);
-        volatile uint8_t *port  = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][PM_INPUT]));
+        const uint8_t     mask  = pgm_read_word(&pin_map[pin][HALPIN]);
+        const uint8_t     timer = pgm_read_byte(&pin_map[pin][HALTMR]);
+        volatile uint8_t *port  = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALIN]));
 
         // If the pin that support PWM output, we need to turn it off
         // before getting a digital reading.
