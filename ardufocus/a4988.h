@@ -29,6 +29,8 @@
 #include "stepper.h"
 #include "io.h"
 
+#define MOTOR_DRIVER a4988
+
 class a4988: public stepper
 {
 protected:

@@ -17,18 +17,13 @@
  *
  */
 
-#ifndef __CONDITIONALS_H__
-#define __CONDITIONALS_H__
-
-#include "version.h"
-#include "config.h"
+#ifndef __ASSERT_H__
+#define __ASSERT_H__
 
 #ifdef USE_ULN2003_DRIVER
   #include "uln2003.h"
-  #define MOTOR_DRIVER uln2003
 #else
   #include "a4988.h"
-  #define MOTOR_DRIVER a4988
 #endif
 
 #ifdef ENABLE_REMOTE_RESET

@@ -109,5 +109,5 @@
 #define THERMISTOR_NOMINAL_VAL    10000.0F
 #define THERMISTOR_SERIESRESISTOR 10000.0F
 
-#include "conditionals.h"
+#include "assert.h"
 #endif

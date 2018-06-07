@@ -32,6 +32,8 @@
 #include "stepper.h"
 #include "lookuptable.h"
 
+#define MOTOR_DRIVER uln2003
+
 class uln2003: public stepper
 {
 protected:
