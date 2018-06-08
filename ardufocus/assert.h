@@ -20,14 +20,22 @@
 #ifndef __ASSERT_H__
 #define __ASSERT_H__
 
-#ifdef USE_ULN2003_DRIVER
+#if defined(USE_A4988_DRIVER)
+  #include "a4988.h"
+#elif defined(USE_ULN2003_DRIVER)
   #include "uln2003.h"
 #else
-  #include "a4988.h"
+  #error No stepper driver selected.
+  #error Please review the config.h file.
+#endif
+
+#ifndef MOTOR1_PINOUT
+  #error A pinout must be defined for the motor.
+  #error Please review the config.h file.
 #endif
 
 #ifdef ENABLE_REMOTE_RESET
-  #warning Remote reset is enabled, make sure your bootloader is updated
+  #warning Remote reset is enabled, make sure your bootloader is updated !
 #endif
 
 #endif

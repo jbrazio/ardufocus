@@ -57,25 +57,26 @@
 #define USE_A4988_DRIVER
 //#define USE_ULN2003_DRIVER
 
-// Pin definition
-//#define MOTOR1_PINOUT 0x0f, &PORTB // Example for ULN2003 (pin D8 to D11)
-
-//                      DIR, STEP, SLEEP, MS1  // Example for A4988 and alike
-//#define MOTOR1_PINOUT   6,   11,    10,   7  // (short pinout)
-
-//                    MS1, MS2, MS3, SLEEP, STEP, DIR  // Example for A4988 and alike
-#define MOTOR1_PINOUT   7,   8,   9,    10,   11,  12  // (no RST nor ENA pib)
-
-//                      ENA, MS1, MS2, MS3, RESET, SLEEP, STEP, DIR  // Example for A4988 and alike
-//#define MOTOR1_PINOUT   5,   6,   7,   8,     9,     10,   11, 12  // (full pinout)
+// Driver pinout definition
+// Define bellow the pinout for your specific driver.
+//
+// Example for ULN2003 driver board
+//
+//                     IN1, IN2, IN3, IN4
+//#define MOTOR1_PINOU   5,   4,   3,   2
+//
+// Example for A4988 driver board
+//
+//                      MS1, MS2, MS3, SLEEP, STEP, DIR
+#define MOTOR1_PINOUT     7,   8,   9,    10,   11,  12
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
 //#define INVERT_MOTOR_DIR
 
-// When active ardufocus will apply a trapezoidal acceleration profile to the
-// motor's speed, this feature is EXPERIMENTAL. The objective is to help the
-// system to cope with heavier focuser loads such as FF + FW + CCD combos.
+// When active ardufocus will apply a linear acceleration profile to the motor's
+// speed. The objective is to help the system cope with heavier loads such as
+// FF + FW + CCD combos.
 //#define USE_LINEAR_ACCEL
 
 // When active ardufocus will cut the stepper motor current when idle, in theory
@@ -109,5 +110,12 @@
 #define THERMISTOR_NOMINAL_VAL    10000.0F
 #define THERMISTOR_SERIESRESISTOR 10000.0F
 
-#include "assert.h"
+
+// ----------------------------------------------------------------------------
+// DO NOT EDIT ANYTHING BELLOW THIS HEADER ------------------------------------
+// ----------------------------------------------------------------------------
+#ifndef __DO_NOT_ASSERT__
+  #include "assert.h"
+#endif
+
 #endif

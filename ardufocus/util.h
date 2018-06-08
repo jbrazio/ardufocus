@@ -19,6 +19,7 @@
 
 #ifndef __UTIL_H__
 #define __UTIL_H__
+#define __DO_NOT_ASSERT__
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -27,12 +28,31 @@
 #include "version.h"
 #include "config.h"
 
-#include "macro.h"
-
 namespace util
 {
   float steinhart(const uint16_t& raw);
   uint16_t hexstr2long(const char* str);
+
+  inline void delay_1us()
+  {
+    // Delay 16 cycles: 1us at 16 MHz
+    asm volatile (
+      "    ldi  r18, 5" "\n"
+      "1:  dec  r18"  "\n"
+      "    brne 1b" "\n"
+      "    nop" "\n"
+    );
+  }
+
+  inline void delay_250us()
+  {
+    // Delay 4 cycles: 250 ns at 16 MHz
+    asm volatile (
+      "    rjmp 1f" "\n"
+      "1:  rjmp 2f" "\n"
+      "2:"  "\n"
+    );
+  }
 };
 
 #endif

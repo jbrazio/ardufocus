@@ -25,38 +25,35 @@
 
 namespace lookup
 {
-  const uint8_t full_step_table_sz = 4;
-  const uint8_t full_step_table[full_step_table_sz] PROGMEM = {
-        // #  DCBA
-     9, // 1 B1001
-     3, // 2 B0011
-     6, // 3 B0110
-    12  // 4 B1100
+  const uint8_t uln2003_unipolar_full_classic_sz = 4;
+  const uint8_t uln2003_unipolar_full_classic[uln2003_unipolar_full_classic_sz] PROGMEM = {
+    //ABCD
+    0b1000, // 1
+    0b0100, // 2
+    0b0010, // 3
+    0b0001, // 4
   };
 
-  const uint8_t half_step_table_sz = 8;
-  const uint8_t half_step_table[half_step_table_sz] PROGMEM = {
-        // #  DCBA
-     9, // 1 B1001
-     1, // 2 B0001
-     3, // 3 B0011
-     2, // 4 B0010
-     6, // 5 B0110
-     4, // 6 B0100
-    12, // 7 B1100
-     8, // 8 B1000
+  const uint8_t uln2003_unipolar_full_sz = 4;
+  const uint8_t uln2003_unipolar_full[uln2003_unipolar_full_sz] PROGMEM = {
+    //ABCD
+    0b1001, // 1
+    0b1100, // 2
+    0b0110, // 3
+    0b0011, // 4
   };
 
-  const uint8_t  step_freq_table_sz = 8;
-  const uint16_t step_freq_table[step_freq_table_sz] PROGMEM = {
-      0x7D, // 500Hz
-      0xFA, // 250Hz
-     0x1F4, // 125Hz
-     0x3E0, // 63Hz
-     0x7A1, // 32Hz
-     0xF42, // 16Hz
-    0x1E84, // 8Hz
-    0x3D09  // 4Hz
+  const uint8_t uln2003_unipolar_half_sz = 8;
+  const uint8_t uln2003_unipolar_half[uln2003_unipolar_half_sz] PROGMEM = {
+    //ABCD
+    0b1000, // 1
+    0b1100, // 2
+    0b0100, // 3
+    0b0110, // 4
+    0b0010, // 5
+    0b0011, // 6
+    0b0001, // 7
+    0b1001, // 8
   };
 }
 

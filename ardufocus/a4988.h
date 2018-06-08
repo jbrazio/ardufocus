@@ -27,243 +27,41 @@
 #include "config.h"
 
 #include "stepper.h"
+#include "util.h"
 #include "io.h"
 
+#undef MOTOR_DRIVER
 #define MOTOR_DRIVER a4988
 
 class a4988: public stepper
 {
-protected:
-  const stepper_pin_t output;
-
-  uint8_t m_step = 0;
-
-public:
-  inline a4988(uint8_t const& dir, uint8_t const& step, uint8_t const& sleep, uint8_t const& ms1)
-    : output({ NOT_A_PIN, ms1, NOT_A_PIN, NOT_A_PIN, NOT_A_PIN, sleep, step, dir })
-  {
-    IO::set_as_output(output.ms1);
-    IO::set_as_output(output.sleep);
-    IO::set_as_output(output.step);
-    IO::set_as_output(output.direction);
-
-    IO::write(output.ms1,        LOW);
-    IO::write(output.step,       LOW);
-    IO::write(output.direction,  LOW);
-
-    #ifdef MOTOR_SLEEP_WHEN_IDLE
-      IO::write(output.sleep, LOW);
-    #else
-      IO::write(output.sleep, HIGH);
-    #endif
-  }
-
-  inline a4988(uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
-               uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
-    : output({ NOT_A_PIN, ms1, ms2, ms3, NOT_A_PIN, sleep, step, dir })
-  {
-    IO::set_as_output(output.ms1);
-    IO::set_as_output(output.ms2);
-    IO::set_as_output(output.ms3);
-    IO::set_as_output(output.sleep);
-    IO::set_as_output(output.step);
-    IO::set_as_output(output.direction);
-
-    IO::write(output.ms1,        LOW);
-    IO::write(output.ms2,        LOW);
-    IO::write(output.ms3,        LOW);
-    IO::write(output.step,       LOW);
-    IO::write(output.direction,  LOW);
-
-    #ifdef MOTOR_SLEEP_WHEN_IDLE
-      IO::write(output.sleep, LOW);
-    #else
-      IO::write(output.sleep, HIGH);
-    #endif
-  }
-
-  inline a4988(uint8_t const& ena, uint8_t const& ms1, uint8_t const& ms2, uint8_t const& ms3,
-               uint8_t const& reset, uint8_t const& sleep, uint8_t const& step, uint8_t const& dir)
-    : output({ ena, ms1, ms2, ms3, reset, sleep, step, dir })
-  {
-    IO::set_as_output(output.enable);
-    IO::set_as_output(output.ms1);
-    IO::set_as_output(output.ms2);
-    IO::set_as_output(output.ms3);
-    IO::set_as_output(output.reset);
-    IO::set_as_output(output.sleep);
-    IO::set_as_output(output.step);
-    IO::set_as_output(output.direction);
-
-    IO::write(output.enable,     LOW);
-    IO::write(output.ms1,        LOW);
-    IO::write(output.ms2,        LOW);
-    IO::write(output.ms3,        LOW);
-    IO::write(output.reset,      HIGH);
-    IO::write(output.step,       LOW);
-    IO::write(output.direction,  LOW);
-
-    #ifdef MOTOR_SLEEP_WHEN_IDLE
-      IO::write(output.sleep, LOW);
-    #else
-      IO::write(output.sleep, HIGH);
-    #endif
-  }
-
-  inline void halt()
-  {
-    stepper::halt();
-
-    m_step = 0;
-    IO::write(output.step, LOW);
-
-    // Delay 16 cycles: 1us at 16 MHz
-    asm volatile (
-        "    ldi  r18, 5" "\n"
-        "1:  dec  r18"  "\n"
-        "    brne 1b" "\n"
-        "    nop" "\n"
-    );
-
-    #ifdef MOTOR_SLEEP_WHEN_IDLE
-      IO::write(output.sleep, LOW);
-    #endif
-  }
-
-  inline void set_full_step()
-  {
-    m_mode = 0x00;
-    IO::write(output.ms1, LOW);
-    IO::write(output.ms2, LOW);
-    IO::write(output.ms3, LOW);
-
-    // Delay 4 cycles: 250 ns at 16 MHz
-    asm volatile (
-        "    rjmp 1f" "\n"
-        "1:  rjmp 2f" "\n"
-        "2:"  "\n"
-    );
-  }
-
-  inline void set_half_step()
-  {
-    m_mode = 0xFF;
-    IO::write(output.ms1, HIGH);
-    IO::write(output.ms2, LOW);
-    IO::write(output.ms3, LOW);
-
-    // Delay 4 cycles: 250 ns at 16 MHz
-    asm volatile (
-        "    rjmp 1f" "\n"
-        "1:  rjmp 2f" "\n"
-        "2:"  "\n"
-    );
-  }
-
-  inline bool step_cw()
-  {
-    switch(IO::read(output.direction))
+  public:
+    struct pinout_t
     {
-      case LOW:
-        IO::write(output.direction, HIGH);
+      uint8_t ms1;
+      uint8_t ms2;
+      uint8_t ms3;
+      uint8_t sleep;
+      uint8_t step;
+      uint8_t direction;
+    };
 
-        // Delay 4 cycles: 250 ns at 16 MHz
-        asm volatile (
-            "    rjmp 1f" "\n"
-            "1:  rjmp 2f" "\n"
-            "2:"  "\n"
-        );
+  protected:
+    uint8_t m_step = 0;
+    const pinout_t m_pinout;
 
-      case HIGH:
-        ;
+  public:
+    inline a4988(pinout_t const& pinout) : m_pinout({ pinout }) { init(); }
 
-      default:
-        return step();
-    }
-  }
+    virtual void init();
+    virtual void halt();
+    virtual void set_full_step();
+    virtual void set_half_step();
+    virtual bool step_cw();
+    virtual bool step_ccw();
 
-  inline bool step_ccw()
-  {
-    switch(IO::read(output.direction))
-    {
-      case LOW:
-        ;
-
-      case HIGH:
-        IO::write(output.direction, LOW);
-
-        // Delay 4 cycles: 250 ns at 16 MHz
-        asm volatile (
-            "    rjmp 1f" "\n"
-            "1:  rjmp 2f" "\n"
-            "2:"  "\n"
-        );
-
-      default:
-        return step();
-    }
-  }
-
-private:
-  inline bool step()
-  {
-    #ifdef MOTOR_SLEEP_WHEN_IDLE
-    if (! IO::read(output.sleep)) {
-      IO::write(output.sleep, HIGH);
-
-      // Delay 4 cycles: 250 ns at 16 MHz
-      asm volatile (
-          "    rjmp 1f" "\n"
-          "1:  rjmp 2f" "\n"
-          "2:"  "\n"
-      );
-    }
-    #endif
-
-    /*
-     * The A4988 driver will physically step the motor when
-     * transitioning from a HIGH to LOW signal, the internal
-     * position counter should only be updated under this
-     * condition.
-     */
-
-    #ifdef COMPRESS_HALF_STEPS
-      ++m_step %= ((m_mode) ? 4 : 2);
-    #else
-      ++m_step %= 2;
-    #endif
-
-    switch(m_step)
-    {
-      case 0:
-        IO::write(output.step, LOW);
-        break;
-
-      case 1:
-        IO::write(output.step, HIGH);
-        break;
-
-      #ifdef COMPRESS_HALF_STEPS
-        case 2:
-          IO::write(output.step, LOW);
-          break;
-
-        case 3:
-          IO::write(output.step, HIGH);
-          break;
-      #endif
-    }
-
-    // Delay 16 cycles: 1us at 16 MHz
-    asm volatile (
-        "    ldi  r18, 5" "\n"
-        "1:  dec  r18"  "\n"
-        "    brne 1b" "\n"
-        "    nop" "\n"
-    );
-
-    return (! m_step);
-  }
+  private:
+    bool step();
 };
 
 #endif

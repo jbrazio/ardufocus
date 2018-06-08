@@ -17,9 +17,6 @@
  *
  */
 
-// Some code was inspired bt the HotStepper Arduino library
-// (c) Ben Pirt <https://github.com/bjpirt>
-
 #ifndef __ULN2003_H__
 #define __ULN2003_H__
 
@@ -29,91 +26,45 @@
 #include "version.h"
 #include "config.h"
 
-#include "stepper.h"
 #include "lookuptable.h"
+#include "stepper.h"
+#include "macro.h"
+#include "util.h"
+#include "io.h"
 
+#undef MOTOR_DRIVER
 #define MOTOR_DRIVER uln2003
 
 class uln2003: public stepper
 {
-protected:
-  const uint8_t m_pinmask;
-  uint8_t* const m_port;
-  volatile int8_t m_phase = 0;
+  public:
+    struct pinout_t
+    {
+      pin_t A,
+            B,
+            C,
+            D;
+    };
 
-public:
-  inline uln2003(uint8_t m, volatile uint8_t* p)
-    : m_pinmask(m), m_port((uint8_t*) p)
-  {
-    if      (m_port == &PORTB) DDRB |= m_pinmask;
-    else if (m_port == &PORTC) DDRC |= m_pinmask;
-    else if (m_port == &PORTD) DDRD |= m_pinmask;
-  }
+  protected:
+    const pinout_t m_pinout;
 
-  inline void halt()
-  {
-    stepper::halt();
+    volatile  int8_t m_sequence;
+             uint8_t m_stepping_sz;
+    const    uint8_t *p_stepping_tbl;
 
-    uint8_t output = (uint8_t)* m_port;
-    output &= ~m_pinmask;
-    output |= pad(0x00, m_pinmask);
-    *m_port = output;
-  }
+  public:
+    inline uln2003(pinout_t const& pinout) : m_pinout({ pinout }) { init(); }
 
-  inline void set_full_step()
-  {
-    // not implemented
-  }
+    virtual void init();
+    virtual void halt();
+    virtual void set_full_step();
+    virtual void set_half_step();
+    virtual bool step_cw();
+    virtual bool step_ccw();
 
-  inline void set_half_step()
-  {
-    // not implemented
-  }
-
-  inline bool step_cw()
-  {
-    step();
-    ++m_phase;
-    if (m_phase > (lookup::full_step_table_sz -1)) { m_phase = 0; }
-    return true;
-  }
-
-  inline bool step_ccw()
-  {
-    step();
-    --m_phase;
-    if (m_phase < 0) { m_phase = (lookup::full_step_table_sz -1); }
-    return true;
-  }
-
-private:
-  inline void step()
-  {
-    const uint8_t next_step = pgm_read_byte_near(lookup::full_step_table + m_phase);
-    uint8_t output = (uint8_t)* m_port;
-    output &= ~m_pinmask;
-    output |= pad(next_step, m_pinmask);
-    *m_port = output;
-  }
-
-private:
-  inline uint8_t pad(uint8_t input, uint8_t mask)
-  {
-    uint8_t output = 0;
-    for (char i = 0; i < 8; i++) {
-      if ((mask & 1)) {
-        if (input & 1) output |= 0x80;
-        else output           &= 0x7f;
-        input >>= 1;
-      }
-
-      if (i < 7) {
-        output >>= 1;
-        mask   >>= 1;
-      }
-    }
-    return output;
-  }
+  private:
+    void step();
 };
 
 #endif

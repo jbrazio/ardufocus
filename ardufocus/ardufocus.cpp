@@ -23,7 +23,7 @@
 // Globals ------------------------------------------------------------------
 // --------------------------------------------------------------------------
 float g_ambient = 0.0F;
-MOTOR_DRIVER g_motor1(MOTOR1_PINOUT);
+MOTOR_DRIVER g_motor1({ MOTOR1_PINOUT });
 
 int main(void)
 {
@@ -48,17 +48,19 @@ int main(void)
   // --------------------------------------------------------------------------
   // Timer1 ISR init routine --------------------------------------------------
   // --------------------------------------------------------------------------
-  // set output compare register A to 250 Hz
-  OCR1A = 0xFA;
+  TCCR1B = 0; TIMSK1 = 0;
 
-  // set waveform generation mode to CTC
+  // set waveform generation mode to CTC, top OCR1A (D9, D10)
   TCCR1B |= bit(WGM12);
 
-  // set clock select to 256 (from prescaler)
-  TCCR1B |= bit(CS12);
+  // set clock select to clk/64
+  TCCR1B |= bit(CS11) | bit(CS10);
 
-  // set output compare A match interrupt enable
+  // output Compare A Match Interrupt Enable
   TIMSK1 |= bit(OCIE1A);
+
+  // sets the Output Compare Register values
+  //OCR1A = 0x32; // (5kHz)
 
 
   // --------------------------------------------------------------------------

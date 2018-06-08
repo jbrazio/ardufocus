@@ -18,6 +18,7 @@
  */
 
 #include "util.h"
+#include "macro.h"
 
 float util::steinhart(const uint16_t& raw)
 {
