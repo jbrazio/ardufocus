@@ -28,8 +28,6 @@ void a4988::init()
 {
   stepper::init();
 
-  OCR1A = 0x32; // (5kHz)
-
   IO::set_as_output(m_pinout.ms1);
   IO::set_as_output(m_pinout.ms2);
   IO::set_as_output(m_pinout.ms3);

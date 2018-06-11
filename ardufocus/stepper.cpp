@@ -26,9 +26,20 @@
  */
 void stepper::init()
 {
-  m_mode    = 0;
-  m_speed   = 2;
-  m_counter = 0;
+  m_mode = 0;
+
+  CRITICAL_SECTION_START
+    m_speed   = 2;
+    m_counter = 0;
+
+    OCR1A =
+      #ifdef HAS_ACCELERATION
+        MIN_ISR_FREQ
+      #else
+        MAX_ISR_FREQ
+      #endif
+        ;
+  CRITICAL_SECTION_END
 }
 
 
@@ -40,7 +51,7 @@ void stepper::init()
 void stepper::move()
 {
   CRITICAL_SECTION_START
-  m_position.moving = true;
+    m_position.moving = true;
   CRITICAL_SECTION_END
 }
 
@@ -53,8 +64,9 @@ void stepper::move()
 bool stepper::is_moving()
 {
   CRITICAL_SECTION_START
-  const bool b = (m_position.moving);
+    const bool b = (m_position.moving);
   CRITICAL_SECTION_END
+
   return b;
 }
 
@@ -67,9 +79,17 @@ bool stepper::is_moving()
 void stepper::halt()
 {
   CRITICAL_SECTION_START
-  m_position.target = m_position.current;
-  m_position.moving = false;
-  m_counter         = 0;
+    m_position.target = m_position.current;
+    m_position.moving = false;
+    m_counter         = 0;
+
+    OCR1A =
+      #ifdef HAS_ACCELERATION
+        MIN_ISR_FREQ
+      #else
+        MAX_ISR_FREQ
+      #endif
+        ;
   CRITICAL_SECTION_END
 }
 
@@ -81,7 +101,11 @@ void stepper::halt()
  */
 uint16_t stepper::get_current_position()
 {
-  return m_position.current;
+  CRITICAL_SECTION_START
+    const uint16_t c = m_position.current;
+  CRITICAL_SECTION_END
+
+  return c;
 }
 
 
@@ -93,8 +117,8 @@ uint16_t stepper::get_current_position()
 void stepper::set_current_position(const uint16_t& target)
 {
   CRITICAL_SECTION_START
-  m_position.current  = target;
-  m_position.target   = target;
+    m_position.current = target;
+    m_position.target  = target;
   CRITICAL_SECTION_END
 }
 
@@ -106,7 +130,11 @@ void stepper::set_current_position(const uint16_t& target)
  */
 uint16_t stepper::get_speed()
 {
-  return m_speed;
+  CRITICAL_SECTION_START
+    const uint16_t s = m_speed;
+  CRITICAL_SECTION_END
+
+  return s;
 }
 
 
@@ -118,7 +146,7 @@ uint16_t stepper::get_speed()
 void stepper::set_speed(const uint16_t& target)
 {
   CRITICAL_SECTION_START
-  m_speed = target;
+    m_speed = target;
   CRITICAL_SECTION_END
 }
 
@@ -130,7 +158,11 @@ void stepper::set_speed(const uint16_t& target)
  */
 uint16_t stepper::get_target_position()
 {
-  return m_position.target;
+  CRITICAL_SECTION_START
+    const uint16_t t = m_position.target;
+  CRITICAL_SECTION_END
+
+  return t;
 }
 
 
@@ -142,29 +174,32 @@ uint16_t stepper::get_target_position()
 void stepper::set_target_position(const uint16_t& target)
 {
   CRITICAL_SECTION_START
+    m_position.target = target;
 
-  m_position.target = target;
+    #ifdef HAS_ACCELERATION
+      m_position.relative = 0;
+      m_position.distance = labs((int32_t)m_position.current - target);
 
-  #ifdef USE_LINEAR_ACCEL
-  /*
-    m_position.last = m_position.current;
+      if (m_position.distance >= ACCEL_MIN_STEPS)
+      {
+        #if defined(USE_LINEAR_ACCEL)
+          m_position.easein  = m_position.distance >> 1;
+          m_position.easeout = m_position.easein;
 
-    if (m_position.target > m_position.current) {
-      m_position.delta = m_position.target - m_position.last;
-    } else {
-      m_position.delta = m_position.last - m_position.target;
-    }
-
-    if (m_position.delta < 200 ) {
-      m_position.accelin = m_position.delta >> 1;
-    } else {
-      m_position.accelin = m_position.delta >> 6;
-    }
-
-    m_position.accelout = m_position.delta - m_position.accelin;
-    */
-  #endif
-
+        #elif defined(USE_TRAPEZOID_ACCEL) || defined(USE_SMOOTHSTEP_ACCEL)
+          if (m_position.distance < (ACCEL_DURATION << 1))
+          {
+            m_position.easein  = m_position.distance >> 1;
+            m_position.easeout = m_position.easein;
+          }
+          else
+          {
+            m_position.easein  = ACCEL_DURATION;
+            m_position.easeout = m_position.distance - ACCEL_DURATION;
+          }
+        #endif
+      }
+    #endif
   CRITICAL_SECTION_END
 }
 
@@ -176,57 +211,83 @@ void stepper::set_target_position(const uint16_t& target)
  */
 void stepper::tick()
 {
-  if (m_position.moving) {
-    // Set the stepping frequency
-    if((m_counter++) % m_speed != 0) { return; }
+  if (! m_position.moving) { return; }          // Movement guard
+  if((m_counter++) % m_speed != 0) { return; }  // Stepping frequency guard
 
-    #ifdef USE_LINEAR_ACCEL
-      #error USE_LINEAR_ACCEL feature is currently not supported.
-    /*
-      // Calculates the current relative position
-      const uint16_t pos = (m_position.target < m_position.current)
-        ? m_position.last - m_position.current
-        : m_position.current - m_position.last;
-
-      // Acceleration control
-      uint16_t min = lookup::step_freq_table[5],
-               max = OCR1A;
-
-      if (pos <= m_position.accelin) {
-        OCR1A = map(pos, 0, m_position.accelin, min, max);
-      }
-
-      else if (pos >= m_position.accelout) {
-        OCR1A = map(pos, m_position.accelout, m_position.delta, max, min);
-      }
-    */
-    #endif
-
-    // Move outwards
-    if (m_position.target > m_position.current) {
-      if (
-        #ifdef INVERT_MOTOR_DIR
-          step_cw()
-        #else
-          step_ccw()
-        #endif
-      ) { ++m_position.current; }
-    }
-
-    // Move inwards
-    else if (m_position.target < m_position.current) {
-      if (
-        #ifdef INVERT_MOTOR_DIR
-          step_ccw()
-        #else
-          step_cw()
-        #endif
-      ) { --m_position.current; }
-    }
-
-    // Stop movement
-    else { halt(); }
+  // Move outwards
+  if (m_position.target > m_position.current) {
+    if (
+      #ifdef INVERT_MOTOR_DIR
+        step_cw()
+      #else
+        step_ccw()
+      #endif
+    ) { update_position(1); }
   }
+
+  // Move inwards
+  else if (m_position.target < m_position.current) {
+    if (
+      #ifdef INVERT_MOTOR_DIR
+        step_ccw()
+      #else
+        step_cw()
+      #endif
+    ) { update_position(-1); }
+  }
+
+  // Stop movement
+  else { halt(); }
+}
+
+
+#ifdef HAS_ACCELERATION
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   *
+   */
+  void stepper::update_freq()
+  {
+    if (m_position.distance >= ACCEL_MIN_STEPS)
+    {
+      #if defined(USE_LINEAR_ACCEL)
+        const float s = (m_position.relative <= m_position.easein)
+          ? m_position.relative : m_position.distance - m_position.relative;
+        const float f = map(s, 0, m_position.easein, 0.0, 1.0);
+
+      #elif defined(USE_TRAPEZOID_ACCEL)
+        const float s = (m_position.relative <= m_position.easein)
+          ? m_position.relative : (m_position.relative >= m_position.easeout)
+          ? m_position.distance - m_position.relative : ACCEL_DURATION;
+        const float f = map(s, 0, ACCEL_DURATION, 0.0, 1.0);
+
+      #elif defined(USE_SMOOTHSTEP_ACCEL)
+        const float f = util::smootheststep(0, m_position.easein, m_position.relative) *
+          (1.0 - util::smootheststep(m_position.easeout, m_position.distance, m_position.relative));
+      #endif
+
+      OCR1A = util::lerp(MIN_ISR_FREQ, MAX_ISR_FREQ, f);
+
+    } else { OCR1A = MIN_ISR_FREQ; }
+  }
+#endif
+
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
+void stepper::update_position(const int8_t &direction)
+{
+  CRITICAL_SECTION_START
+    m_position.current += direction;          // Update the global position
+
+    #ifdef HAS_ACCELERATION
+      m_position.relative += abs(direction);  // Update the relative position
+      update_freq();                          // Update the stepping frequency
+    #endif
+  CRITICAL_SECTION_END
 }
 
 

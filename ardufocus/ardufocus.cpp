@@ -48,19 +48,22 @@ int main(void)
   // --------------------------------------------------------------------------
   // Timer1 ISR init routine --------------------------------------------------
   // --------------------------------------------------------------------------
-  TCCR1B = 0; TIMSK1 = 0;
+  TCCR1A = 0; TCCR1B = 0; TIMSK1 = 0; OCR1A = 0; OCR1B = 0; TCNT1 = 0;
+
+  // Normal port operation, no output
+  TCCR1A &= ~(bit(COM1A1) | bit(COM1A0));
 
   // set waveform generation mode to CTC, top OCR1A (D9, D10)
   TCCR1B |= bit(WGM12);
 
-  // set clock select to clk/64
-  TCCR1B |= bit(CS11) | bit(CS10);
+  // set clock select to clk/8
+  TCCR1B |= bit(CS11);
 
   // output Compare A Match Interrupt Enable
   TIMSK1 |= bit(OCIE1A);
 
   // sets the Output Compare Register values
-  //OCR1A = 0x32; // (5kHz)
+  OCR1A = MAX_ISR_FREQ;
 
 
   // --------------------------------------------------------------------------

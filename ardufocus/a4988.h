@@ -30,20 +30,13 @@
 #include "util.h"
 #include "io.h"
 
-#undef MOTOR_DRIVER
-#define MOTOR_DRIVER a4988
-
 class a4988: public stepper
 {
   public:
     struct pinout_t
     {
-      uint8_t ms1;
-      uint8_t ms2;
-      uint8_t ms3;
-      uint8_t sleep;
-      uint8_t step;
-      uint8_t direction;
+      pin_t ms1, ms2, ms3;
+      pin_t sleep, step, direction;
     };
 
   protected:

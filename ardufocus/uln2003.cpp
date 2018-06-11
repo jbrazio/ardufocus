@@ -31,8 +31,6 @@ void uln2003::init()
   m_sequence = 0;
   set_full_step();
 
-  OCR1A = 0xFA; // (1kHz)
-
   IO::set_as_output(m_pinout.A);
   IO::set_as_output(m_pinout.B);
   IO::set_as_output(m_pinout.C);

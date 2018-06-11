@@ -19,7 +19,6 @@
 
 #ifndef __STEPPER_H__
 #define __STEPPER_H__
-#define __DO_NOT_ASSERT__
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -27,21 +26,43 @@
 #include "version.h"
 #include "config.h"
 
+#include "util.h"
 #include "macro.h"
-#include "struct.h"
 #include "lookuptable.h"
 
 class stepper
 {
+  public:
+    struct position_t
+    {
+      bool moving;      // When set to true it will start the movement
+      uint16_t current, // Absolution position
+               target;  // Target value for the step counter
+
+      #ifdef HAS_ACCELERATION
+      uint16_t distance,  // Move distance
+               relative,  // Relative position
+               easein,    // Step where easein stops
+               easeout;   // Step where easeout starts
+      #endif
+    };
+
   protected:
     uint8_t m_mode;
     volatile uint16_t m_speed;
     volatile uint8_t  m_counter;
-    volatile stepper_position_t m_position = { false, 0, 0, 0, 0, 0, 0 };
+    volatile position_t m_position;
 
   public:
-
     void tick();
+
+  private:
+    #ifdef HAS_ACCELERATION
+    __attribute__((always_inline)) inline void update_freq();
+    #endif
+    __attribute__((always_inline)) inline void update_position(const int8_t&);
+
+  public:
     virtual void init();
 
     void move();

@@ -17,38 +17,15 @@
  *
  */
 
-#ifndef __STRUCT_H__
-#define __STRUCT_H__
-
-#include <stdint.h>
-#include <stdlib.h>
-
 #include "version.h"
 #include "config.h"
 
-struct stepper_position_t
-{
-  bool moving;
+#if defined(USE_A4988_DRIVER)
+  #include "a4988.h"
+  #define MOTOR_DRIVER a4988
 
-  uint16_t current,
-           target,
-           last;
-
-  uint16_t delta,
-           accelin,
-           accelout;
-};
-
-struct stepper_pin_t
-{
-  uint8_t enable;
-  uint8_t ms1;
-  uint8_t ms2;
-  uint8_t ms3;
-  uint8_t reset;
-  uint8_t sleep;
-  uint8_t step;
-  uint8_t direction;
-};
+#elif defined(USE_ULN2003_DRIVER)
+  #include "uln2003.h"
+  #define MOTOR_DRIVER uln2003
 
 #endif

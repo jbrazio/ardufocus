@@ -19,7 +19,6 @@
 
 #ifndef __UTIL_H__
 #define __UTIL_H__
-#define __DO_NOT_ASSERT__
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -28,10 +27,12 @@
 #include "version.h"
 #include "config.h"
 
+#include "macro.h"
+
 namespace util
 {
-  float steinhart(const uint16_t& raw);
-  uint16_t hexstr2long(const char* str);
+  float steinhart(const uint16_t&);
+  uint16_t hexstr2long(const char*);
 
   inline void delay_1us()
   {
@@ -53,6 +54,17 @@ namespace util
       "2:"  "\n"
     );
   }
+
+  #ifdef HAS_ACCELERATION
+    float lerp(float const&, float const&, float);
+    float clamp(float, float const&, float const&);
+
+    #ifdef USE_SMOOTHSTEP_ACCEL
+      float smoothstep(float const&, float const&, float);
+      float smootherstep(float const&, float const&, float);
+      float smootheststep(float const&, float const&, float);
+    #endif
+  #endif
 };
 
 #endif

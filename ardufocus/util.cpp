@@ -18,7 +18,6 @@
  */
 
 #include "util.h"
-#include "macro.h"
 
 float util::steinhart(const uint16_t& raw)
 {
@@ -39,3 +38,45 @@ uint16_t util::hexstr2long(const char* str)
   n = strtol(str, NULL, 16);
   return (n);
 }
+
+#ifdef HAS_ACCELERATION
+  float util::lerp(float const &edge0, float const &edge1, float x) {
+    return (1.0 - x) * edge0 + x * edge1;
+  }
+
+  float util::clamp(float x, float const &lowerlimit, float const &upperlimit)
+  {
+    if      (x < lowerlimit) x = lowerlimit;
+    else if (x > upperlimit) x = upperlimit;
+    return x;
+  }
+
+  #ifdef USE_SMOOTHSTEP_ACCEL
+    // 5th-order equation
+    float util::smoothstep(float const &edge0, float const &edge1, float x)
+    {
+      // Scale, and clamp x to 0..1 range
+      x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+      // Evaluate polynomial
+      return x * x * (3.0 - 2.0 * x);
+    }
+
+    // 5th-order equation
+    float util::smootherstep(float const &edge0, float const &edge1, float x)
+    {
+      // Scale, and clamp x to 0..1 range
+      x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+      // Evaluate polynomial
+      return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+    }
+
+    // 7th-order equation
+    float util::smootheststep(float const &edge0, float const &edge1, float x)
+    {
+      // Scale, and clamp x to 0..1 range
+      x = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+      // Evaluate polynomial
+      return x * x * x * x * ( x * (x * (- x * 20.0  + 70.0) - 84.0) + 35.0);
+    }
+  #endif
+#endif

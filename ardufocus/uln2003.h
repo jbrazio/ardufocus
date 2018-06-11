@@ -32,18 +32,12 @@
 #include "util.h"
 #include "io.h"
 
-#undef MOTOR_DRIVER
-#define MOTOR_DRIVER uln2003
-
 class uln2003: public stepper
 {
   public:
     struct pinout_t
     {
-      pin_t A,
-            B,
-            C,
-            D;
+      pin_t A, B, C, D;
     };
 
   protected:

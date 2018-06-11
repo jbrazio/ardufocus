@@ -32,6 +32,7 @@
 #include "log.h"
 #include "util.h"
 #include "analog.h"
+#include "motor1drv.h"
 
 extern float g_ambient;
 extern MOTOR_DRIVER g_motor1;

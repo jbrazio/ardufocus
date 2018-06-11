@@ -29,6 +29,7 @@
 #include "config.h"
 
 #include "analog.h"
+#include "motor1drv.h"
 
 extern MOTOR_DRIVER g_motor1;
 

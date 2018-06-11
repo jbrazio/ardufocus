@@ -23,43 +23,37 @@
 #include <avr/interrupt.h>
 #include <avr/sfr_defs.h>
 
-#ifndef CRITICAL_SECTION_START
-  #define CRITICAL_SECTION_START  const uint8_t __SREG___ = SREG; cli();
-  #define CRITICAL_SECTION_END    SREG = __SREG___;
-#endif
+#undef CRITICAL_SECTION_START
+#define CRITICAL_SECTION_START const uint8_t __SREG___ = SREG; cli();
 
-#ifndef bit
-  #define bit(b) (1UL << (b))
-#endif
+#undef CRITICAL_SECTION_END
+#define CRITICAL_SECTION_END   SREG = __SREG___;
 
-#ifndef cbi
-  #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#endif
+#undef bit
+#define bit(b) (1UL << (b))
 
-#ifndef sbi
-  #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-#endif
+#undef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 
-#ifndef min
-  #define min(a,b) ((a)<(b)?(a):(b))
-#endif
+#undef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 
-#ifndef max
-  #define max(a,b) ((a)>(b)?(a):(b))
-#endif
+#undef min
+#define min(a,b) ((a)<(b)?(a):(b))
 
-/*
-#ifndef abs
-  #define abs(x) ((x)>0?(x):-(x))
-#endif
-*/
+#undef max
+#define max(a,b) ((a)>(b)?(a):(b))
 
-#ifndef constrain
-  #define constrain(n, low, high) ((n)<(low)?(low):((n)>(high)?(high):(n)))
-#endif
+//#undef abs
+//#define abs(n) ((n)>0?(n):-(n))
 
-#ifndef asizeof
-  #define asizeof(a) (sizeof(a) / sizeof(*a))
-#endif
+#undef constrain
+#define constrain(n, l, h) ((n)<(l)?(l):((n)>(h)?(h):(n)))
+
+#undef map
+#define map(n, a, b, x, y) ((n-a)*(y-x)/(b-a)+x)
+
+#undef asizeof
+#define asizeof(a) (sizeof(a) / sizeof(*a))
 
 #endif

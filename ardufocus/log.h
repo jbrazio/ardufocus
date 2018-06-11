@@ -123,7 +123,7 @@ class Log
     // float:
     static void number(const float& n)
     {
-      Log::fraq(n, 2);
+      Log::fraq(n, 3);
     }
 
   public:

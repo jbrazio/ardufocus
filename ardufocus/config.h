@@ -31,7 +31,7 @@
 // damage your board. For more information read the README.md file or the source
 // code commit history.
 //
-// [8375767]: https://github.com/jbrazio/ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
+// [8375767]: https://github.com/jbrazio/Ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
 
 // ----------------------------------------------------------------------------
 // Remote reset ---------------------------------------------------------------
@@ -63,24 +63,51 @@
 // Example for ULN2003 driver board
 //
 //                     IN1, IN2, IN3, IN4
-//#define MOTOR1_PINOU   5,   4,   3,   2
+//#define MOTOR1_PINOUT    5,   4,   3,   2
 //
 // Example for A4988 driver board
 //
-//                      MS1, MS2, MS3, SLEEP, STEP, DIR
+//                      MS1, MS2, MS3, SLEEP,  STEP, DIR
 #define MOTOR1_PINOUT     7,   8,   9,    10,   11,  12
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
 //#define INVERT_MOTOR_DIR
 
-// When active ardufocus will apply a linear acceleration profile to the motor's
-// speed. The objective is to help the system cope with heavier loads such as
-// FF + FW + CCD combos.
+// When active Ardufocus will apply the selected acceleration profile to the
+// motor's speed. The objective is to help the system cope with heavier loads
+// such as FF + FW + CCD combos.
+//
+//
+// Linear Acceleration   Trapezoid Acceleration   Smooth Step Acceleration
+//                                                        (S-Curve)
+//
+//   |   /\                |   ___________           |     __---__
+// V |  /  \             V |  /           \        V |    -       -
+//   | /    \              | /             \         |   -         -
+//   |/      \             |/               \        |__-           -__
+//   +----------------     +-------------------      +-------------------
+//         T                        T                         T
+//
 //#define USE_LINEAR_ACCEL
+//#define USE_TRAPEZOID_ACCEL
+#define USE_SMOOTHSTEP_ACCEL
 
-// When active ardufocus will cut the stepper motor current when idle, in theory
-// this could lead to less accuracy betwen movements but will keep the motor
+// The acceleration profile, independent of the method used, has at least two
+// main periods: the ramp-up period when the motor is gaining speed and the
+// ramp-down period when the motor is losing speed. This setting controls the
+// duration of each one of those periods, the default value is 250 steps for
+// each period if left undefined.
+//#define ACCEL_DURATION 250
+
+// When acceleration control is active this setting controls the minimum
+// required number of steps on a movement for the algorithm to kick in. Any
+// movement with less steps than this will be done at minimum speed without
+// any acceleration control. The default value is 10 steps of left undefined.
+//#define ACCEL_MIN_STEPS 10
+
+// When active Ardufocus will cut the stepper motor current when idle, in theory
+// this could lead to less accuracy between movements but will keep the motor
 // cool. When disabling this flag make sure your motor does not overheat.
 #define MOTOR_SLEEP_WHEN_IDLE
 
@@ -96,7 +123,7 @@
 // According to the Moonlite protocol the temperature probe should only be read
 // when the command ":C#" is received but some applications, such as SGP, seems
 // not to respect this and only call the get temperature command ":GT#" which
-// means the temperature will never get updated and the last value is always
+// means the temperature will never get updated and the last read value is always
 // returned, either it is valid or not. Enabling the following option will force
 // the temperature gathering process on every temperature read command.
 // #define START_TEMP_CONVERSION_ON_EVERY_GET
@@ -114,8 +141,6 @@
 // ----------------------------------------------------------------------------
 // DO NOT EDIT ANYTHING BELLOW THIS HEADER ------------------------------------
 // ----------------------------------------------------------------------------
-#ifndef __DO_NOT_ASSERT__
-  #include "assert.h"
-#endif
+#include "assert.h"
 
 #endif

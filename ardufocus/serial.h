@@ -19,7 +19,6 @@
 
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
-#define __DO_NOT_ASSERT__
 
 #include <stdint.h>
 #include <stdlib.h>
