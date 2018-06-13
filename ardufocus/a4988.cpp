@@ -41,11 +41,8 @@ void a4988::init()
   IO::write(m_pinout.step,       LOW);
   IO::write(m_pinout.direction,  LOW);
 
-  #ifdef MOTOR_SLEEP_WHEN_IDLE
-    IO::write(m_pinout.sleep, LOW);
-  #else
-    IO::write(m_pinout.sleep, HIGH);
-  #endif
+  // active low logic
+  IO::write(m_pinout.sleep, (m_sleep_when_idle) ? LOW : HIGH);
 }
 
 
@@ -61,11 +58,10 @@ void a4988::halt()
   m_step = 0;
   IO::write(m_pinout.step, LOW);
 
-  util::delay_1us();
-
-  #ifdef MOTOR_SLEEP_WHEN_IDLE
+  if(m_sleep_when_idle)
     IO::write(m_pinout.sleep, LOW);
-  #endif
+
+  util::delay_2us();
 }
 
 
@@ -135,7 +131,6 @@ bool a4988::step_ccw()
 
     case HIGH:
       IO::write(m_pinout.direction, LOW);
-
       util::delay_250us();
 
     default:
@@ -151,12 +146,10 @@ bool a4988::step_ccw()
  */
 bool a4988::step()
 {
-  #ifdef MOTOR_SLEEP_WHEN_IDLE
-    if (! IO::read(m_pinout.sleep)) {
-      IO::write(m_pinout.sleep, HIGH);
-      util::delay_250us();
-    }
-  #endif
+  if(m_sleep_when_idle && !IO::read(m_pinout.sleep)) {
+    IO::write(m_pinout.sleep, HIGH);
+    util::delay_250us();
+  }
 
   /*
    * The A4988 driver will physically step the motor when
@@ -165,11 +158,8 @@ bool a4988::step()
    * condition.
    */
 
-  #ifdef COMPRESS_HALF_STEPS
-    ++m_step %= ((m_mode) ? 4 : 2);
-  #else
-    ++m_step %= 2;
-  #endif
+  if(m_compress_steps) ++m_step %= ((m_mode) ? 4 : 2);
+  else ++m_step %= 2;
 
   switch(m_step)
   {
@@ -181,17 +171,18 @@ bool a4988::step()
       IO::write(m_pinout.step, HIGH);
       break;
 
-    #ifdef COMPRESS_HALF_STEPS
-      case 2:
-        IO::write(m_pinout.step, LOW);
-        break;
+    // TODO
+    // Optimize this code, case 2-3 is only required
+    // when COMPRESS_STEPS is enabled.
+    case 2:
+      IO::write(m_pinout.step, LOW);
+      break;
 
-      case 3:
-        IO::write(m_pinout.step, HIGH);
-        break;
-    #endif
+    case 3:
+      IO::write(m_pinout.step, HIGH);
+      break;
   }
 
-  util::delay_1us();
+  util::delay_2us();
   return (! m_step);
 }

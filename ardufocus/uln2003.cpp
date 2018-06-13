@@ -52,12 +52,13 @@ void uln2003::halt()
 {
   stepper::halt();
 
-  #ifdef MOTOR_SLEEP_WHEN_IDLE
+  if(m_sleep_when_idle)
+  {
     IO::write(m_pinout.A, LOW);
     IO::write(m_pinout.B, LOW);
     IO::write(m_pinout.C, LOW);
     IO::write(m_pinout.D, LOW);
-  #endif
+  }
 }
 
 
@@ -95,8 +96,8 @@ void uln2003::set_half_step()
 bool uln2003::step_cw()
 {
   uln2003::step();
-  ++m_sequence;
-  if (m_sequence > (int8_t) (m_stepping_sz -1)) { m_sequence = 0; }
+  --m_sequence;
+  if (m_sequence < 0) { m_sequence = (m_stepping_sz -1); }
   return true;
 }
 
@@ -109,8 +110,8 @@ bool uln2003::step_cw()
 bool uln2003::step_ccw()
 {
   uln2003::step();
-  --m_sequence;
-  if (m_sequence < 0) { m_sequence = (m_stepping_sz -1); }
+  ++m_sequence;
+  if (m_sequence > (int8_t) (m_stepping_sz -1)) { m_sequence = 0; }
   return true;
 }
 

@@ -23,47 +23,50 @@
 // ----------------------------------------------------------------------------
 // SAFETY NOTICE --------------------------------------------------------------
 // ----------------------------------------------------------------------------
-
-// THIS IS VERY IMPORTANT INFORMATION
+//
+//                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//                   !! VERY IMPORTANT INFORMATION FOLLOWS !!
+//                   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //
 // The wiring of the focuser has changed since commit [8375767], you should remove
-// any physical conections between the AREF and the 3.3V pin, not doing so may
+// any physical connections between the AREF and the 3.3V pin, not doing so may
 // damage your board. For more information read the README.md file or the source
 // code commit history.
 //
-// [8375767]: https://github.com/jbrazio/Ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
+// [8375767]: https://bit.ly/2HKUXgV
 
 // ----------------------------------------------------------------------------
-// Remote reset ---------------------------------------------------------------
+// MISCELLANEOUS --------------------------------------------------------------
 // ----------------------------------------------------------------------------
-
+//
 // Remote reset is a non standard feature added to the Moonlite protocol which
 // allows you to reset the micro controller inside the focuser. Please test
 // this feature on your bench before deploying on the field. For this feature
-// to work the default bootloader must be changed otherwise the uC will enter
+// to work the default boot loader must be changed otherwise the uC will enter
 // in a infinite loop state. For more information visit the [bug report].
 //
 // [bug report]: https://github.com/arduino/Arduino/issues/4492
 //#define ENABLE_REMOTE_RESET
 
-// ----------------------------------------------------------------------------
-// Motor driver configuration -------------------------------------------------
-// ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// MOTOR #1 CONFIGURATION -----------------------------------------------------
+// ----------------------------------------------------------------------------
+//
 // You should only enable *ONE* of the following drivers
 // The ULN2003 shall be used with the unmodded version of 28BYJ-48 or any other
 // Unipolar stepper motor. The A4988 driver should be used with Bipolar stepper
 // motors or the modded version of the 28BYJ-48 (see the doc/ folder).
-#define USE_A4988_DRIVER
-//#define USE_ULN2003_DRIVER
+#define MOTOR1_USE_A4988_DRIVER
+//#define MOTOR1_USE_ULN2003_DRIVER
 
-// Driver pinout definition
-// Define bellow the pinout for your specific driver.
+// Driver pin-out definition
+// Define bellow the pin-out for your specific driver.
 //
 // Example for ULN2003 driver board
 //
 //                     IN1, IN2, IN3, IN4
-//#define MOTOR1_PINOUT    5,   4,   3,   2
+//#define MOTOR1_PINOUT    2,   3,   4,   5
 //
 // Example for A4988 driver board
 //
@@ -72,8 +75,25 @@
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
-//#define INVERT_MOTOR_DIR
+//#define MOTOR1_INVERT_DIRECTION
 
+// When active Ardufocus will cut the stepper motor current when idle, in theory
+// this could lead to less accuracy between movements but will keep the motor
+// cool. When disabling this flag make sure your motor does not overheat.
+#define MOTOR1_SLEEP_WHEN_IDLE
+
+// When active each two half-steps will increase one unit on the step counter
+// thus making distance-per-step constant between the two stepping modes, full
+// and half.
+//
+// Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
+// verify if the overall system accuracy increases.
+//#define MOTOR1_COMPRESS_STEPS
+
+
+// ----------------------------------------------------------------------------
+// ACCELERATION PROFILE -------------------------------------------------------
+// ----------------------------------------------------------------------------
 // When active Ardufocus will apply the selected acceleration profile to the
 // motor's speed. The objective is to help the system cope with heavier loads
 // such as FF + FW + CCD combos.
@@ -106,19 +126,15 @@
 // any acceleration control. The default value is 10 steps of left undefined.
 //#define ACCEL_MIN_STEPS 10
 
-// When active Ardufocus will cut the stepper motor current when idle, in theory
-// this could lead to less accuracy between movements but will keep the motor
-// cool. When disabling this flag make sure your motor does not overheat.
-#define MOTOR_SLEEP_WHEN_IDLE
 
-// When active each two half-steps will increase one unit on the step counter
-// thus making distance-per-step constant between the two stepping modes, full
-// and half.
-//
-// Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
-// verify if the overall system accuracy increases.
-//#define COMPRESS_HALF_STEPS
-
+// ----------------------------------------------------------------------------
+// TEMPERATURE SENSOR ---------------------------------------------------------
+// ----------------------------------------------------------------------------
+#define THERMISTOR_ADC_CHANNEL          0
+#define THERMISTOR_NOMINAL_TEMP      25.0F
+#define THERMISTOR_BCOEFFICIENT    3950.0F
+#define THERMISTOR_NOMINAL_VAL    10000.0F
+#define THERMISTOR_SERIESRESISTOR 10000.0F
 
 // According to the Moonlite protocol the temperature probe should only be read
 // when the command ":C#" is received but some applications, such as SGP, seems
@@ -127,15 +143,6 @@
 // returned, either it is valid or not. Enabling the following option will force
 // the temperature gathering process on every temperature read command.
 // #define START_TEMP_CONVERSION_ON_EVERY_GET
-
-// ----------------------------------------------------------------------------
-// Temperature sensor configuration -------------------------------------------
-// ----------------------------------------------------------------------------
-#define THERMISTOR_ADC_CHANNEL          0
-#define THERMISTOR_NOMINAL_TEMP      25.0F
-#define THERMISTOR_BCOEFFICIENT    3950.0F
-#define THERMISTOR_NOMINAL_VAL    10000.0F
-#define THERMISTOR_SERIESRESISTOR 10000.0F
 
 
 // ----------------------------------------------------------------------------

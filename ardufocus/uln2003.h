@@ -47,18 +47,18 @@ class uln2003: public stepper
              uint8_t m_stepping_sz;
     const    uint8_t *p_stepping_tbl;
 
-  public:
-    inline uln2003(pinout_t const& pinout) : m_pinout({ pinout }) { init(); }
+  private:
+    void speed step();
 
+  public:
     virtual void init();
     virtual void halt();
     virtual void set_full_step();
     virtual void set_half_step();
-    virtual bool step_cw();
-    virtual bool step_ccw();
+    virtual speed bool step_cw();
+    virtual speed bool step_ccw();
 
-  private:
-    void step();
+    inline uln2003(pinout_t const& pinout) : m_pinout({ pinout }) { ; }
 };
 
 #endif

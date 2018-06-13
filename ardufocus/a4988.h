@@ -43,18 +43,18 @@ class a4988: public stepper
     uint8_t m_step = 0;
     const pinout_t m_pinout;
 
-  public:
-    inline a4988(pinout_t const& pinout) : m_pinout({ pinout }) { init(); }
+  private:
+    force_inline speed bool step();
 
+  public:
     virtual void init();
     virtual void halt();
     virtual void set_full_step();
     virtual void set_half_step();
-    virtual bool step_cw();
-    virtual bool step_ccw();
+    virtual speed bool step_cw();
+    virtual speed bool step_ccw();
 
-  private:
-    bool step();
+    inline a4988(pinout_t const& pinout) : m_pinout({ pinout }) { ; }
 };
 
 #endif

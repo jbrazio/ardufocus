@@ -56,4 +56,9 @@
 #undef asizeof
 #define asizeof(a) (sizeof(a) / sizeof(*a))
 
+#define force_inline __attribute__((always_inline)) inline
+#define silence      __attribute__((unused))
+#define speed        __attribute__((optimize("O3")))
+#define diet         __attribute__((optimize("Os")))
+
 #endif

@@ -48,26 +48,43 @@ class stepper
     };
 
   protected:
-    uint8_t m_mode;
-    volatile uint16_t m_speed;
-    volatile uint8_t  m_counter;
-    volatile position_t m_position;
+    uint8_t m_mode;                 // Stepping mode (1/1, 1/2, 1/4, 1/8, 1/16, 1/32)
+    volatile uint16_t m_speed;      // Stepping speed
+    volatile position_t m_position; // Absolute motor position
 
-  public:
-    void tick();
+    bool m_sleep_when_idle;         // Disable power to the motor when idle
+    bool m_invert_direction;        // Invert the direction of rotation
+    bool m_compress_steps;          // Convert micro-stepping counting to full steps
 
-  private:
+  protected:
     #ifdef HAS_ACCELERATION
-    __attribute__((always_inline)) inline void update_freq();
+    inline speed void update_freq();
     #endif
-    __attribute__((always_inline)) inline void update_position(const int8_t&);
+    inline speed void update_position(const int8_t&);
 
   public:
     virtual void init();
+    virtual void halt();
+
+    virtual uint8_t       get_step_mode();
+    virtual inline void   set_full_step() { ; }
+    virtual inline void   set_half_step() { ; }
+
+    virtual inline bool step_cw()  { return false; }
+    virtual inline bool step_ccw() { return false; }
+
+    inline bool get_sleep_when_idle() { return m_sleep_when_idle; }
+    inline void set_sleep_when_idle(const bool& b) { m_sleep_when_idle = b; }
+
+    inline bool get_invert_direction() { return m_invert_direction; }
+    inline void set_invert_direction(const bool& b) { m_invert_direction = b; }
+
+    inline bool get_compress_steps() { return m_compress_steps; }
+    inline void set_compress_steps(const bool& b) { m_compress_steps = b; }
 
     void move();
     bool is_moving();
-    virtual void halt();
+    void speed tick();
 
     uint16_t get_current_position();
     void     set_current_position(const uint16_t&);
@@ -77,13 +94,6 @@ class stepper
 
     uint16_t get_target_position();
     void     set_target_position(const uint16_t&);
-
-    virtual uint8_t       get_step_mode();
-    virtual inline void   set_full_step() { ; }
-    virtual inline void   set_half_step() { ; }
-
-    virtual inline bool step_cw()  { return false; }
-    virtual inline bool step_ccw() { return false; }
 };
 
 #endif

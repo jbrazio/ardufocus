@@ -45,6 +45,18 @@ namespace util
     );
   }
 
+  inline void delay_2us()
+  {
+    // Delay 32 cycles: 2us at 16 MHz
+    asm volatile (
+      "    ldi  r18, 10"  "\n"
+      "1:  dec  r18"  "\n"
+      "    brne 1b" "\n"
+      "    rjmp 1f" "\n"
+      "1:"  "\n"
+    );
+  }
+
   inline void delay_250us()
   {
     // Delay 4 cycles: 250 ns at 16 MHz

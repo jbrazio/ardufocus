@@ -20,26 +20,31 @@
 #ifndef __ASSERT_H__
 #define __ASSERT_H__
 
-#if defined(USE_A4988_DRIVER)
-  #define MAX_ISR_FREQ 0x3E8 // 2KHz
-  #define MIN_ISR_FREQ 0xFA0 // 500Hz
-
-#elif defined(USE_ULN2003_DRIVER)
-  #define MAX_ISR_FREQ 0x7D0  // 1KHz
-  #define MIN_ISR_FREQ 0x4E20 // 100Hz
-
-#else
-  #error No stepper driver selected.
-  #error Please review the config.h file.
+#ifdef ENABLE_REMOTE_RESET
+  #warning Remote reset is enabled, make sure your bootloader is updated !
 #endif
 
 #ifndef MOTOR1_PINOUT
-  #error A pinout must be defined for the motor.
+  #error A pinout must be defined for the motor #1.
   #error Please review the config.h file.
-#endif
+#else
+  #if defined(MOTOR1_USE_A4988_DRIVER)
+    #define MAX_ISR_FREQ 0x3E8 // 2KHz
+    #define MIN_ISR_FREQ 0xFA0 // 500Hz
 
-#ifdef ENABLE_REMOTE_RESET
-  #warning Remote reset is enabled, make sure your bootloader is updated !
+  #elif defined(MOTOR1_USE_ULN2003_DRIVER)
+    #define MAX_ISR_FREQ 0x7D0  // 1KHz
+    #define MIN_ISR_FREQ 0x4E20 // 100Hz
+
+    #ifdef MOTOR1_COMPRESS_STEPS
+      #error COMPRESS_STEPS is not supported for ULN2003 drivers.
+      #error Please review the config.h file.
+    #endif
+
+  #else
+    #error No stepper driver selected for motor #1.
+    #error Please review the config.h file.
+  #endif
 #endif
 
 #if defined(USE_LINEAR_ACCEL) || defined(USE_TRAPEZOID_ACCEL) || defined(USE_SMOOTHSTEP_ACCEL)

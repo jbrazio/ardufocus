@@ -74,6 +74,36 @@ int main(void)
 
 
   // --------------------------------------------------------------------------
+  // Motor #1 init routine ----------------------------------------------------
+  // --------------------------------------------------------------------------
+  g_motor1.set_invert_direction(
+    #ifdef MOTOR1_INVERT_DIRECTION
+      true
+    #else
+      false
+    #endif
+  );
+
+  g_motor1.set_sleep_when_idle(
+    #ifdef MOTOR1_SLEEP_WHEN_IDLE
+      true
+    #else
+      false
+    #endif
+  );
+
+  g_motor1.set_compress_steps(
+    #ifdef MOTOR1_COMPRESS_STEPS
+      true
+    #else
+      false
+    #endif
+  );
+
+  g_motor1.init();
+
+
+  // --------------------------------------------------------------------------
   // Enable global interrupts -------------------------------------------------
   // --------------------------------------------------------------------------
   sei();

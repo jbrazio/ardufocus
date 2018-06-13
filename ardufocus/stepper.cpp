@@ -26,11 +26,8 @@
  */
 void stepper::init()
 {
-  m_mode = 0;
-
   CRITICAL_SECTION_START
     m_speed   = 2;
-    m_counter = 0;
 
     OCR1A =
       #ifdef HAS_ACCELERATION
@@ -38,7 +35,7 @@ void stepper::init()
       #else
         MAX_ISR_FREQ
       #endif
-        ;
+    ;
   CRITICAL_SECTION_END
 }
 
@@ -81,7 +78,6 @@ void stepper::halt()
   CRITICAL_SECTION_START
     m_position.target = m_position.current;
     m_position.moving = false;
-    m_counter         = 0;
 
     OCR1A =
       #ifdef HAS_ACCELERATION
@@ -89,7 +85,7 @@ void stepper::halt()
       #else
         MAX_ISR_FREQ
       #endif
-        ;
+    ;
   CRITICAL_SECTION_END
 }
 
@@ -211,29 +207,19 @@ void stepper::set_target_position(const uint16_t& target)
  */
 void stepper::tick()
 {
-  if (! m_position.moving) { return; }          // Movement guard
-  if((m_counter++) % m_speed != 0) { return; }  // Stepping frequency guard
+  static uint8_t counter = 0;
+
+  if (! m_position.moving) { return; }        // Movement guard
+  if((counter++) % m_speed != 0) { return; }  // Stepping frequency guard
 
   // Move outwards
   if (m_position.target > m_position.current) {
-    if (
-      #ifdef INVERT_MOTOR_DIR
-        step_cw()
-      #else
-        step_ccw()
-      #endif
-    ) { update_position(1); }
+    if ((m_invert_direction) ? step_cw() : step_ccw()) { update_position(1); }
   }
 
   // Move inwards
   else if (m_position.target < m_position.current) {
-    if (
-      #ifdef INVERT_MOTOR_DIR
-        step_ccw()
-      #else
-        step_cw()
-      #endif
-    ) { update_position(-1); }
+    if ((m_invert_direction) ? step_ccw() : step_cw()) { update_position(-1); }
   }
 
   // Stop movement
@@ -296,6 +282,7 @@ void stepper::update_position(const int8_t &direction)
  * @details [long description]
  *
  */
-uint8_t stepper::get_step_mode() {
+uint8_t stepper::get_step_mode()
+{
   return m_mode;
 }
