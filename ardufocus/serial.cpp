@@ -70,7 +70,8 @@ bool Serial::available()
 char Serial::read()
 {
   CRITICAL_SECTION_START
-    const char c = (Serial::s_buffer.rx.empty()) ? 0XFF : Serial::s_buffer.rx.dequeue();
+    const char c = (Serial::s_buffer.rx.empty())
+      ? 0XFF : Serial::s_buffer.rx.dequeue();
   CRITICAL_SECTION_END
 
   return c;
@@ -104,7 +105,6 @@ void Serial::flush()
  */
 void Serial::process(callbackfunc_t callback)
 {
-
   static size_t pos = 0;
   static char   cmd[16];
 
