@@ -70,4 +70,14 @@
   #endif
 #endif
 
+#ifndef THERMISTOR_ADC_CHANNEL
+  #error You must assign a analog channel to the thermistor.
+  #error Please review the config.h file.
+#else
+    #if !defined(THERMISTOR_NOMINAL_TEMP) || !defined(THERMISTOR_BCOEFFICIENT) || !defined(THERMISTOR_NOMINAL_VAL) || !defined(THERMISTOR_SERIESRESISTOR)
+      #error Thermistor configuration is not valid.
+      #error Please review the config.h file.
+    #endif
+#endif
+
 #endif

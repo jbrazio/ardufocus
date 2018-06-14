@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+cat << EOF >> ardufocus/config.h
+#define ${1} ${2}
+EOF
+
+exit 0

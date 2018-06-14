@@ -35,7 +35,7 @@ The option #1 (bipolar/A4988) will allow your focuser to drive bigger loads, the
 
 I have no issues driving an ASI1600MMC-Cool with a ZWO EFW8 and a 0.85x field flattener using the [modified version] of the 28BYJ-48 with a A4988 driver on an ED80 telescope.
 
-[modified version]: https://github.com/jbrazio/ardufocus/blob/master/doc/howto-bipolar_mod_28byj-48.pdf
+[modified version]: https://github.com/jbrazio/ardufocus/blob/master/doc/28byj-48-bipolar-mod.pdf
 
 ## BOM
 
