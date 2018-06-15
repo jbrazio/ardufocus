@@ -66,7 +66,7 @@
 // Example for ULN2003 driver board
 //
 //                     IN1, IN2, IN3, IN4
-//#define MOTOR1_PINOUT    2,   3,   4,   5
+//#define MOTOR1_PINOUT  2,   3,   4,   5
 //
 // Example for A4988 driver board
 //

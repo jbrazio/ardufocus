@@ -30,6 +30,8 @@
 #include "macro.h"
 #include "lookuptable.h"
 
+#include "log.h"
+
 class stepper
 {
   public:
@@ -48,13 +50,18 @@ class stepper
     };
 
   protected:
-    uint8_t m_mode;                 // Stepping mode (1/1, 1/2, 1/4, 1/8, 1/16, 1/32)
-    volatile uint16_t m_speed;      // Stepping speed
-    volatile position_t m_position; // Absolute motor position
+    uint8_t m_mode;                  // Stepping mode (1/1, 1/2, ..)
+    volatile uint16_t m_speed;       // Stepping speed
+    volatile position_t m_position;  // Absolute motor position
+    volatile uint16_t m_ovf_counter; // Overflow counter
 
-    bool m_sleep_when_idle;         // Disable power to the motor when idle
-    bool m_invert_direction;        // Invert the direction of rotation
-    bool m_compress_steps;          // Convert micro-stepping counting to full steps
+    bool m_sleep_when_idle;          // Disable power to the motor when idle
+    bool m_invert_direction;         // Invert the direction of rotation
+    bool m_compress_steps;           // Convert micro-stepping counting to full steps
+
+    uint16_t m_max_speed = DEFAULT_MAX_SPEED;
+    uint16_t m_set_speed = DEFAULT_MAX_SPEED;
+    uint16_t m_min_speed = DEFAULT_MIN_SPEED;
 
   protected:
     #ifdef HAS_ACCELERATION

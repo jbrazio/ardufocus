@@ -24,7 +24,9 @@
  * @details
  *
  */
-ISR(TIMER1_COMPA_vect)
+ISR(TIMER0_COMPA_vect)
 {
+  PORTB ^= bit(4);
   g_motor1.tick();
+  PORTB ^= bit(4);
 }

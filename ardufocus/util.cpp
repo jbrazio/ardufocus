@@ -39,6 +39,23 @@ uint16_t util::hexstr2long(const char* str)
   return (n);
 }
 
+uint16_t util::get_timer_prescaler(const uint8_t &idx)
+{
+  switch(idx)
+  {
+    case 0:
+      return timer_prescaler[(TCCR0B & 0x6F)][1];
+
+    case 1:
+      return timer_prescaler[(TCCR1B & 0x6F)][1];
+
+    case 2:
+      return timer_prescaler[(TCCR2B & 0x6F)][1];
+
+    default: return 0;
+  }
+}
+
 #ifdef HAS_ACCELERATION
   float util::lerp(float const &edge0, float const &edge1, float x) {
     return (1.0 - x) * edge0 + x * edge1;

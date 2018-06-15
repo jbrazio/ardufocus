@@ -27,12 +27,14 @@
 #include "version.h"
 #include "config.h"
 
+#include "hal.h"
 #include "macro.h"
 
 namespace util
 {
   float steinhart(const uint16_t&);
   uint16_t hexstr2long(const char*);
+  uint16_t speed get_timer_prescaler(uint8_t const&);
 
   inline void delay_1us()
   {

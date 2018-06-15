@@ -63,6 +63,11 @@ enum hal_non_existent_t     { NOT_A_PIN = 0, NOT_A_PORT = 0 };
     /* 19 */ { (uint16_t) &DDRC, (uint16_t) &PORTC, (uint16_t) &PINC,  NOTIMER,  bit(5) },
   };
 
+  static const uint16_t timer_prescaler[6][2] PROGMEM = {
+    { 0b000, 0  }, { 0b001, 1   }, { 0b010, 8 },
+    { 0b011, 64 }, { 0b100, 256 }, { 0b101, 1024 }
+  };
+
 #elif defined (__AVR_ATmega328PB__)
   #error FIXME
 #else

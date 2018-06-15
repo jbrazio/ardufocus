@@ -20,6 +20,13 @@
 #ifndef __ASSERT_H__
 #define __ASSERT_H__
 
+#define TIMER0_FREQ 20000 //Hz
+#define TIMER0_PSCL 8
+
+#ifdef TIMER0_FREQ
+  #define TIMER0_OCRA ((F_CPU/8) / TIMER0_FREQ)
+#endif
+
 #ifdef ENABLE_REMOTE_RESET
   #warning Remote reset is enabled, make sure your bootloader is updated !
 #endif
@@ -29,12 +36,12 @@
   #error Please review the config.h file.
 #else
   #if defined(MOTOR1_USE_A4988_DRIVER)
-    #define MAX_ISR_FREQ 0x3E8 // 2KHz
-    #define MIN_ISR_FREQ 0xFA0 // 500Hz
+    #define DEFAULT_MAX_SPEED 1000 // steps/sec
+    #define DEFAULT_MIN_SPEED  250 // steps/sec
 
   #elif defined(MOTOR1_USE_ULN2003_DRIVER)
-    #define MAX_ISR_FREQ 0x7D0  // 1KHz
-    #define MIN_ISR_FREQ 0x4E20 // 100Hz
+    #define DEFAULT_MAX_SPEED  250 // steps/sec
+    #define DEFAULT_MIN_SPEED   25 // steps/sec
 
     #ifdef MOTOR1_COMPRESS_STEPS
       #error COMPRESS_STEPS is not supported for ULN2003 drivers.

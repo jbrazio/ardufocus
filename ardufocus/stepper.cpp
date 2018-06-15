@@ -27,15 +27,8 @@
 void stepper::init()
 {
   CRITICAL_SECTION_START
-    m_speed   = 2;
-
-    OCR1A =
-      #ifdef HAS_ACCELERATION
-        MIN_ISR_FREQ
-      #else
-        MAX_ISR_FREQ
-      #endif
-    ;
+    m_speed = 2;
+    m_ovf_counter = 0;
   CRITICAL_SECTION_END
 }
 
@@ -48,6 +41,7 @@ void stepper::init()
 void stepper::move()
 {
   CRITICAL_SECTION_START
+    m_ovf_counter = 0;
     m_position.moving = true;
   CRITICAL_SECTION_END
 }
@@ -78,14 +72,6 @@ void stepper::halt()
   CRITICAL_SECTION_START
     m_position.target = m_position.current;
     m_position.moving = false;
-
-    OCR1A =
-      #ifdef HAS_ACCELERATION
-        MIN_ISR_FREQ
-      #else
-        MAX_ISR_FREQ
-      #endif
-    ;
   CRITICAL_SECTION_END
 }
 
@@ -207,10 +193,18 @@ void stepper::set_target_position(const uint16_t& target)
  */
 void stepper::tick()
 {
-  static uint8_t counter = 0;
+  // Movement guard
+  if (! m_position.moving) { return; }
 
-  if (! m_position.moving) { return; }        // Movement guard
-  if((counter++) % m_speed != 0) { return; }  // Stepping frequency guard
+  // Step frequency generator
+  if((m_ovf_counter++) < (TIMER0_FREQ / (m_set_speed<<1)) -1) { return; }
+  m_ovf_counter = 0;
+
+  // Speed control
+  // We're not 100% moonlite compatible here: the PPS speed value you select
+  // on the driver acts as a divider of *_MAX_SPEED set on the config file.
+  static uint8_t counter = 0;
+  if((counter++) % (m_speed>>1) != 0) { return; }
 
   // Move outwards
   if (m_position.target > m_position.current) {
@@ -253,9 +247,9 @@ void stepper::tick()
           (1.0 - util::smootheststep(m_position.easeout, m_position.distance, m_position.relative));
       #endif
 
-      OCR1A = util::lerp(MIN_ISR_FREQ, MAX_ISR_FREQ, f);
+      m_set_speed = util::lerp(m_min_speed, m_max_speed, f);
 
-    } else { OCR1A = MIN_ISR_FREQ; }
+    } else { m_set_speed = m_min_speed; }
   }
 #endif
 
