@@ -17,8 +17,13 @@
  *
  */
 
-#include "util.h"
+#include "utility.h"
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
 float util::steinhart(const uint16_t& raw)
 {
   float ret = constrain(raw, 1, 1022);
@@ -32,6 +37,12 @@ float util::steinhart(const uint16_t& raw)
   return ret;
 }
 
+
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
 uint16_t util::hexstr2long(const char* str)
 {
   uint16_t n = 0;
@@ -39,6 +50,12 @@ uint16_t util::hexstr2long(const char* str)
   return (n);
 }
 
+
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
 uint16_t util::get_timer_prescaler(const uint8_t &idx)
 {
   switch(idx)
@@ -57,10 +74,22 @@ uint16_t util::get_timer_prescaler(const uint8_t &idx)
 }
 
 #ifdef HAS_ACCELERATION
+  /**
+   * @brief Linear interpolation function
+   * @details Linear interpolation on a set of data points (x0, y0), (x1, y1),
+   *          is defined as the concatenation of linear interpolants between
+   *          each pair of data points. [https://bit.ly/2JP5SIh]
+   *
+   */
   float util::lerp(float const &edge0, float const &edge1, float x) {
     return (1.0 - x) * edge0 + x * edge1;
   }
 
+  /**
+   * @brief [brief description]
+   * @details [long description]
+   *
+   */
   float util::clamp(float x, float const &lowerlimit, float const &upperlimit)
   {
     if      (x < lowerlimit) x = lowerlimit;
@@ -69,7 +98,11 @@ uint16_t util::get_timer_prescaler(const uint8_t &idx)
   }
 
   #ifdef USE_SMOOTHSTEP_ACCEL
-    // 5th-order equation
+    /**
+     * @brief Sigmoid-like interpolation and clamping function
+     * @details 3rd-order equation [https://bit.ly/2la5Ek0]
+     *
+     */
     float util::smoothstep(float const &edge0, float const &edge1, float x)
     {
       // Scale, and clamp x to 0..1 range
@@ -78,7 +111,12 @@ uint16_t util::get_timer_prescaler(const uint8_t &idx)
       return x * x * (3.0 - 2.0 * x);
     }
 
-    // 5th-order equation
+
+    /**
+     * @brief Sigmoid-like interpolation and clamping function
+     * @details 5th-order equation [https://bit.ly/2JUMe0I]
+     *
+     */
     float util::smootherstep(float const &edge0, float const &edge1, float x)
     {
       // Scale, and clamp x to 0..1 range
@@ -87,7 +125,12 @@ uint16_t util::get_timer_prescaler(const uint8_t &idx)
       return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
     }
 
-    // 7th-order equation
+
+    /**
+     * @brief Sigmoid-like interpolation and clamping function
+     * @details 7th-order equation [https://bit.ly/2MtinL2]
+     *
+     */
     float util::smootheststep(float const &edge0, float const &edge1, float x)
     {
       // Scale, and clamp x to 0..1 range

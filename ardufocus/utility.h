@@ -30,6 +30,13 @@
 #include "hal.h"
 #include "macro.h"
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
+extern volatile uint32_t timer0_compa_count;
+
 namespace util
 {
   float steinhart(const uint16_t&);

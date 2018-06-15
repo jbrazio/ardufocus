@@ -26,7 +26,7 @@
 #include "version.h"
 #include "config.h"
 
-#include "util.h"
+#include "utility.h"
 #include "macro.h"
 #include "lookuptable.h"
 
@@ -63,6 +63,9 @@ class stepper
     uint16_t m_set_speed = DEFAULT_MAX_SPEED;
     uint16_t m_min_speed = DEFAULT_MIN_SPEED;
 
+    uint8_t  m_sleep_timeout     = DEFAULT_SLEEP_TIMEOUT;
+    uint32_t m_sleep_timeout_cnt = 0;
+
   protected:
     #ifdef HAS_ACCELERATION
     inline speed void update_freq();
@@ -73,9 +76,10 @@ class stepper
     virtual void init();
     virtual void halt();
 
-    virtual uint8_t       get_step_mode();
-    virtual inline void   set_full_step() { ; }
-    virtual inline void   set_half_step() { ; }
+    virtual inline void    sleep() { ; }
+    virtual inline void    set_full_step() { ; }
+    virtual inline void    set_half_step() { ; }
+    virtual inline uint8_t get_step_mode() { return m_mode; }
 
     virtual inline bool step_cw()  { return false; }
     virtual inline bool step_ccw() { return false; }
@@ -88,6 +92,15 @@ class stepper
 
     inline bool get_compress_steps() { return m_compress_steps; }
     inline void set_compress_steps(const bool& b) { m_compress_steps = b; }
+
+    inline uint16_t get_max_speed() { return m_max_speed; }
+    inline void     set_max_speed(uint16_t const& s) { m_max_speed = s; }
+
+    inline uint16_t get_min_speed() { return m_min_speed; }
+    inline void     set_min_speed(uint16_t const& s) { m_min_speed = s; }
+
+    inline uint8_t get_sleep_timeout() { return m_sleep_timeout; }
+    inline void    set_sleep_timeout(uint8_t const& t) { m_sleep_timeout = t; }
 
     void move();
     bool is_moving();

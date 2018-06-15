@@ -67,8 +67,6 @@ int main(void)
   // sets the Output Compare Register values
   OCR0A = TIMER0_OCRA;
 
-  IO::set_as_output(12); IO::write(12, LOW);
-
 
   // --------------------------------------------------------------------------
   // ADC init routine ---------------------------------------------------------
@@ -80,30 +78,12 @@ int main(void)
   // --------------------------------------------------------------------------
   // Motor #1 init routine ----------------------------------------------------
   // --------------------------------------------------------------------------
-  g_motor1.set_invert_direction(
-    #ifdef MOTOR1_INVERT_DIRECTION
-      true
-    #else
-      false
-    #endif
-  );
-
-  g_motor1.set_sleep_when_idle(
-    #ifdef MOTOR1_SLEEP_WHEN_IDLE
-      true
-    #else
-      false
-    #endif
-  );
-
-  g_motor1.set_compress_steps(
-    #ifdef MOTOR1_COMPRESS_STEPS
-      true
-    #else
-      false
-    #endif
-  );
-
+  g_motor1.set_invert_direction(MOTOR1_INVERT_DIRECTION);
+  g_motor1.set_sleep_when_idle(MOTOR1_SLEEP_WHEN_IDLE);
+  g_motor1.set_sleep_timeout(MOTOR1_SLEEP_TIMEOUT);
+  g_motor1.set_compress_steps(MOTOR1_COMPRESS_STEPS);
+  g_motor1.set_max_speed(MOTOR1_MAX_SPEED);
+  g_motor1.set_min_speed(MOTOR1_MIN_SPEED);
   g_motor1.init();
 
 

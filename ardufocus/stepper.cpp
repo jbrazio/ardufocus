@@ -194,7 +194,7 @@ void stepper::set_target_position(const uint16_t& target)
 void stepper::tick()
 {
   // Movement guard
-  if (! m_position.moving) { return; }
+  if (! m_position.moving) { sleep(); return; }
 
   // Step frequency generator
   if((m_ovf_counter++) < (TIMER0_FREQ / (m_set_speed<<1)) -1) { return; }
@@ -268,15 +268,4 @@ void stepper::update_position(const int8_t &direction)
       update_freq();                          // Update the stepping frequency
     #endif
   CRITICAL_SECTION_END
-}
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-uint8_t stepper::get_step_mode()
-{
-  return m_mode;
 }

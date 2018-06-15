@@ -56,11 +56,9 @@ void a4988::halt()
   stepper::halt();
 
   m_step = 0;
+  m_sleep_timeout_cnt = ((m_sleep_timeout * 1000000UL) / TIMER0_TICK);
+
   IO::write(m_pinout.step, LOW);
-
-  if(m_sleep_when_idle)
-    IO::write(m_pinout.sleep, LOW);
-
   util::delay_2us();
 }
 
@@ -185,4 +183,23 @@ bool a4988::step()
 
   util::delay_2us();
   return (! m_step);
+}
+
+
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
+void a4988::sleep()
+{
+  if(m_sleep_when_idle && m_sleep_timeout_cnt) {
+    --m_sleep_timeout_cnt;
+
+    if(!m_sleep_timeout_cnt)
+    {
+      IO::write(m_pinout.sleep, LOW);
+      util::delay_250us();
+    }
+  }
 }

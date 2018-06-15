@@ -29,7 +29,7 @@
 #include "lookuptable.h"
 #include "stepper.h"
 #include "macro.h"
-#include "util.h"
+#include "utility.h"
 #include "io.h"
 
 class uln2003: public stepper
