@@ -25,7 +25,16 @@
 #define TIMER0_OCRA ((F_CPU/8) / TIMER0_FREQ)
 #define TIMER0_TICK (1000000 / TIMER0_FREQ) // uS
 
-#define DEFAULT_SLEEP_TIMEOUT 1
+#define DEFAULT_SLEEP_TIMEOUT 5
+
+// Default speed values per driver --------------------------------------------
+#if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
+  #define DEFAULT_MAX_SPEED 1000 // steps/sec
+  #define DEFAULT_MIN_SPEED  250 // steps/sec
+#elif defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
+  #define DEFAULT_MAX_SPEED  250 // steps/sec
+  #define DEFAULT_MIN_SPEED   25 // steps/sec
+#endif
 
 // User warnings --------------------------------------------------------------
 #ifdef ENABLE_REMOTE_RESET
@@ -38,15 +47,6 @@
     #error COMPRESS_STEPS is not supported for ULN2003 drivers.
     #error Please review the config.h file.
   #endif
-#endif
-
-// Default speed values per driver --------------------------------------------
-#if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
-  #define DEFAULT_MAX_SPEED 1000 // steps/sec
-  #define DEFAULT_MIN_SPEED  250 // steps/sec
-#elif defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
-  #define DEFAULT_MAX_SPEED  250 // steps/sec
-  #define DEFAULT_MIN_SPEED   25 // steps/sec
 #endif
 
 // Duplicate driver check -----------------------------------------------------
@@ -96,10 +96,10 @@
   #else
     #undef MOTOR1_SLEEP_WHEN_IDLE
     #define MOTOR1_SLEEP_WHEN_IDLE true
+  #endif
 
-    #ifndef MOTOR1_SLEEP_TIMEOUT
-      #define MOTOR1_SLEEP_TIMEOUT DEFAULT_SLEEP_TIMEOUT
-    #endif
+  #ifndef MOTOR1_SLEEP_TIMEOUT
+    #define MOTOR1_SLEEP_TIMEOUT DEFAULT_SLEEP_TIMEOUT
   #endif
 
   #ifndef MOTOR1_COMPRESS_STEPS
