@@ -21,7 +21,7 @@
  * Pst !
  *
  * This file is just a placeholder so the Arduino IDE likes us, all
- * the juicy source code is located under the src/ folder, go have a
+ * the juicy source code is located at the ardufocus/ folder, go have a
  * look.
  *
  * If you have issues running this firmware or you'd like to suggest an
