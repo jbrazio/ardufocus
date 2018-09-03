@@ -146,7 +146,12 @@ bool a4988::step()
 {
   if(m_sleep_when_idle && !IO::read(m_pinout.sleep)) {
     IO::write(m_pinout.sleep, HIGH);
-    util::delay_250us();
+
+    #ifdef MOTOR1_USE_DRV8825_DRIVER
+      util::delay_1ms();
+    #else
+      util::delay_250us();
+    #endif
   }
 
   /*
@@ -199,7 +204,12 @@ void a4988::sleep()
     if(!m_sleep_timeout_cnt)
     {
       IO::write(m_pinout.sleep, LOW);
-      util::delay_250us();
+
+      #ifdef MOTOR1_USE_DRV8825_DRIVER
+        util::delay_1ms();
+      #else
+        util::delay_250us();
+      #endif
     }
   }
 }
