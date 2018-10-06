@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 cat << EOF >> ardufocus/config.h
-#define THERMISTOR_ADC_CHANNEL          0
-#define THERMISTOR_NOMINAL_TEMP      25.0F
-#define THERMISTOR_BCOEFFICIENT    3950.0F
-#define THERMISTOR_NOMINAL_VAL    10000.0F
-#define THERMISTOR_SERIESRESISTOR 10000.0F
+#define NTC_ADC_CHANNEL        0
+#define NTC_NOMINAL_TEMP    25.0F
+#define NTC_BCOEFFICIENT  3950.0F
+#define NTC_NOMINAL_VAL  10000.0F
+#define NTC_RESISTOR_VAL 10000.0F
 EOF
 
 exit 0

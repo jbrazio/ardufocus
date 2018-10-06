@@ -48,8 +48,8 @@ class Serial
     // and have a set of wrappers around it.. adding it to the TODO list.
     static struct buffer_t
     {
-      Ringbuf<char, 32u> rx;
-      Ringbuf<char, 64u> tx;
+      Ringbuf<char, SERIAL_RXBUF_SZ> rx;
+      Ringbuf<char, SERIAL_TXBUF_SZ> tx;
     } s_buffer;
 
   public:

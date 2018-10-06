@@ -112,5 +112,8 @@ void Analog::setup()
 
     // set digital input disable register to A4-A5
     DIDR0 |= bit(ADC5D) | bit(ADC4D);
+
+    // wait a bit
+    util::delay_5ms();
   CRITICAL_SECTION_END
 }

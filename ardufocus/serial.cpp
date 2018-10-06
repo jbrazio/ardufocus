@@ -106,7 +106,7 @@ void Serial::flush()
 void Serial::process(callbackfunc_t callback)
 {
   static size_t pos = 0;
-  static char   cmd[16];
+  static char cmd[SERIAL_CMD_LEN];
 
   while(available())
   {

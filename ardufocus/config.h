@@ -35,6 +35,7 @@
 //
 // [8375767]: https://bit.ly/2HKUXgV
 
+
 // ----------------------------------------------------------------------------
 // MISCELLANEOUS --------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -42,8 +43,10 @@
 // Remote reset is a non standard feature added to the Moonlite protocol which
 // allows you to reset the micro controller inside the focuser. Please test
 // this feature on your bench before deploying on the field. For this feature
-// to work the default boot loader must be changed otherwise the uC will enter
-// in a infinite loop state. For more information visit the [bug report].
+// to work the default boot loader may need to be changed otherwise the uC will
+// enter into an infinite loop state.
+//
+// For more information read the [bug report].
 //
 // [bug report]: https://github.com/arduino/Arduino/issues/4492
 //#define ENABLE_REMOTE_RESET
@@ -83,6 +86,18 @@
 // cool. When disabling this flag make sure your motor does not overheat.
 #define MOTOR1_SLEEP_WHEN_IDLE
 
+// When the previous directive is active, allows you to control the amount of
+// time the driver will wait, after stopping, before powering down the motor.
+// The idea behind is the system needs full accuracy between the AF point
+// sequence but can be powered down between AF runs. Thus you should set this
+// to wait a bit more than the time your system needs to take and measure each
+// AF point.
+#define MOTOR1_SLEEP_TIMEOUT 15
+
+
+// -------- DEPRECATED --------
+// --- WILL BE REMOVED SOON ---
+//
 // When active each two half-steps will increase one unit on the step counter
 // thus making distance-per-step constant between the two stepping modes, full
 // and half.
@@ -90,6 +105,24 @@
 // Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
 // verify if the overall system accuracy increases.
 //#define MOTOR1_COMPRESS_STEPS
+
+
+// ----------------------------------------------------------------------------
+// SPEED PROFILE --------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Specify a custom speed profile for you motor model and driver combo.
+// The units are in steps/sec.
+//
+// Usually a motor such as the 28BYJ-48 need lower speed limits:
+//  - Max speed: 250
+//  - Min speed: 25
+//
+// NEMA17 motors allow you to use higher speed limits:
+//  - Max speed: 1000
+//  - Min speed: 250
+//
+#define MOTOR1_MAX_SPEED 250
+#define MOTOR1_MIN_SPEED  25
 
 
 // ----------------------------------------------------------------------------
@@ -131,11 +164,14 @@
 // ----------------------------------------------------------------------------
 // TEMPERATURE SENSOR ---------------------------------------------------------
 // ----------------------------------------------------------------------------
-#define THERMISTOR_ADC_CHANNEL          0
-#define THERMISTOR_NOMINAL_TEMP      25.0F
-#define THERMISTOR_BCOEFFICIENT    3950.0F
-#define THERMISTOR_NOMINAL_VAL    10000.0F
-#define THERMISTOR_SERIESRESISTOR 10000.0F
+#define NTC_ADC_CHANNEL          0
+#define NTC_NOMINAL_TEMP      25.0F
+#define NTC_BCOEFFICIENT    3950.0F
+#define NTC_NOMINAL_VAL    10000.0F
+#define NTC_RESISTOR_VAL   10000.0F
+
+#define NTC_MIN_RAW_VALUE  50 // min value to be considered a valid reading (xxxC)
+#define NTC_MAX_RAW_VALUE 950 // max value to be considered a valid reading (-23C)
 
 // According to the Moonlite protocol the temperature probe should only be read
 // when the command ":C#" is received but some applications, such as SGP, seems
@@ -143,7 +179,7 @@
 // means the temperature will never get updated and the last read value is always
 // returned, either it is valid or not. Enabling the following option will force
 // the temperature gathering process on every temperature read command.
-// #define START_TEMP_CONVERSION_ON_EVERY_GET
+//define START_TEMP_CONVERSION_ON_EVERY_GET
 
 
 // ----------------------------------------------------------------------------

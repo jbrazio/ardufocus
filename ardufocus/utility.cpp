@@ -26,30 +26,19 @@
  */
 float util::steinhart(const uint16_t& raw)
 {
-  float ret = constrain(raw, 1, 1022);
-  ret  = THERMISTOR_SERIESRESISTOR / (1023.0 / ret - 1.0);  // convert raw to ohms
-  ret  = ret / THERMISTOR_NOMINAL_VAL;                      // (R/Ro)
-  ret  = log(ret);                                          // ln(R/Ro)
-  ret /= THERMISTOR_BCOEFFICIENT;                           // 1/B * ln(R/Ro)
-  ret += 1.0 / (THERMISTOR_NOMINAL_TEMP + 273.15);          // + (1/To)
-  ret  = 1.0 / ret;                                         // invert
-  ret -= 273.15;                                            // convert to K to C
-  return ret;
+  if (raw < NTC_MIN_RAW_VALUE || raw > NTC_MAX_RAW_VALUE) {
+    return -13.37F;
+  }
+
+  float steinhart = constrain(raw, 1, 1022);
+  steinhart  = NTC_RESISTOR_VAL / (1023.0F / steinhart - 1.0F); // convert raw to ohms
+  steinhart  = log(steinhart / NTC_NOMINAL_VAL);                // ln(R/Ro)
+  steinhart /= NTC_BCOEFFICIENT;                                // 1/B * ln(R/Ro)
+  steinhart += 1.0F / (NTC_NOMINAL_TEMP + 273.15F);             // + (1/To)
+  steinhart  = 1.0F / steinhart;                                // invert
+  steinhart -= 273.15F;                                         // convert to K to C
+  return steinhart;
 }
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-uint16_t util::hexstr2long(const char* str)
-{
-  uint16_t n = 0;
-  n = strtol(str, NULL, 16);
-  return (n);
-}
-
 
 /**
  * @brief [brief description]

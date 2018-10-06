@@ -160,7 +160,10 @@ void stepper::set_target_position(const uint16_t& target)
 
     #ifdef HAS_ACCELERATION
       m_position.relative = 0;
-      m_position.distance = labs((int32_t)m_position.current - target);
+
+      m_position.distance = (m_position.current > target)
+        ? m_position.current - target
+        : target - m_position.current;
 
       if (m_position.distance >= ACCEL_MIN_STEPS)
       {
@@ -264,8 +267,8 @@ void stepper::update_position(const int8_t &direction)
     m_position.current += direction;          // Update the global position
 
     #ifdef HAS_ACCELERATION
-      m_position.relative += abs(direction);  // Update the relative position
-      update_freq();                          // Update the stepping frequency
+      ++m_position.relative;  // Update the relative position
+      update_freq();          // Update the stepping frequency
     #endif
   CRITICAL_SECTION_END
 }

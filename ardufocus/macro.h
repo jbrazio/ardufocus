@@ -38,15 +38,6 @@
 #undef sbi
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 
-#undef min
-#define min(a,b) ((a)<(b)?(a):(b))
-
-#undef max
-#define max(a,b) ((a)>(b)?(a):(b))
-
-//#undef abs
-//#define abs(n) ((n)>0?(n):-(n))
-
 #undef constrain
 #define constrain(n, l, h) ((n)<(l)?(l):((n)>(h)?(h):(n)))
 

@@ -30,6 +30,7 @@
 
 #include "macro.h"
 #include "log.h"
+#include "utility.h"
 
 extern float g_ambient;
 

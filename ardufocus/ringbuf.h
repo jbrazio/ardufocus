@@ -78,7 +78,7 @@ public:
    * @details Returns true if there are no items on the queue, false otherwise.
    * @return  true if queue is empty
    */
-  inline bool empty() { return (abs(m_buffer.head == m_buffer.tail)); }
+  inline bool empty() { return (m_buffer.head == m_buffer.tail); }
 
   /**
    * @brief   Checks if the queue is full

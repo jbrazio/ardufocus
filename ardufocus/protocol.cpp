@@ -26,7 +26,7 @@ void protocol::process(const char *cmd)
 
   switch (cmd[0]) {
     case 'C': // Start temperature conversion
-      Analog::read(THERMISTOR_ADC_CHANNEL);
+      Analog::read(NTC_ADC_CHANNEL);
       break;
 
     case 'F':
@@ -79,7 +79,7 @@ void protocol::process(const char *cmd)
 
         case 'T': // Get the current temperature
           #ifdef START_TEMP_CONVERSION_ON_EVERY_GET
-            Analog::read(THERMISTOR_ADC_CHANNEL);
+            Analog::read(NTC_ADC_CHANNEL);
           #endif
 
           sprintf(str, "%04X#", static_cast<int16_t>(util::steinhart(g_ambient)) << 1);
@@ -116,7 +116,7 @@ void protocol::process(const char *cmd)
       switch(cmd[1]) {
         case 'D': // Set the motor 1 speed
           strncpy(str, cmd + 2, 2);
-          g_motor1.set_speed(util::hexstr2long(str));
+          g_motor1.set_speed(util::hex2l(str));
           break;
 
         case 'F': // Set motor 1 to full step
@@ -129,12 +129,12 @@ void protocol::process(const char *cmd)
 
         case 'N': // Set the new motor 1 position
           strncpy(str, cmd + 2, 4);
-          g_motor1.set_target_position(util::hexstr2long(str));
+          g_motor1.set_target_position(util::hex2l(str));
           break;
 
         case 'P': // Set current motor 1 positon
           strncpy(str, cmd + 2, 4);
-          g_motor1.set_current_position(util::hexstr2long(str));
+          g_motor1.set_current_position(util::hex2l(str));
           break;
 
         default: break;

@@ -72,7 +72,7 @@ int main(void)
   // ADC init routine ---------------------------------------------------------
   // --------------------------------------------------------------------------
   Analog::setup();
-  Analog::read(THERMISTOR_ADC_CHANNEL);
+  Analog::read(NTC_ADC_CHANNEL);
 
 
   // --------------------------------------------------------------------------
@@ -96,7 +96,7 @@ int main(void)
   // --------------------------------------------------------------------------
   // Banner -------------------------------------------------------------------
   // --------------------------------------------------------------------------
-  LogLn::PGM(PSTR("Ardufocus " ARDUFOCUS_VERSION " ready."));
+  LogLn::PGM(PSTR("Ardufocus " ARDUFOCUS_VERSION "-" ARDUFOCUS_BRANCH " ready."));
   LogLn::PGM(PSTR("Visit " ARDUFOCUS_URL " for updates."));
   Log::eol();
 

@@ -40,9 +40,33 @@ extern volatile uint32_t timer0_compa_count;
 namespace util
 {
   float steinhart(const uint16_t&);
-  uint16_t hexstr2long(const char*);
   uint16_t speed get_timer_prescaler(uint8_t const&);
 
+  /**
+   * @brief Convert a string to long integer
+   * @details [long description]
+   *
+   */
+  inline int32_t hex2l(const char* str)
+  {
+    return (strtol(str, NULL, 16));
+  }
+
+  /**
+   * @brief Convert a string to usingned long integer
+   * @details [long description]
+   *
+   */
+  inline uint32_t hex2ul(const char* str)
+  {
+    return (strtoul(str, NULL, 16));
+  }
+
+  /**
+   * @brief Blocking delay for 1us
+   * @details Uses ASM to create a blocking delay
+   *
+   */
   inline void delay_1us()
   {
     // Delay 16 cycles: 1us at 16 MHz
@@ -54,6 +78,11 @@ namespace util
     );
   }
 
+  /**
+   * @brief Blocking delay for 2us
+   * @details Uses ASM to create a blocking delay
+   *
+   */
   inline void delay_2us()
   {
     // Delay 32 cycles: 2us at 16 MHz
@@ -66,6 +95,11 @@ namespace util
     );
   }
 
+  /**
+   * @brief Blocking delay for 250us
+   * @details Uses ASM to create a blocking delay
+   *
+   */
   inline void delay_250us()
   {
     // Delay 4 cycles: 250 ns at 16 MHz
@@ -76,12 +110,35 @@ namespace util
     );
   }
 
+  /**
+   * @brief Blocking delay for 1ms
+   * @details Uses ASM to create a blocking delay
+   *
+   */
   inline void delay_1ms()
   {
     // Delay 16 000 cycles: 1ms at 16.0 MHz
     asm volatile (
       "    ldi  r18, 21"  "\n"
       "    ldi  r19, 199" "\n"
+      "1:  dec  r19"  "\n"
+      "    brne 1b" "\n"
+      "    dec  r18"  "\n"
+      "    brne 1b" "\n"
+    );
+  }
+
+  /**
+   * @brief Blocking delay for 5ms
+   * @details Uses ASM to create a blocking delay
+   *
+   */
+  inline void delay_5ms()
+  {
+    // Delay 80 000 cycles: 5ms at 16.0 MHz
+    asm volatile (
+      "    ldi  r18, 104" "\n"
+      "    ldi  r19, 229" "\n"
       "1:  dec  r19"  "\n"
       "    brne 1b" "\n"
       "    dec  r18"  "\n"

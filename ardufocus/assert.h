@@ -25,19 +25,14 @@
 #define TIMER0_OCRA ((F_CPU/8) / TIMER0_FREQ)
 #define TIMER0_TICK (1000000 / TIMER0_FREQ) // uS
 
-#define DEFAULT_SLEEP_TIMEOUT 5
+#define DEFAULT_SLEEP_TIMEOUT 15
 
-// Default speed values per driver --------------------------------------------
-#if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
-  #define DEFAULT_MAX_SPEED 1000 // steps/sec
-  #define DEFAULT_MIN_SPEED  250 // steps/sec
-#elif defined(MOTOR1_USE_DRV8825_DRIVER) || defined(MOTOR2_USE_DRV8825_DRIVER)
-  #define DEFAULT_MAX_SPEED 1000 // steps/sec
-  #define DEFAULT_MIN_SPEED  250 // steps/sec
-#elif defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
-  #define DEFAULT_MAX_SPEED  250 // steps/sec
-  #define DEFAULT_MIN_SPEED   25 // steps/sec
-#endif
+#define DEFAULT_MAX_SPEED 250
+#define DEFAULT_MIN_SPEED  25
+
+#define SERIAL_CMD_LEN   9u
+#define SERIAL_TXBUF_SZ (SERIAL_CMD_LEN * 2)
+#define SERIAL_RXBUF_SZ (SERIAL_CMD_LEN * 3)
 
 // User warnings --------------------------------------------------------------
 #ifdef ENABLE_REMOTE_RESET
@@ -45,10 +40,13 @@
 #endif
 
 // Invalid configurations -----------------------------------------------------
-#if defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
-  #if defined(MOTOR1_COMPRESS_STEPS)
+#if defined(MOTOR1_COMPRESS_STEPS)
+  #if defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
     #error COMPRESS_STEPS is not supported for ULN2003 drivers.
     #error Please review the config.h file.
+  #else
+    #warning COMPRESS_STEPS is deprecated and will be removed soon.
+    #warning Please review the config.h file.
   #endif
 #endif
 
@@ -181,13 +179,21 @@
   #endif
 #endif
 
-#ifndef THERMISTOR_ADC_CHANNEL
+#ifndef NTC_ADC_CHANNEL
   #error You must assign a analog channel to the thermistor.
   #error Please review the config.h file.
 #else
-    #if !defined(THERMISTOR_NOMINAL_TEMP) || !defined(THERMISTOR_BCOEFFICIENT) || !defined(THERMISTOR_NOMINAL_VAL) || !defined(THERMISTOR_SERIESRESISTOR)
+    #if !defined(NTC_NOMINAL_TEMP) || !defined(NTC_BCOEFFICIENT) || !defined(NTC_NOMINAL_VAL) || !defined(NTC_RESISTOR_VAL)
       #error Thermistor configuration is not valid.
       #error Please review the config.h file.
+    #endif
+
+    #ifndef NTC_MIN_RAW_VALUE
+      #define NTC_MIN_RAW_VALUE 50
+    #endif
+
+    #ifndef NTC_MAX_RAW_VALUE
+      #define NTC_MAX_RAW_VALUE 950
     #endif
 #endif
 
