@@ -31,6 +31,9 @@
 #if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
   #define DEFAULT_MAX_SPEED 1000 // steps/sec
   #define DEFAULT_MIN_SPEED  250 // steps/sec
+#elif defined(MOTOR1_USE_DRV8825_DRIVER) || defined(MOTOR2_USE_DRV8825_DRIVER)
+  #define DEFAULT_MAX_SPEED 1000 // steps/sec
+  #define DEFAULT_MIN_SPEED  250 // steps/sec
 #elif defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
   #define DEFAULT_MAX_SPEED  250 // steps/sec
   #define DEFAULT_MIN_SPEED   25 // steps/sec
@@ -49,6 +52,11 @@
   #endif
 #endif
 
+// DRV8825 driver hack --------------------------------------------------------
+#if defined(MOTOR1_USE_DRV8825_DRIVER)
+  #define MOTOR1_USE_A4988_DRIVER
+#endif
+
 // Duplicate driver check -----------------------------------------------------
 #if defined(MOTOR1_USE_A4988_DRIVER) && defined(MOTOR1_USE_ULN2003_DRIVER)
   #error More than one stepper driver selected for motor #1
@@ -58,6 +66,11 @@
 #else
   #error No stepper driver selected for motor #1.
   #error Please review the config.h file.
+#endif
+
+// DRV8825 driver hack --------------------------------------------------------
+#if defined(MOTOR2_USE_DRV8825_DRIVER)
+  #define MOTOR2_USE_A4988_DRIVER
 #endif
 
 #if defined(MOTOR2_USE_A4988_DRIVER) && defined(MOTOR2_USE_ULN2003_DRIVER)

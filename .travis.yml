@@ -38,7 +38,7 @@ script:
   # Test default config
   - platformio run -e debug -e debug168
   #
-  # Test basic A4988 driver
+  # Test basic A4988 driver ---------------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
   - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
@@ -84,7 +84,53 @@ script:
   - config-footer
   - platformio run -e debug -e debug168
   #
-  # Test basic ULN2003 driver
+  # Test basic DRV8825 driver ---------------------------------------------------
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_INVERT_DIRECTION
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_INVERT_DIRECTION
+  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_INVERT_DIRECTION
+  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
+  - config-opt-add MOTOR1_COMPRESS_STEPS
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_INVERT_DIRECTION
+  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
+  - config-opt-add MOTOR1_COMPRESS_STEPS
+  - config-opt-add START_TEMP_CONVERSION_ON_EVERY_GET
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  # Test basic ULN2003 driver -------------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_ULN2003_DRIVER
   - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
@@ -130,7 +176,7 @@ script:
   - config-footer
   - platformio run -e debug -e debug168
   #
-  # Test A4988 with acceleration
+  # Test A4988 with acceleration ----------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
   - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
@@ -155,7 +201,32 @@ script:
   - config-footer
   - platformio run -e debug -e debug168
   #
-  # Test ULN2003 with acceleration
+  # Test DRV8825 with acceleration ----------------------------------------------
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add USE_LINEAR_ACCEL
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add USE_TRAPEZOID_ACCEL
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  - config-header
+  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
+  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add USE_SMOOTHSTEP_ACCEL
+  - config-ntc
+  - config-footer
+  - platformio run -e debug -e debug168
+  #
+  # Test ULN2003 with acceleration --------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_ULN2003_DRIVER
   - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"

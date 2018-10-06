@@ -76,6 +76,19 @@ namespace util
     );
   }
 
+  inline void delay_1ms()
+  {
+    // Delay 16 000 cycles: 1ms at 16.0 MHz
+    asm volatile (
+      "    ldi  r18, 21"  "\n"
+      "    ldi  r19, 199" "\n"
+      "1:  dec  r19"  "\n"
+      "    brne 1b" "\n"
+      "    dec  r18"  "\n"
+      "    brne 1b" "\n"
+    );
+  }
+
   #ifdef HAS_ACCELERATION
     float lerp(float const&, float const&, float);
     float clamp(float, float const&, float const&);

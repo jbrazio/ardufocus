@@ -58,6 +58,7 @@
 // Unipolar stepper motor. The A4988 driver should be used with Bipolar stepper
 // motors or the modded version of the 28BYJ-48 (see the doc/ folder).
 #define MOTOR1_USE_A4988_DRIVER
+//#define MOTOR1_USE_DRV8825_DRIVER
 //#define MOTOR1_USE_ULN2003_DRIVER
 
 // Driver pin-out definition
