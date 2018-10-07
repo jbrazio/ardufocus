@@ -33,7 +33,7 @@
 enum hal_register_headers_t { HALDIR, HALOUT, HALIN, HALTMR, HALPIN };
 enum hal_non_existent_t     { NOT_A_PIN = 0, NOT_A_PORT = 0 };
 
-#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega168P__)
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__)
 
   enum hal_timer_t { NOTIMER = 0, TIMER0A, TIMER0B, TIMER1A, TIMER1B, TIMER2A, TIMER2B };
 
@@ -68,8 +68,6 @@ enum hal_non_existent_t     { NOT_A_PIN = 0, NOT_A_PORT = 0 };
     { 0b011, 64 }, { 0b100, 256 }, { 0b101, 1024 }
   };
 
-#elif defined (__AVR_ATmega328PB__)
-  #error FIXME
 #else
   #error No supported platform found
   #error Please file a bug at https://github.com/jbrazio/ardufocus/issues

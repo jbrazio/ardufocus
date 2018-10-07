@@ -27,7 +27,11 @@ Serial::buffer_t Serial::s_buffer;
 /**
  * @brief USART RX interrupt handler
  */
-ISR(USART_RX_vect)
+#ifdef __AVR_ATmega328PB__
+  ISR(USART0_RX_vect)
+#else
+  ISR(USART_RX_vect)
+#endif
 {
   // read a byte from the incoming stream
   char c = UDR0;
@@ -41,7 +45,11 @@ ISR(USART_RX_vect)
 /**
  * @brief USART TX interrupt handler
  */
-ISR(USART_UDRE_vect)
+#ifdef __AVR_ATmega328PB__
+  ISR(USART0_UDRE_vect)
+#else
+  ISR(USART_UDRE_vect)
+#endif
 {
   // turn off Data Register Empty Interrupt
   // to stop tx-streaming if this concludes the transfer
