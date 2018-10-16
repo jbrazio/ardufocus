@@ -119,6 +119,9 @@ The wiring of the focuser has changed since commit [8375767], you should remove 
 
 [8375767]: https://github.com/jbrazio/ardufocus/commit/8375767da8008305e1cb2a93d049970c49c1482d
 
+### Uploading the firmware
+A capacitor is used on the Arduino's reset line to keep it high during serial connect/disconnect which is mandatory for normal operation but in order to flash the firmware to the board the capacitor must be disconnected, otherwise you need to syncronize a manual push of the reset button when uploading to the board.
+
 ### A4988 driver with a Bipolar motor
 ![Bipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_bb.png)
 [Download the bipolar schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_schem.png)
