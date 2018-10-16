@@ -66,16 +66,15 @@
 
 // Driver pin-out definition
 // Define bellow the pin-out for your specific driver.
-//
-// Example for ULN2003 driver board
-//
-//                     IN1, IN2, IN3, IN4
-//#define MOTOR1_PINOUT  2,   3,   4,   5
-//
-// Example for A4988 driver board
-//
-//                      MS1, MS2, MS3, SLEEP,  STEP, DIR
-#define MOTOR1_PINOUT     7,   8,   9,    10,   11,  12
+#ifdef MOTOR1_USE_ULN2003_DRIVER
+  //                    IN1, IN2, IN3, IN4
+  #define MOTOR1_PINOUT   2,   3,   4,   5
+#endif
+
+#ifdef MOTOR1_USE_A4988_DRIVER
+  //                    MS1, MS2, MS3, SLEEP,  STEP, DIR
+  #define MOTOR1_PINOUT  12,  11,  10,     9,     8,   7
+#endif
 
 // Activate the following directive if you'd like to invert the motor rotation
 // changing the focus direction.
