@@ -31,6 +31,7 @@
 #include "version.h"
 #include "config.h"
 
+#include "eeprom.h"
 #include "serial.h"
 #include "log.h"
 #include "analog.h"
@@ -40,7 +41,8 @@
 // --------------------------------------------------------------------------
 // Globals ------------------------------------------------------------------
 // --------------------------------------------------------------------------
-extern float g_ambient;
+extern eeprom_map_t g_config;
+extern float        g_ambient;
 extern MOTOR_DRIVER g_motor1;
 
 #endif

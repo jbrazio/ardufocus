@@ -17,20 +17,35 @@
  *
  */
 
-#ifndef __ISR_H__
-#define __ISR_H__
+#ifndef __EEPROM_H__
+#define __EEPROM_H__
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <avr/interrupt.h>
+#include <avr/eeprom.h>
 
 #include "version.h"
 #include "config.h"
 
-#include "eeprom.h"
-#include "analog.h"
-#include "motor1drv.h"
+#define EEPROM_MAGIC_HEADER  0xaa55
+#define EEPROM_START_ADDRESS 0x0000
 
-extern MOTOR_DRIVER g_motor1;
+struct eeprom_map_t {
+  uint16_t header;      // 00
+  uint32_t position_m1; // 02
+  uint32_t position_m2; // 06
+};
+
+extern eeprom_map_t g_config;
+
+#ifdef USE_EEPROM
+  void eeprom_init(eeprom_map_t *);
+  void eeprom_load(eeprom_map_t *);
+  void eeprom_save(eeprom_map_t *);
+#else
+  inline void eeprom_init(eeprom_map_t * ptr_config) { (*ptr_config) = {0, 0, 0}; }
+  inline void eeprom_load(eeprom_map_t *) { ; }
+  inline void eeprom_save(eeprom_map_t *) { ; }
+#endif
 
 #endif

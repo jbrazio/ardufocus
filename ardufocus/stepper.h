@@ -26,11 +26,10 @@
 #include "version.h"
 #include "config.h"
 
+#include "eeprom.h"
 #include "utility.h"
 #include "macro.h"
 #include "lookuptable.h"
-
-#include "log.h"
 
 class stepper
 {

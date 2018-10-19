@@ -17,20 +17,34 @@
  *
  */
 
-#ifndef __ISR_H__
-#define __ISR_H__
-
-#include <stdint.h>
-#include <stdlib.h>
-#include <avr/interrupt.h>
-
-#include "version.h"
-#include "config.h"
-
 #include "eeprom.h"
-#include "analog.h"
-#include "motor1drv.h"
 
-extern MOTOR_DRIVER g_motor1;
+#ifdef USE_EEPROM
+  void eeprom_init(eeprom_map_t * ptr_config)
+  {
+    eeprom_busy_wait();
+    eeprom_load(ptr_config);
 
+    if ((*ptr_config).header != EEPROM_MAGIC_HEADER)
+    {
+      (*ptr_config) = {
+        .header = EEPROM_MAGIC_HEADER,
+        .position_m1 = 0,
+        .position_m2 = 0
+      };
+    }
+
+    eeprom_save(ptr_config);
+  }
+
+
+  void eeprom_load(eeprom_map_t * ptr_config)
+  {
+    eeprom_read_block(ptr_config, EEPROM_START_ADDRESS, sizeof(eeprom_map_t));
+  }
+
+  void eeprom_save(eeprom_map_t * ptr_config)
+  {
+    eeprom_update_block(ptr_config, EEPROM_START_ADDRESS, sizeof(eeprom_map_t));
+  }
 #endif
