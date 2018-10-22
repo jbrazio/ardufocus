@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <avr/eeprom.h>
 
 #include "version.h"
@@ -43,7 +44,7 @@ extern eeprom_map_t g_config;
   void eeprom_load(eeprom_map_t *);
   void eeprom_save(eeprom_map_t *);
 #else
-  inline void eeprom_init(eeprom_map_t * ptr_config) { (*ptr_config) = {0, 0, 0}; }
+  inline void eeprom_init(eeprom_map_t * ptr) { memset(ptr, 0, sizeof(eeprom_map_t)); }
   inline void eeprom_load(eeprom_map_t *) { ; }
   inline void eeprom_save(eeprom_map_t *) { ; }
 #endif
