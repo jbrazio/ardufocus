@@ -43,7 +43,7 @@
 // Enable auto save of the focuser position uppon finishing each move. When
 // active the focuser will remember between power cycles the exact position
 // where it was.
-//#define USE_EEPROM
+#define USE_EEPROM
 
 
 // ----------------------------------------------------------------------------
@@ -83,7 +83,7 @@
 
 #ifdef MOTOR1_USE_A4988_DRIVER
   //                    MS1, MS2, MS3, SLEEP,  STEP, DIR
-  #define MOTOR1_PINOUT  12,  11,  10,     9,     8,   7
+  #define MOTOR1_PINOUT  12,  11,  10,     8,     7,   6
 #endif
 
 // Activate the following directive if you'd like to invert the motor rotation
@@ -130,7 +130,7 @@
 //  - Max speed: 1000
 //  - Min speed: 250
 //
-#define MOTOR1_MAX_SPEED 250
+#define MOTOR1_MAX_SPEED 150
 #define MOTOR1_MIN_SPEED  25
 
 
@@ -153,8 +153,8 @@
 //         T                        T                         T
 //
 //#define USE_LINEAR_ACCEL
-//#define USE_TRAPEZOID_ACCEL
-#define USE_SMOOTHSTEP_ACCEL
+#define USE_TRAPEZOID_ACCEL
+//#define USE_SMOOTHSTEP_ACCEL
 
 // The acceleration profile, independent of the method used, has at least two
 // main periods: the ramp-up period when the motor is gaining speed and the

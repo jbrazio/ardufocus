@@ -39,6 +39,8 @@ I have no issues driving an ASI1600MMC-Cool with a ZWO EFW8 and a 0.85x field fl
 
 ## BOM
 
+This BOM is to be used by the prefboard version of the controller. A PCB specific BOM will be published soon, in the meanwhile check the schematic for specific parts.
+
 Common components:
 - 1x [Arduino Nano]
 - 1x [Electrolytic capacitor 10uF 25V]
@@ -122,6 +124,21 @@ The wiring of the focuser has changed since commit [8375767], you should remove 
 ### Uploading the firmware
 A capacitor is used on the Arduino's reset line to keep it high during serial connect/disconnect which is mandatory for normal operation but in order to flash the firmware to the board the capacitor must be disconnected, otherwise you need to syncronize a manual push of the reset button when uploading to the board.
 
+
+### PCB and Schematic
+For the complete Eagle files have a look at the [PCB](./doc/pcb/) folder, as an alternative you may perfer to build the [Preforated Board](./doc/fzz/) version.
+Please note that the dual motor setup is a work in progress and is not yet supoprted by the firmware.
+
+![PCB Top View](https://github.com/jbrazio/ardufocus/blob/master/doc/pcb/ardufocus-top.png)
+
+![PCB Bottom View](https://github.com/jbrazio/ardufocus/blob/master/doc/pcb/ardufocus-bottom.png)
+
+### Alternative designs
+
+J Archbold (ozarchie) made an alternative PCB design which is [available here](https://easyeda.com/editor#id=4bba61b315ce478189830a0f22f85c1a|f9187ab81f2a4f3ba5474865568245bf).
+
+----
+
 ### A4988 driver with a Bipolar motor
 ![Bipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_bb.png)
 [Download the bipolar schematic](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-bipolar_schem.png)
@@ -139,6 +156,7 @@ To use this configuration you must edit the `config.h` file:
 #### Pinout
 ![Bipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/pinout-bipolar.png)
 
+----
 
 ### ULN2003 driver with a Unipolar motor
 ![Unipolar](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/schematic-unipolar_bb.png)
