@@ -1,7 +1,7 @@
 # Disclaimer
 
 Unless otherwise noted, all materials contained in this repository are copyrighted
-Copyright (C) 2017-2018 João Brázio [joao@brazio.org] and licensed under GPLv3.
+Copyright (C) 2017-2019 João Brázio [joao@brazio.org] and licensed under GPLv3.
 
 The following materials are property of their respective owners:
 
