@@ -17,29 +17,16 @@
  *
  */
 
-#ifndef __SERIAL_PROTOCOL_H__
-#define __SERIAL_PROTOCOL_H__
+#ifndef __PROTOCOL_H__
+#define __PROTOCOL_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "api.h"
 
-#include <avr/wdt.h>
-
-#include "version.h"
-#include "config.h"
-
-#include "log.h"
-#include "utility.h"
-#include "analog.h"
-#include "motor1drv.h"
-
-extern float g_ambient;
-extern MOTOR_DRIVER g_motor1;
-
-namespace protocol
-{
-  void process(const char*);
+class protocol: protected api {
+    virtual void setup()              = 0;
+    virtual void receive()            = 0;
+    virtual void reply(const char*)   = 0;
+    virtual void reply_P(const char*) = 0;
 };
 
 #endif

@@ -30,12 +30,8 @@
 #define DEFAULT_MAX_SPEED 250
 #define DEFAULT_MIN_SPEED  25
 
-#define SERIAL_CMD_LEN   9u
-#define SERIAL_TXBUF_SZ (SERIAL_CMD_LEN * 2)
-#define SERIAL_RXBUF_SZ (SERIAL_CMD_LEN * 3)
-
 // User warnings --------------------------------------------------------------
-#ifdef ENABLE_REMOTE_RESET
+#if defined(ENABLE_REMOTE_RESET)
   #warning Remote reset is enabled, make sure your bootloader is updated !
 #endif
 
@@ -81,6 +77,11 @@
   #error Please review the config.h file.
 #else
   // Motor 2 driver is optional if a pinout is undef
+#endif
+
+// High resolution mode -------------------------------------------------------
+#if defined(MOTOR1_HIGH_RESOLUTION) || defined(MOTOR2_HIGH_RESOLUTION)
+  #define HIGH_RESOLUTION_MODE
 #endif
 
 // Sanity check for motor one -------------------------------------------------
@@ -145,6 +146,10 @@
   #else
     #undef MOTOR2_SLEEP_WHEN_IDLE
     #define MOTOR2_SLEEP_WHEN_IDLE true
+  #endif
+
+  #ifndef MOTOR2_HIGH_RESOLUTION
+    #define MOTOR2_HIGH_RESOLUTION false
   #endif
 
   #ifndef MOTOR2_COMPRESS_STEPS

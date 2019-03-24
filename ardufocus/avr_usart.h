@@ -17,12 +17,27 @@
  *
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __USART_H__
+#define __USART_H__
 
- // Program version and release
-#define ARDUFOCUS_VERSION "0.2a"
-#define ARDUFOCUS_BRANCH  "master"
-#define ARDUFOCUS_URL     "https://github.com/jbrazio/ardufocus"
+#include <stdint.h>
+#include <stdlib.h>
+#include <avr/interrupt.h>
+
+#include "hal.h"
+#include "config.h"
+#include "ringbuf.h"
+
+#define SERIAL_TXBUF_SZ 39u
+#define SERIAL_RXBUF_SZ 78u
+
+namespace usart {
+  struct buffer_t {
+    Ringbuf<char, SERIAL_RXBUF_SZ> rx;
+    Ringbuf<char, SERIAL_TXBUF_SZ> tx;
+  };
+
+  extern buffer_t buffer;
+}
 
 #endif

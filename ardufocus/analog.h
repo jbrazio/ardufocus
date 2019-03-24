@@ -21,15 +21,12 @@
 #define __ADC_H__
 
 #include <stdint.h>
-#include <stdlib.h>
-
 #include <avr/interrupt.h>
 
 #include "version.h"
 #include "config.h"
 
 #include "macro.h"
-#include "log.h"
 #include "utility.h"
 
 extern float g_ambient;

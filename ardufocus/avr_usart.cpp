@@ -17,12 +17,21 @@
  *
  */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#include "avr_usart.h"
 
- // Program version and release
-#define ARDUFOCUS_VERSION "0.2a"
-#define ARDUFOCUS_BRANCH  "master"
-#define ARDUFOCUS_URL     "https://github.com/jbrazio/ardufocus"
+usart::buffer_t usart::buffer;
 
-#endif
+ISR(USART_RX_VECT) {
+  // read a byte from the incoming stream
+  // check for parity error and buffer it
+  if (bit_is_clear(UCSR0A, UPE0)) { usart::buffer.rx.enqueue(UDR0); }
+}
+
+ISR(USART_TX_VECT) {
+  // transmit a byte from the buffer
+  // disable USART TX ISR when buffer is empty
+  if (! usart::buffer.tx.empty()) {
+    UDR0 = usart::buffer.tx.dequeue();
+    UCSR0A |= bit(TXC0);
+  } else { UCSR0B &= ~bit(UDRIE0); }
+}

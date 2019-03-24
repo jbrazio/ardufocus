@@ -103,17 +103,11 @@
 // AF point.
 #define MOTOR1_SLEEP_TIMEOUT 15
 
-
-// -------- DEPRECATED --------
-// --- WILL BE REMOVED SOON ---
-//
-// When active each two half-steps will increase one unit on the step counter
-// thus making distance-per-step constant between the two stepping modes, full
-// and half.
-//
-// Enable this flag if you're using a cheap stepper motor such as 28BYJ-48 and
-// verify if the overall system accuracy increases.
-//#define MOTOR1_COMPRESS_STEPS
+// Activating this option will enable high resolution counters (32-bit) thus
+// becoming incompatible with the standard Moonlite protocol. You should enable
+// this if using a gearbox or having a milimetric threaded rod on the drive
+// mechanism.
+//#define MOTOR1_HIGH_RESOLUTION
 
 
 // ----------------------------------------------------------------------------
@@ -194,6 +188,10 @@
 // ----------------------------------------------------------------------------
 // DO NOT EDIT ANYTHING BELLOW THIS HEADER ------------------------------------
 // ----------------------------------------------------------------------------
+#ifdef USE_CONFIG_OVERRIDE
+  #include "localcfg.h"
+#endif
+
 #include "assert.h"
 
 #endif

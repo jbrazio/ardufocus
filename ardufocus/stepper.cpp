@@ -81,14 +81,15 @@ void stepper::halt()
  * @details [long description]
  *
  */
-uint16_t stepper::get_current_position()
+uint32_t stepper::get_current_position()
 {
   CRITICAL_SECTION_START
-    const uint16_t c = m_position.current;
+    const uint32_t c = m_position.current;
   CRITICAL_SECTION_END
 
   return c;
 }
+
 
 
 /**
@@ -96,8 +97,7 @@ uint16_t stepper::get_current_position()
  * @details [long description]
  *
  */
-void stepper::set_current_position(const uint16_t& target)
-{
+void stepper::set_current_position(const uint32_t& target) {
   CRITICAL_SECTION_START
     m_position.current = target;
     m_position.target  = target;
@@ -138,14 +138,15 @@ void stepper::set_speed(const uint16_t& target)
  * @details [long description]
  *
  */
-uint16_t stepper::get_target_position()
+uint32_t stepper::get_target_position()
 {
   CRITICAL_SECTION_START
-    const uint16_t t = m_position.target;
+    const uint32_t t = m_position.target;
   CRITICAL_SECTION_END
 
   return t;
 }
+
 
 
 /**
@@ -153,8 +154,7 @@ uint16_t stepper::get_target_position()
  * @details [long description]
  *
  */
-void stepper::set_target_position(const uint16_t& target)
-{
+void stepper::set_target_position(const uint32_t& target) {
   CRITICAL_SECTION_START
     m_position.target = target;
 

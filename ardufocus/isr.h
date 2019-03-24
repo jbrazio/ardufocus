@@ -27,7 +27,6 @@
 #include "version.h"
 #include "config.h"
 
-#include "eeprom.h"
 #include "analog.h"
 #include "motor1drv.h"
 

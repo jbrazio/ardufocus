@@ -21,9 +21,7 @@
 #define __ARDUFOCUS_H__
 
 #include <stdint.h>
-#include <stdlib.h>
 #include <math.h>
-
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <avr/wdt.h>
@@ -32,11 +30,11 @@
 #include "config.h"
 
 #include "eeprom.h"
-#include "serial.h"
-#include "log.h"
 #include "analog.h"
-#include "protocol.h"
 #include "motor1drv.h"
+
+#include "moonlite.h"
+
 
 // --------------------------------------------------------------------------
 // Globals ------------------------------------------------------------------
@@ -44,5 +42,7 @@
 extern eeprom_map_t g_config;
 extern float        g_ambient;
 extern MOTOR_DRIVER g_motor1;
+
+extern moonlite     comms;
 
 #endif

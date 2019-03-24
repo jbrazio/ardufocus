@@ -21,7 +21,6 @@
 #define __A4988_H__
 
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "version.h"
 #include "config.h"

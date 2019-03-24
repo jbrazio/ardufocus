@@ -22,10 +22,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-
 #include <avr/interrupt.h>
-
-#include "macro.h"
 
 /**
  * @brief   Circular Queue class
@@ -65,11 +62,13 @@ public:
   {
     if (full()) return false;
 
-    CRITICAL_SECTION_START
-      m_buffer.queue[m_buffer.tail] = item;
-      m_buffer.tail = (m_buffer.tail +1) % N;
-    CRITICAL_SECTION_END
+    const uint8_t __SREG___ = SREG;
+    cli();
 
+    m_buffer.queue[m_buffer.tail] = item;
+    m_buffer.tail = (m_buffer.tail +1) % N;
+
+    SREG = __SREG___;
     return true;
   }
 
@@ -104,10 +103,13 @@ public:
    */
   bool reset()
   {
-    CRITICAL_SECTION_START
-      m_buffer.head = 0;
-      m_buffer.tail = 0;
-    CRITICAL_SECTION_END
+    const uint8_t __SREG___ = SREG;
+    cli();
+
+    m_buffer.head = 0;
+    m_buffer.tail = 0;
+
+    SREG = __SREG___;
     return true;
   }
 
@@ -129,11 +131,13 @@ public:
   {
     if (empty()) return T();
 
-    CRITICAL_SECTION_START
-      const T item = m_buffer.queue[m_buffer.head];
-      m_buffer.head = (m_buffer.head +1) % N;
-    CRITICAL_SECTION_END
+    const uint8_t __SREG___ = SREG;
+    cli();
 
+    const T item = m_buffer.queue[m_buffer.head];
+    m_buffer.head = (m_buffer.head +1) % N;
+
+    SREG = __SREG___;
     return item;
   }
 };

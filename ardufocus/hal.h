@@ -68,6 +68,14 @@ enum hal_non_existent_t     { NOT_A_PIN = 0, NOT_A_PORT = 0 };
     { 0b011, 64 }, { 0b100, 256 }, { 0b101, 1024 }
   };
 
+  #ifdef __AVR_ATmega328PB__
+    #define USART_RX_VECT USART0_RX_vect
+    #define USART_TX_VECT USART0_UDRE_vect
+  #else
+    #define USART_RX_VECT USART_RX_vect
+    #define USART_TX_VECT USART_UDRE_vect
+  #endif
+
 #else
   #error No supported platform found
   #error Please file a bug at https://github.com/jbrazio/ardufocus/issues

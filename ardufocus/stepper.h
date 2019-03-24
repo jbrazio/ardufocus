@@ -37,13 +37,15 @@ class stepper
     struct position_t
     {
       bool moving;      // When set to true it will start the movement
-      uint16_t current, // Absolution position
+
+      uint32_t current, // Absolution position
                target;  // Target value for the step counter
 
       #ifdef HAS_ACCELERATION
-      uint16_t distance,  // Move distance
-               relative,  // Relative position
-               easein,    // Step where easein stops
+      uint32_t distance,  // Move distance
+               relative;  // Relative position
+
+      uint32_t easein,    // Step where easein stops
                easeout;   // Step where easeout starts
       #endif
     };
@@ -75,44 +77,44 @@ class stepper
     virtual void init();
     virtual void halt();
 
-    virtual inline void    sleep() { ; }
-    virtual inline void    set_full_step() { ; }
-    virtual inline void    set_half_step() { ; }
-    virtual inline uint8_t get_step_mode() { return m_mode; }
+    virtual inline void sleep()                        { ; }
+    virtual inline void set_full_step()                { ; }
+    virtual inline void set_half_step()                { ; }
 
-    virtual inline bool step_cw()  { return false; }
-    virtual inline bool step_ccw() { return false; }
+    virtual inline uint8_t get_step_mode()             { return m_mode;             }
 
-    inline bool get_sleep_when_idle() { return m_sleep_when_idle; }
-    inline void set_sleep_when_idle(const bool& b) { m_sleep_when_idle = b; }
+    virtual inline bool step_cw()                      { return false;              }
+    virtual inline bool step_ccw()                     { return false;              }
 
-    inline bool get_invert_direction() { return m_invert_direction; }
-    inline void set_invert_direction(const bool& b) { m_invert_direction = b; }
+    inline bool get_sleep_when_idle()                  { return m_sleep_when_idle;  }
+    inline void set_sleep_when_idle(const bool& b)     { m_sleep_when_idle = b;     }
 
-    inline bool get_compress_steps() { return m_compress_steps; }
-    inline void set_compress_steps(const bool& b) { m_compress_steps = b; }
+    inline bool get_invert_direction()                 { return m_invert_direction; }
+    inline void set_invert_direction(const bool& b)    { m_invert_direction = b;    }
 
-    inline uint16_t get_max_speed() { return m_max_speed; }
-    inline void     set_max_speed(uint16_t const& s) { m_max_speed = s; }
+    inline bool get_compress_steps()                   { return m_compress_steps;   }
+    inline void set_compress_steps(const bool& b)      { m_compress_steps = b;      }
 
-    inline uint16_t get_min_speed() { return m_min_speed; }
-    inline void     set_min_speed(uint16_t const& s) { m_min_speed = s; }
+    inline uint16_t get_max_speed()                    { return m_max_speed;        }
+    inline void     set_max_speed(uint16_t const& s)   { m_max_speed = s;           }
 
-    inline uint8_t get_sleep_timeout() { return m_sleep_timeout; }
-    inline void    set_sleep_timeout(uint8_t const& t) { m_sleep_timeout = t; }
+    inline uint16_t get_min_speed()                    { return m_min_speed;        }
+    inline void     set_min_speed(uint16_t const& s)   { m_min_speed = s;           }
+
+    inline uint8_t get_sleep_timeout()                 { return m_sleep_timeout;    }
+    inline void    set_sleep_timeout(uint8_t const& t) { m_sleep_timeout = t;       }
 
     void move();
     bool is_moving();
     void speed tick();
 
-    uint16_t get_current_position();
-    void     set_current_position(const uint16_t&);
-
     uint16_t get_speed();
     void     set_speed(const uint16_t&);
 
-    uint16_t get_target_position();
-    void     set_target_position(const uint16_t&);
+    uint32_t get_current_position();
+    void     set_current_position(const uint32_t&);
+    uint32_t get_target_position ();
+    void     set_target_position (const uint32_t&);
 };
 
 #endif
