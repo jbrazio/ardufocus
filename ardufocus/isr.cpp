@@ -30,5 +30,6 @@ ISR(TIMER0_COMPA_vect)
 
   if (!g_motor1.is_moving()) {
     g_config.position_m1 = g_motor1.get_current_position();
+    eeprom_save(&g_config);
   }
 }

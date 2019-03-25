@@ -98,10 +98,7 @@ int main(void)
   // --------------------------------------------------------------------------
   // Loop routine -------------------------------------------------------------
   // --------------------------------------------------------------------------
-  for(;;) {
-    comms.receive();
-    eeprom_save(&g_config);
-  }
+  for(;;) { comms.receive(); util::delay_1ms(); }
 
   // Someone made an Opsie !
   // Code should not reach this

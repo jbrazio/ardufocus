@@ -21,6 +21,7 @@
 #define __ARDUFOCUS_H__
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
@@ -31,6 +32,7 @@
 
 #include "eeprom.h"
 #include "analog.h"
+#include "utility.h"
 #include "motor1drv.h"
 
 #include "moonlite.h"

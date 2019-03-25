@@ -19,6 +19,28 @@
 
 #include "uln2003.h"
 
+// FIXME TODO
+// When this clas is active the linker was screaming:
+// undefined reference to `__cxa_pure_virtual'
+
+extern "C" void __cxa_pure_virtual(void) __attribute__ ((__noreturn__));
+extern "C" void __cxa_deleted_virtual(void) __attribute__ ((__noreturn__));
+
+void __cxa_pure_virtual(void) {
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  abort();
+}
+
+void __cxa_deleted_virtual(void) {
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  abort();
+}
+
+// EOF
+
+
 /**
  * @brief [brief description]
  * @details [long description]
@@ -95,7 +117,7 @@ void uln2003::set_half_step()
  */
 bool uln2003::step_cw()
 {
-  uln2003::step();
+  step();
   --m_sequence;
   if (m_sequence < 0) { m_sequence = (m_stepping_sz -1); }
   return true;
@@ -109,7 +131,7 @@ bool uln2003::step_cw()
  */
 bool uln2003::step_ccw()
 {
-  uln2003::step();
+  step();
   ++m_sequence;
   if (m_sequence > (int8_t) (m_stepping_sz -1)) { m_sequence = 0; }
   return true;

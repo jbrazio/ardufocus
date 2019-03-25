@@ -228,6 +228,7 @@ class api {
       }
     }
 
+    #ifdef ENABLE_REMOTE_RESET
     static void system_reset(const uint32_t& wait) {
       wdt_disable();
       _delay_ms(wait);
@@ -235,6 +236,7 @@ class api {
       wdt_enable(WDTO_2S);
       while (true) { /* loop */ }
     }
+    #endif
 
 };
 
