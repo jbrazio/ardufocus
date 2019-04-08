@@ -24,6 +24,7 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 
+#include "dtr.h"
 #include "config.h"
 #include "analog.h"
 #include "motor1drv.h"
@@ -233,11 +234,15 @@ class api {
       wdt_disable();
       _delay_ms(wait);
 
-      wdt_enable(WDTO_2S);
+      wdt_enable(WDTO_1S);
       while (true) { /* loop */ }
     }
     #endif
 
+    #ifdef ENABLE_DTR_RESET
+    static void    set_dtr_reset(const bool& value) { dtr_reset(value);       }
+    static uint8_t get_dtr_reset()                  { return dtr_reset_get(); }
+    #endif
 };
 
 #endif

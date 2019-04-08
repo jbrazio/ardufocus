@@ -61,6 +61,19 @@
 // [bug report]: https://github.com/arduino/Arduino/issues/4492
 //#define ENABLE_REMOTE_RESET
 
+// Enable a subset of commands to control the status of the DTR auto-reset
+// feature on the Arduino boards. By default Ardufocus uses a cap between the
+// reset pin and ground to prevent the DTR signal to reset the board, which
+// happens everytime a new serial connection is open to the board.
+// By having the cap between the reset pin and another board pin, enabling
+// this feature allows the DTR auto-reset to be controlled. This is usefull
+// for firmware uploads, if the DTR auto-reset is disabled the user must
+// manually press the reset button when uploading new firmware.
+//#define ENABLE_DTR_RESET
+
+// This is the board pin which controls the enable/disable of the feature.
+//#define DTR_RESET_PINOUT 15
+
 
 // ----------------------------------------------------------------------------
 // MOTOR #1 CONFIGURATION -----------------------------------------------------

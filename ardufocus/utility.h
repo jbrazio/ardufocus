@@ -30,11 +30,15 @@
 
 #include "hal.h"
 #include "macro.h"
+#include "io.h"
 
 extern volatile uint32_t timer0_compa_count;
 
 namespace util
 {
+  void dtr_disable();
+  void  dtr_enable();
+
   float steinhart(const uint16_t&);
 
   uint16_t speed get_timer_prescaler(uint8_t const&);

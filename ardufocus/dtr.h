@@ -17,35 +17,31 @@
  *
  */
 
-#ifndef __ARDUFOCUS_H__
-#define __ARDUFOCUS_H__
-
-#include <stdint.h>
-#include <stdlib.h>
-#include <math.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <avr/wdt.h>
+#ifndef __DTR_RESET_H__
+#define __DTR_RESET_H__
 
 #include "version.h"
 #include "config.h"
 
+#include "io.h"
 #include "eeprom.h"
-#include "analog.h"
-#include "utility.h"
-#include "motor1drv.h"
 
-#include "moonlite.h"
-#include "dtr.h"
-
-
-// --------------------------------------------------------------------------
-// Globals ------------------------------------------------------------------
-// --------------------------------------------------------------------------
 extern eeprom_map_t g_config;
-extern float        g_ambient;
-extern MOTOR_DRIVER g_motor1;
 
-extern moonlite     comms;
+void dtr_disable() {
+  #ifdef ENABLE_DTR_RESET
+    if (g_config.dtr_reset == false) {
+      IO::set_as_output(DTR_RESET_PINOUT);
+    }
+  #endif
+}
+
+void dtr_reset(const bool& value) {
+  g_config.dtr_reset = value;
+}
+
+uint8_t dtr_reset_get() {
+  return (g_config.dtr_reset) ? 1 : 0;
+}
 
 #endif

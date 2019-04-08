@@ -35,6 +35,7 @@ struct eeprom_map_t {
   uint16_t header;      // 00
   uint32_t position_m1; // 02
   uint32_t position_m2; // 06
+  bool     dtr_reset;   // 10
 };
 
 extern eeprom_map_t g_config;

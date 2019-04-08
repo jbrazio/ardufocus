@@ -36,6 +36,7 @@
 #include "version.h"
 #include "protocol.h"
 #include "utility.h"
+#include "dtr.h"
 
 class moonlite: protected protocol, protected serial {
   public:
@@ -45,6 +46,7 @@ class moonlite: protected protocol, protected serial {
 
     void setup() {
       serial::setup();
+
       #if 0
       switch(MCUSR) {
         case WDRF:
@@ -63,10 +65,10 @@ class moonlite: protected protocol, protected serial {
           serial::write_P(PSTR("Power-on reset flag\n"));
           break;
       }
+      #endif
 
       serial::write_P(PSTR("Ardufocus " ARDUFOCUS_VERSION "-" ARDUFOCUS_BRANCH " ready.\n"));
       serial::write_P(PSTR("Visit " ARDUFOCUS_URL " for updates.\n\n"));
-      #endif
     }
 
     void receive() {
@@ -154,6 +156,12 @@ class moonlite: protected protocol, protected serial {
               #endif
               break;
 
+            #ifdef ENABLE_DTR_RESET
+            case 'Y':
+              sprintf_P(buffer, PSTR("%02X"), get_dtr_reset());
+              break;
+            #endif
+
             default:
               reply_P(PSTR ("00"));
           }
@@ -192,6 +200,12 @@ class moonlite: protected protocol, protected serial {
               motor_set_position(motor, (uint32_t)util::hex2l(buffer));
               #endif
               break;
+
+            #ifdef ENABLE_DTR_RESET
+            case 'Y':
+              set_dtr_reset((buffer[0] == '1') ? true : false);
+              break;
+            #endif
           } break;
 
         default:

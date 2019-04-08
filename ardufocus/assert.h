@@ -46,6 +46,11 @@
   #endif
 #endif
 
+#if defined(ENABLE_DTR_RESET) && !defined(DTR_RESET_PINOUT)
+  #error DTR_RESET_PINOUT is active but DTR_RESET_PINOUT is missing.
+  #error Please review the config.h file.
+#endif
+
 // DRV8825 driver hack --------------------------------------------------------
 #if defined(MOTOR1_USE_DRV8825_DRIVER)
   #define MOTOR1_USE_A4988_DRIVER
