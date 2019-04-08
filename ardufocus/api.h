@@ -110,14 +110,14 @@ class api {
       return 0;
     }
 
-    static bool motor_is_moving(const motor_t& idx) {
+    static uint8_t motor_is_moving(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return g_motor1.is_moving();
+          return ((g_motor1.is_moving()) ? 1 : 0);
           break;
 
         case MOTOR_TWO:
-          // return g_motor2.is_moving();
+          //return ((g_motor2.is_moving()) ? 1 : 0);
           break;
       }
 
