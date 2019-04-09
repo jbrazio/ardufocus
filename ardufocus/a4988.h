@@ -38,6 +38,23 @@ class a4988: public stepper
       pin_t sleep, step, direction;
     };
 
+    /*
+     *
+     *   A4988 STEP STICK PINOUT
+     *
+     *       .-----------.
+     * !ENA |o           o| VMOT
+     *  MS1 |o  -----    o| GND
+     *  MS2 |o |     |   o| 2B
+     *  MS3 |o |     |   o| 2A
+     * !RST |o  -----    o| 1A
+     * !SLP |o      ---  o| 1B
+     *  STP |o     | O | o| VDD
+     *  DIR |o      ---  o| GND
+     *       `-----------´
+     *
+     */
+
   protected:
     uint8_t m_step = 0;
     const pinout_t m_pinout;
