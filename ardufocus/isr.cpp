@@ -26,10 +26,28 @@
  */
 ISR(TIMER0_COMPA_vect)
 {
-  g_motor1.tick();
+  #if defined(MOTOR1_HAS_DRIVER) && defined(MOTOR2_HAS_DRIVER)
+    g_motor1->tick();
+    g_motor2->tick();
 
-  if (!g_motor1.is_moving()) {
-    g_config.position_m1 = g_motor1.get_current_position();
-    eeprom_save(&g_config);
-  }
+    if (!g_motor1->is_moving() && !g_motor2->is_moving()) {
+      g_config.position_m1 = g_motor1->get_current_position();
+      g_config.position_m2 = g_motor2->get_current_position();
+      eeprom_save(&g_config);
+    }
+  #elif defined(MOTOR1_HAS_DRIVER)
+    g_motor1->tick();
+
+    if (!g_motor1->is_moving()) {
+      g_config.position_m1 = g_motor1->get_current_position();
+      eeprom_save(&g_config);
+    }
+  #elif defined(MOTOR2_HAS_DRIVER)
+    g_motor2->tick();
+
+    if (!g_motor2->is_moving()) {
+      g_config.position_m2 = g_motor2->get_current_position();
+      eeprom_save(&g_config);
+    }
+  #endif
 }

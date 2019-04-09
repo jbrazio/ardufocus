@@ -74,6 +74,11 @@
 // This is the board pin which controls the enable/disable of the feature.
 //#define DTR_RESET_PINOUT 15
 
+// Activating this option will enable high resolution counters (32-bit) thus
+// becoming incompatible with the standard Moonlite protocol. You should enable
+// this if using a gearbox or having a milimetric threaded rod on the drive
+// mechanism.
+//#define HIGH_RESOLUTION_MODE
 
 // ----------------------------------------------------------------------------
 // MOTOR #1 CONFIGURATION -----------------------------------------------------
@@ -115,12 +120,6 @@
 // to wait a bit more than the time your system needs to take and measure each
 // AF point.
 #define MOTOR1_SLEEP_TIMEOUT 15
-
-// Activating this option will enable high resolution counters (32-bit) thus
-// becoming incompatible with the standard Moonlite protocol. You should enable
-// this if using a gearbox or having a milimetric threaded rod on the drive
-// mechanism.
-//#define MOTOR1_HIGH_RESOLUTION
 
 
 // ----------------------------------------------------------------------------

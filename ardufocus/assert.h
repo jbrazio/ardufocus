@@ -21,18 +21,17 @@
 #define __ASSERT_H__
 
 // Defaults -------------------------------------------------------------------
-#define TIMER0_FREQ 20000 // Hz
+#define TIMER0_FREQ 20000L // Hz
 #define TIMER0_OCRA ((F_CPU/8) / TIMER0_FREQ)
-#define TIMER0_TICK (1000000 / TIMER0_FREQ) // uS
+#define TIMER0_TICK (1000000L  / TIMER0_FREQ) // uS
 
+#define DEFAULT_MAX_SPEED    250
+#define DEFAULT_MIN_SPEED     25
 #define DEFAULT_SLEEP_TIMEOUT 15
-
-#define DEFAULT_MAX_SPEED 250
-#define DEFAULT_MIN_SPEED  25
 
 // User warnings --------------------------------------------------------------
 #if defined(ENABLE_REMOTE_RESET)
-  #warning Remote reset is enabled, make sure your bootloader is updated !
+  //#warning Remote reset is enabled, make sure your bootloader is updated !
 #endif
 
 // Invalid configurations -----------------------------------------------------
@@ -46,9 +45,16 @@
   #endif
 #endif
 
-#if defined(ENABLE_DTR_RESET) && !defined(DTR_RESET_PINOUT)
-  #error DTR_RESET_PINOUT is active but DTR_RESET_PINOUT is missing.
-  #error Please review the config.h file.
+#if defined(ENABLE_DTR_RESET)
+  #if !defined(DTR_RESET_PINOUT)
+    #error DTR_RESET_PINOUT is active but DTR_RESET_PINOUT is missing.
+    #error Please review the config.h file.
+  #endif
+
+  #if !defined(USE_EEPROM)
+    #error ENABLE_DTR_RESET requiures USE_EEPROM to be active aswell.
+    #error Please review the config.h file.
+  #endif
 #endif
 
 // DRV8825 driver hack --------------------------------------------------------
@@ -63,13 +69,7 @@
 #elif defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR1_USE_ULN2003_DRIVER)
   #define MOTOR1_HAS_DRIVER
 #else
-  #error No stepper driver selected for motor #1.
-  #error Please review the config.h file.
-#endif
-
-// DRV8825 driver hack --------------------------------------------------------
-#if defined(MOTOR2_USE_DRV8825_DRIVER)
-  #define MOTOR2_USE_A4988_DRIVER
+  // Motor 1 is optional
 #endif
 
 #if defined(MOTOR2_USE_A4988_DRIVER) && defined(MOTOR2_USE_ULN2003_DRIVER)
@@ -77,11 +77,35 @@
   #error Please review the config.h file.
 #elif defined(MOTOR2_USE_A4988_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
   #define MOTOR2_HAS_DRIVER
-#elif defined (MOTOR2_PINOUT)
+#else
+  // Motor 2 is optional
+#endif
+
+// DRV8825 driver hack --------------------------------------------------------
+#if defined(MOTOR2_USE_DRV8825_DRIVER)
+  #define MOTOR2_USE_A4988_DRIVER
+#endif
+
+// Optional motor 2 -----------------------------------------------------------
+#if !defined(MOTOR1_HAS_DRIVER) && defined(MOTOR1_PINOUT)
+  #error No motor pinout defined for motor #1.
+  #error Please review the config.h file.
+#elif defined(MOTOR1_HAS_DRIVER) && !defined(MOTOR1_PINOUT)
+  #error No stepper driver selected for motor #1.
+  #error Please review the config.h file.
+#endif
+
+#if !defined(MOTOR2_HAS_DRIVER) && defined(MOTOR2_PINOUT)
+  #error No motor pinout defined for motor #2.
+  #error Please review the config.h file.
+#elif defined(MOTOR2_HAS_DRIVER) && !defined(MOTOR2_PINOUT)
   #error No stepper driver selected for motor #2.
   #error Please review the config.h file.
-#else
-  // Motor 2 driver is optional if a pinout is undef
+#endif
+
+#if !defined(MOTOR1_HAS_DRIVER) && !defined(MOTOR2_HAS_DRIVER)
+  #error At least ONE motor must be defined.
+  #error Please review the config.h file.
 #endif
 
 // High resolution mode -------------------------------------------------------
@@ -153,8 +177,8 @@
     #define MOTOR2_SLEEP_WHEN_IDLE true
   #endif
 
-  #ifndef MOTOR2_HIGH_RESOLUTION
-    #define MOTOR2_HIGH_RESOLUTION false
+  #ifndef MOTOR2_SLEEP_TIMEOUT
+    #define MOTOR2_SLEEP_TIMEOUT DEFAULT_SLEEP_TIMEOUT
   #endif
 
   #ifndef MOTOR2_COMPRESS_STEPS

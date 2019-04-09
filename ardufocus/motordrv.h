@@ -17,20 +17,30 @@
  *
  */
 
-#ifndef __MOTOR1_DRIVER_H__
-#define __MOTOR1_DRIVER_H__
+#ifndef __MOTOR_DRIVER_H__
+#define __MOTOR_DRIVER_H__
 
 #include "version.h"
 #include "config.h"
 
-#if defined(MOTOR1_USE_A4988_DRIVER)
+#if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
   #include "a4988.h"
-  #define MOTOR_DRIVER a4988
+#endif
 
-#elif defined(MOTOR1_USE_ULN2003_DRIVER)
+#if defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
   #include "uln2003.h"
-  #define MOTOR_DRIVER uln2003
+#endif
 
+#if defined(MOTOR1_USE_A4988_DRIVER)
+  a4988   motor1drv({ MOTOR1_PINOUT });
+#elif defined(MOTOR1_USE_ULN2003_DRIVER)
+  uln2003 motor1drv({ MOTOR1_PINOUT });
+#endif
+
+#if defined(MOTOR2_USE_A4988_DRIVER)
+  a4988   motor2drv({ MOTOR2_PINOUT });
+#elif defined(MOTOR2_USE_ULN2003_DRIVER)
+  uln2003 motor2drv({ MOTOR2_PINOUT });
 #endif
 
 #endif

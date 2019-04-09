@@ -29,8 +29,14 @@
 
 #include "eeprom.h"
 #include "analog.h"
-#include "motor1drv.h"
+#include "stepper.h"
 
-extern MOTOR_DRIVER g_motor1;
+#ifdef MOTOR1_HAS_DRIVER
+extern stepper* g_motor1;
+#endif
+
+#ifdef MOTOR2_HAS_DRIVER
+extern stepper* g_motor2;
+#endif
 
 #endif

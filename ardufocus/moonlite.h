@@ -96,7 +96,7 @@ class moonlite: protected protocol, protected serial {
         motor = MOTOR_TWO;
       }
 
-      switch (str[0] + offset) {
+      switch (str[0 + offset]) {
         case 'C':
           update_temperature();
           break;
@@ -119,7 +119,7 @@ class moonlite: protected protocol, protected serial {
           } break;
 
         case 'G':
-          switch(str[1] + offset) {
+          switch(str[1 + offset]) {
             case 'D':
               sprintf_P(buffer, PSTR("%02X"), motor_get_speed(motor));
               break;
@@ -172,7 +172,7 @@ class moonlite: protected protocol, protected serial {
         case 'S':
           strncpy(buffer, str + 2 + offset, strlen(str) - (2 + offset));
 
-          switch(str[1] + offset) {
+          switch(str[1 + offset]) {
             case 'D':
               motor_set_speed(motor, util::hex2l(buffer));
               break;

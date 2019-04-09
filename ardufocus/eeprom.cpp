@@ -33,7 +33,6 @@
     }
   }
 
-
   void eeprom_load(eeprom_map_t * ptr)
   {
     eeprom_read_block(ptr, EEPROM_START_ADDRESS, sizeof(eeprom_map_t));

@@ -24,7 +24,15 @@
 // --------------------------------------------------------------------------
 eeprom_map_t  g_config;
 float         g_ambient = 0.0F;
-MOTOR_DRIVER  g_motor1({ MOTOR1_PINOUT });
+
+#ifdef MOTOR1_HAS_DRIVER
+  stepper* g_motor1 = &motor1drv;
+#endif
+
+#ifdef MOTOR2_HAS_DRIVER
+  stepper* g_motor2 = &motor2drv;
+#endif
+
 
 int main(void)
 {
@@ -55,7 +63,13 @@ int main(void)
   // --------------------------------------------------------------------------
   // Load settings ------------------------------------------------------------
   // --------------------------------------------------------------------------
-  g_motor1.set_current_position(g_config.position_m1);
+  #ifdef MOTOR1_HAS_DRIVER
+    g_motor1->set_current_position(g_config.position_m1);
+  #endif
+
+  #ifdef MOTOR2_HAS_DRIVER
+    g_motor2->set_current_position(g_config.position_m2);
+  #endif
 
 
   // --------------------------------------------------------------------------
@@ -91,13 +105,25 @@ int main(void)
   // --------------------------------------------------------------------------
   // Motor #1 init routine ----------------------------------------------------
   // --------------------------------------------------------------------------
-  g_motor1.set_invert_direction(MOTOR1_INVERT_DIRECTION);
-  g_motor1.set_sleep_when_idle(MOTOR1_SLEEP_WHEN_IDLE);
-  g_motor1.set_sleep_timeout(MOTOR1_SLEEP_TIMEOUT);
-  g_motor1.set_compress_steps(MOTOR1_COMPRESS_STEPS);
-  g_motor1.set_max_speed(MOTOR1_MAX_SPEED);
-  g_motor1.set_min_speed(MOTOR1_MIN_SPEED);
-  g_motor1.init();
+  #ifdef MOTOR1_HAS_DRIVER
+    g_motor1->set_invert_direction(MOTOR1_INVERT_DIRECTION);
+    g_motor1->set_sleep_when_idle(MOTOR1_SLEEP_WHEN_IDLE);
+    g_motor1->set_sleep_timeout(MOTOR1_SLEEP_TIMEOUT);
+    g_motor1->set_compress_steps(MOTOR1_COMPRESS_STEPS);
+    g_motor1->set_max_speed(MOTOR1_MAX_SPEED);
+    g_motor1->set_min_speed(MOTOR1_MIN_SPEED);
+    g_motor1->init();
+  #endif
+
+  #ifdef MOTOR2_HAS_DRIVER
+    g_motor2->set_invert_direction(MOTOR2_INVERT_DIRECTION);
+    g_motor2->set_sleep_when_idle(MOTOR2_SLEEP_WHEN_IDLE);
+    g_motor2->set_sleep_timeout(MOTOR2_SLEEP_TIMEOUT);
+    g_motor2->set_compress_steps(MOTOR2_COMPRESS_STEPS);
+    g_motor2->set_max_speed(MOTOR2_MAX_SPEED);
+    g_motor2->set_min_speed(MOTOR2_MIN_SPEED);
+    g_motor2->init();
+  #endif
 
 
   // --------------------------------------------------------------------------

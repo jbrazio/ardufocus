@@ -27,11 +27,18 @@
 #include "dtr.h"
 #include "config.h"
 #include "analog.h"
-#include "motor1drv.h"
+#include "stepper.h"
 
 //TODO https://stackoverflow.com/questions/553682/when-can-i-use-a-forward-declaration
-extern float        g_ambient;
-extern MOTOR_DRIVER g_motor1;
+extern float    g_ambient;
+
+#ifdef MOTOR1_HAS_DRIVER
+extern stepper* g_motor1;
+#endif
+
+#ifdef MOTOR2_HAS_DRIVER
+extern stepper* g_motor2;
+#endif
 
 enum motor_t {
   MOTOR_ONE,
@@ -58,11 +65,15 @@ class api {
     static void motor_start(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.move();
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->move();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.move();
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->move();
+          #endif
           break;
 
         default: break;
@@ -72,11 +83,15 @@ class api {
     static void motor_stop(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.halt();
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->halt();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.halt();
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->halt();
+          #endif
           break;
 
         default: break;
@@ -86,11 +101,15 @@ class api {
     static uint8_t motor_get_speed(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return g_motor1.get_speed();
+          #ifdef MOTOR1_HAS_DRIVER
+          return g_motor1->get_speed();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // return g_motor2.get_speed();
+          #ifdef MOTOR2_HAS_DRIVER
+          return g_motor2->get_speed();
+          #endif
           break;
       }
 
@@ -100,11 +119,15 @@ class api {
     static uint8_t motor_get_mode(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return g_motor1.get_step_mode();
+          #ifdef MOTOR1_HAS_DRIVER
+          return g_motor1->get_step_mode();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // return g_motor2.get_step_mode();
+          #ifdef MOTOR2_HAS_DRIVER
+          return g_motor2->get_step_mode();
+          #endif
           break;
       }
 
@@ -114,11 +137,15 @@ class api {
     static uint8_t motor_is_moving(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return ((g_motor1.is_moving()) ? 1 : 0);
+          #ifdef MOTOR1_HAS_DRIVER
+          return ((g_motor1->is_moving()) ? 1 : 0);
+          #endif
           break;
 
         case MOTOR_TWO:
-          //return ((g_motor2.is_moving()) ? 1 : 0);
+          #ifdef MOTOR2_HAS_DRIVER
+          return ((g_motor2->is_moving()) ? 1 : 0);
+          #endif
           break;
       }
 
@@ -128,11 +155,15 @@ class api {
     static uint32_t motor_get_target(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return g_motor1.get_target_position();
+          #ifdef MOTOR1_HAS_DRIVER
+          return g_motor1->get_target_position();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // return g_motor2.get_target_position();
+          #ifdef MOTOR2_HAS_DRIVER
+          return g_motor2->get_target_position();
+          #endif
           break;
       }
 
@@ -142,11 +173,15 @@ class api {
     static uint32_t motor_get_position(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          return g_motor1.get_current_position();
+          #ifdef MOTOR1_HAS_DRIVER
+          return g_motor1->get_current_position();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // return g_motor2.get_current_position();
+          #ifdef MOTOR2_HAS_DRIVER
+          return g_motor2->get_current_position();
+          #endif
           break;
 
       }
@@ -157,11 +192,15 @@ class api {
     static void motor_set_speed(const motor_t& idx, const uint32_t& value) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.set_speed(value);
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->set_speed(value);
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.set_speed(value);
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->set_speed(value);
+          #endif
           break;
 
         default:
@@ -172,11 +211,15 @@ class api {
     static void motor_set_mode_full(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.set_full_step();
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->set_full_step();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.set_full_step();
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->set_full_step();
+          #endif
           break;
 
         default:
@@ -187,11 +230,15 @@ class api {
     static void motor_set_mode_half(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.set_half_step();
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->set_half_step();
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.set_half_step();
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->set_half_step();
+          #endif
           break;
 
         default:
@@ -202,11 +249,15 @@ class api {
     static void motor_set_target(const motor_t& idx, const uint32_t& value) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.set_target_position(value);
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->set_target_position(value);
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.set_target_position(value);
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->set_target_position(value);
+          #endif
           break;
 
         default:
@@ -217,11 +268,15 @@ class api {
     static void motor_set_position(const motor_t& idx, const uint32_t& value) {
       switch(idx) {
         case MOTOR_ONE:
-          g_motor1.set_current_position(value);
+          #ifdef MOTOR1_HAS_DRIVER
+          g_motor1->set_current_position(value);
+          #endif
           break;
 
         case MOTOR_TWO:
-          // g_motor2.set_current_position(value);
+          #ifdef MOTOR2_HAS_DRIVER
+          g_motor2->set_current_position(value);
+          #endif
           break;
 
         default:

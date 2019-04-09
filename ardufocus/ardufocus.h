@@ -33,19 +33,11 @@
 #include "eeprom.h"
 #include "analog.h"
 #include "utility.h"
-#include "motor1drv.h"
+
+#include "motordrv.h"
+#include "stepper.h"
 
 #include "moonlite.h"
 #include "dtr.h"
-
-
-// --------------------------------------------------------------------------
-// Globals ------------------------------------------------------------------
-// --------------------------------------------------------------------------
-extern eeprom_map_t g_config;
-extern float        g_ambient;
-extern MOTOR_DRIVER g_motor1;
-
-extern moonlite     comms;
 
 #endif
