@@ -37,7 +37,15 @@ float         g_ambient = 0.0F;
 int main(void)
 {
   // --------------------------------------------------------------------------
-  // EEPROM  ------------------------------------------------------------------
+  // DEBUG --------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  #ifdef DEBUG_ISR
+  DDRB = bit(PB5);
+  DDRC = bit(PC3) | bit(PC2);
+  #endif
+
+  // --------------------------------------------------------------------------
+  // EEPROM -------------------------------------------------------------------
   // --------------------------------------------------------------------------
   eeprom_init(&g_config);
 
@@ -79,14 +87,11 @@ int main(void)
   TCCR0A = 0; TCCR0B = 0; TIMSK0 = 0;
   TIFR0  = 0; TCNT0  = 0; OCR0A  = 0; OCR0B = 0;
 
-  // Normal port operation, no output
-  //TCCR0A &= ~(bit(COM0A1) | bit(COM0A0) | bit(COM0B1) | bit(COM0B0));
-
   // set waveform generation mode to CTC, top OCR0A
   TCCR0A |= bit(WGM01);
 
-  // set clock select to clk/8
-  TCCR0B |= bit(CS01);
+  // set clock select to clk/64
+  TCCR0B |= bit(CS01) | bit(CS00);
 
   // output Compare A Match Interrupt Enable
   TIMSK0 |= bit(OCIE0A);
@@ -109,7 +114,6 @@ int main(void)
     g_motor1->set_invert_direction(MOTOR1_INVERT_DIRECTION);
     g_motor1->set_sleep_when_idle(MOTOR1_SLEEP_WHEN_IDLE);
     g_motor1->set_sleep_timeout(MOTOR1_SLEEP_TIMEOUT);
-    g_motor1->set_compress_steps(MOTOR1_COMPRESS_STEPS);
     g_motor1->set_max_speed(MOTOR1_MAX_SPEED);
     g_motor1->set_min_speed(MOTOR1_MIN_SPEED);
     g_motor1->init();
@@ -119,7 +123,6 @@ int main(void)
     g_motor2->set_invert_direction(MOTOR2_INVERT_DIRECTION);
     g_motor2->set_sleep_when_idle(MOTOR2_SLEEP_WHEN_IDLE);
     g_motor2->set_sleep_timeout(MOTOR2_SLEEP_TIMEOUT);
-    g_motor2->set_compress_steps(MOTOR2_COMPRESS_STEPS);
     g_motor2->set_max_speed(MOTOR2_MAX_SPEED);
     g_motor2->set_min_speed(MOTOR2_MIN_SPEED);
     g_motor2->init();
@@ -135,7 +138,7 @@ int main(void)
   // --------------------------------------------------------------------------
   // Loop routine -------------------------------------------------------------
   // --------------------------------------------------------------------------
-  for(;;) { comms.receive(); util::delay_1ms(); }
+  for(;;) { comms.receive(); }
 
   // Someone made an Opsie !
   // Code should not reach this

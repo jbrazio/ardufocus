@@ -21,8 +21,9 @@
 #define __ASSERT_H__
 
 // Defaults -------------------------------------------------------------------
-#define TIMER0_FREQ 20000L // Hz
-#define TIMER0_OCRA ((F_CPU/8) / TIMER0_FREQ)
+#define TIMER0_PSCL 64
+#define TIMER0_FREQ 5000L // Hz
+#define TIMER0_OCRA (((F_CPU/TIMER0_PSCL) / TIMER0_FREQ)  -1)
 #define TIMER0_TICK (1000000L  / TIMER0_FREQ) // uS
 
 #define DEFAULT_MAX_SPEED    250
@@ -35,16 +36,6 @@
 #endif
 
 // Invalid configurations -----------------------------------------------------
-#if defined(MOTOR1_COMPRESS_STEPS)
-  #if defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
-    #error COMPRESS_STEPS is not supported for ULN2003 drivers.
-    #error Please review the config.h file.
-  #else
-    #warning COMPRESS_STEPS is deprecated and will be removed soon.
-    #warning Please review the config.h file.
-  #endif
-#endif
-
 #if defined(ENABLE_DTR_RESET)
   #if !defined(DTR_RESET_PINOUT)
     #error DTR_RESET_PINOUT is active but DTR_RESET_PINOUT is missing.
@@ -142,13 +133,6 @@
   #ifndef MOTOR1_SLEEP_TIMEOUT
     #define MOTOR1_SLEEP_TIMEOUT DEFAULT_SLEEP_TIMEOUT
   #endif
-
-  #ifndef MOTOR1_COMPRESS_STEPS
-    #define MOTOR1_COMPRESS_STEPS false
-  #else
-    #undef MOTOR1_COMPRESS_STEPS
-    #define MOTOR1_COMPRESS_STEPS true
-  #endif
 #endif
 
 // Sanity check for motor two -------------------------------------------------
@@ -179,13 +163,6 @@
 
   #ifndef MOTOR2_SLEEP_TIMEOUT
     #define MOTOR2_SLEEP_TIMEOUT DEFAULT_SLEEP_TIMEOUT
-  #endif
-
-  #ifndef MOTOR2_COMPRESS_STEPS
-    #define MOTOR2_COMPRESS_STEPS false
-  #else
-    #undef MOTOR2_COMPRESS_STEPS
-    #define MOTOR2_COMPRESS_STEPS true
   #endif
 #endif
 

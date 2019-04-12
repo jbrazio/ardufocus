@@ -36,15 +36,41 @@ extern volatile uint32_t timer0_compa_count;
 
 namespace util
 {
-  void dtr_disable();
-  void  dtr_enable();
-
   float steinhart(const uint16_t&);
-
-  uint16_t speed get_timer_prescaler(uint8_t const&);
 
   inline uint16_t  hex2l(const char* str) { return ( strtol(str, NULL, 16)); }
   inline uint32_t hex2ul(const char* str) { return (strtoul(str, NULL, 16)); }
+
+  __attribute__((always_inline)) inline void delay_250ns()
+  {
+    // Delay 4 cycles: 250us at 16 MHz
+    asm volatile (
+      "    rjmp 1f" "\n"
+      "1:  rjmp 2f" "\n"
+      "2:"  "\n"
+    );
+  }
+
+  __attribute__((always_inline)) inline void delay_500ns()
+  {
+    // Delay 8 cycles: 500us at 16 MHz
+    asm volatile (
+      "    lpm" "\n"
+      "    lpm" "\n"
+      "    rjmp 1f" "\n"
+      "1:"  "\n"
+    );
+  }
+
+  __attribute__((always_inline)) inline void delay_750ns()
+  {
+    // Delay 12 cycles: 750us at 16 MHz
+    asm volatile (
+      "    ldi  r18, 4" "\n"
+      "1:  dec  r18"  "\n"
+      "    brne 1b" "\n"
+    );
+  }
 
   __attribute__((always_inline)) inline void delay_1us()
   {
@@ -89,6 +115,20 @@ namespace util
       "    brne 1b"       "\n"
       "    dec  r18"      "\n"
       "    brne 1b"       "\n"
+    );
+  }
+
+  __attribute__((always_inline)) inline void delay_2ms()
+  {
+    // Delay 32 000 cycles: 2ms at 16.0 MHz
+    asm volatile (
+      "    ldi  r18, 42"  "\n"
+      "    ldi  r19, 142" "\n"
+      "1:  dec  r19"  "\n"
+      "    brne 1b" "\n"
+      "    dec  r18"  "\n"
+      "    brne 1b" "\n"
+      "    nop" "\n"
     );
   }
 

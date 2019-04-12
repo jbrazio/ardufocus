@@ -58,7 +58,6 @@ class stepper
 
     bool m_sleep_when_idle;          // Disable power to the motor when idle
     bool m_invert_direction;         // Invert the direction of rotation
-    bool m_compress_steps;           // Convert micro-stepping counting to full steps
 
     uint16_t m_max_speed = DEFAULT_MAX_SPEED;
     uint16_t m_set_speed = DEFAULT_MAX_SPEED;
@@ -91,9 +90,6 @@ class stepper
 
     inline bool get_invert_direction()                 { return m_invert_direction; }
     inline void set_invert_direction(const bool& b)    { m_invert_direction = b;    }
-
-    inline bool get_compress_steps()                   { return m_compress_steps;   }
-    inline void set_compress_steps(const bool& b)      { m_compress_steps = b;      }
 
     inline uint16_t get_max_speed()                    { return m_max_speed;        }
     inline void     set_max_speed(uint16_t const& s)   { m_max_speed = s;           }

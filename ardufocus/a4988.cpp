@@ -53,12 +53,15 @@ void a4988::init()
  */
 void a4988::halt()
 {
+
   stepper::halt();
 
   m_step = 0;
   m_sleep_timeout_cnt = ((m_sleep_timeout * 1000000UL) / TIMER0_TICK);
 
   IO::write(m_pinout.step, LOW);
+
+  // A4988: 400ns, A8825: 1.3us
   util::delay_2us();
 }
 
@@ -74,7 +77,9 @@ void a4988::set_full_step()
   IO::write(m_pinout.ms1, LOW);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
-  util::delay_250us();
+
+  // A4988: 400ns, A8825: 1.3us
+  util::delay_2us();
 }
 
 
@@ -89,7 +94,9 @@ void a4988::set_half_step()
   IO::write(m_pinout.ms1, HIGH);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
-  util::delay_250us();
+
+  // A4988: 400ns, A8825: 1.3us
+  util::delay_2us();
 }
 
 
@@ -104,7 +111,8 @@ bool a4988::step_cw()
   {
     case LOW:
       IO::write(m_pinout.direction, HIGH);
-      util::delay_250us();
+      // A4988: 400ns, A8825: 1.3us
+      util::delay_2us();
 
     case HIGH:
       ;
@@ -129,7 +137,8 @@ bool a4988::step_ccw()
 
     case HIGH:
       IO::write(m_pinout.direction, LOW);
-      util::delay_250us();
+      // A4988: 400ns, A8825: 1.3us
+      util::delay_2us();
 
     default:
       return step();
@@ -146,12 +155,8 @@ bool a4988::step()
 {
   if(m_sleep_when_idle && !IO::read(m_pinout.sleep)) {
     IO::write(m_pinout.sleep, HIGH);
-
-    #ifdef MOTOR1_USE_DRV8825_DRIVER
-      util::delay_1ms();
-    #else
-      util::delay_250us();
-    #endif
+    // A4988: 200ns, A8825: 1.7ms
+    util::delay_2ms();
   }
 
   /*
@@ -161,33 +166,15 @@ bool a4988::step()
    * condition.
    */
 
-  if(m_compress_steps) ++m_step %= ((m_mode) ? 4 : 2);
-  else ++m_step %= 2;
-
-  switch(m_step)
-  {
-    case 0:
-      IO::write(m_pinout.step, LOW);
-      break;
-
-    case 1:
-      IO::write(m_pinout.step, HIGH);
-      break;
-
-    // TODO
-    // Optimize this code, case 2-3 is only required
-    // when COMPRESS_STEPS is enabled.
-    case 2:
-      IO::write(m_pinout.step, LOW);
-      break;
-
-    case 3:
-      IO::write(m_pinout.step, HIGH);
-      break;
-  }
-
+  // A4988: 1us, A8825: 1.9us
+  IO::write(m_pinout.step, HIGH);
   util::delay_2us();
-  return (! m_step);
+
+  // A4988: 1us, A8825: 1.9us
+  IO::write(m_pinout.step, LOW);
+  util::delay_2us();
+
+  return true;
 }
 
 
@@ -204,12 +191,6 @@ void a4988::sleep()
     if(!m_sleep_timeout_cnt)
     {
       IO::write(m_pinout.sleep, LOW);
-
-      #ifdef MOTOR1_USE_DRV8825_DRIVER
-        util::delay_1ms();
-      #else
-        util::delay_250us();
-      #endif
     }
   }
 }

@@ -24,10 +24,10 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 
-#include "dtr.h"
 #include "config.h"
 #include "analog.h"
 #include "stepper.h"
+#include "dtr.h"
 
 //TODO https://stackoverflow.com/questions/553682/when-can-i-use-a-forward-declaration
 extern float    g_ambient;

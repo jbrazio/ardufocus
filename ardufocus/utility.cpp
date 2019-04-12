@@ -40,28 +40,6 @@ float util::steinhart(const uint16_t& raw)
   return steinhart;
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-uint16_t util::get_timer_prescaler(const uint8_t &idx)
-{
-  switch(idx)
-  {
-    case 0:
-      return timer_prescaler[(TCCR0B & 0x6F)][1];
-
-    case 1:
-      return timer_prescaler[(TCCR1B & 0x6F)][1];
-
-    case 2:
-      return timer_prescaler[(TCCR2B & 0x6F)][1];
-
-    default: return 0;
-  }
-}
-
 #ifdef HAS_ACCELERATION
   /**
    * @brief Linear interpolation function

@@ -36,7 +36,6 @@
 #include "version.h"
 #include "protocol.h"
 #include "utility.h"
-#include "dtr.h"
 
 class moonlite: protected protocol, protected serial {
   public:
@@ -47,28 +46,11 @@ class moonlite: protected protocol, protected serial {
     void setup() {
       serial::setup();
 
-      #if 0
-      switch(MCUSR) {
-        case WDRF:
-          serial::write_P(PSTR("Wathdog reset flag\n"));
-          break;
-
-        case BORF:
-          serial::write_P(PSTR("Brown-out reset flag\n"));
-          break;
-
-        case EXTRF:
-          serial::write_P(PSTR("External reset flag\n"));
-          break;
-
-        case PORF:
-          serial::write_P(PSTR("Power-on reset flag\n"));
-          break;
-      }
-      #endif
-
+      // On low memory devices do not print the serial banner
+      #if !defined(__AVR_ATmega168__) && !defined(__AVR_ATmega168P__)
       serial::write_P(PSTR("Ardufocus " ARDUFOCUS_VERSION "-" ARDUFOCUS_BRANCH " ready.\n"));
       serial::write_P(PSTR("Visit " ARDUFOCUS_URL " for updates.\n\n"));
+      #endif
     }
 
     void receive() {

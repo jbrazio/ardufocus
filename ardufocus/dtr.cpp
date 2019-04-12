@@ -17,19 +17,20 @@
  *
  */
 
-#ifndef __DTR_RESET_H__
-#define __DTR_RESET_H__
+#include "dtr.h"
 
-#include "version.h"
-#include "config.h"
+void dtr_disable() {
+  #ifdef ENABLE_DTR_RESET
+    if (g_config.dtr_reset == false) {
+      IO::set_as_output(DTR_RESET_PINOUT);
+    }
+  #endif
+}
 
-#include "io.h"
-#include "eeprom.h"
+void dtr_reset(const bool& value) {
+  g_config.dtr_reset = value;
+}
 
-extern eeprom_map_t g_config;
-
-void dtr_disable();
-uint8_t dtr_reset_get();
-void dtr_reset(const bool& value);
-
-#endif
+uint8_t dtr_reset_get() {
+  return (g_config.dtr_reset) ? 1 : 0;
+}

@@ -18,36 +18,80 @@
  */
 
 #include "isr.h"
+#include "macro.h"
 
 /**
- * @brief Timer1 interrupt handler
+ * @brief Timer0 interrupt handler
  * @details
  *
  */
 ISR(TIMER0_COMPA_vect)
 {
-  #if defined(MOTOR1_HAS_DRIVER) && defined(MOTOR2_HAS_DRIVER)
+  #ifdef DEBUG_ISR
+    PORTB ^= bit(PB5);
+  #endif
+
+  #ifdef MOTOR1_HAS_DRIVER
+    #ifdef DEBUG_ISR
+      PORTC ^= bit(PC2);
+    #endif
+
+    //
+    // This block takes ~50uS to execute when motor is stepping
+    //
+
     g_motor1->tick();
+
+    // previous motor state
+    static bool pstate1 = g_motor1->is_moving();
+
+    // current motor state
+    bool cstate1 = g_motor1->is_moving();
+
+    if(cstate1 != pstate1) {
+      if(cstate1 == false) {
+        g_config.position_m1 = g_motor1->get_current_position();
+        eeprom_save(&g_config);
+      }
+      pstate1 = cstate1;
+    }
+
+    #ifdef DEBUG_ISR
+      PORTC ^= bit(PC2);
+    #endif
+  #endif
+
+  #ifdef MOTOR2_HAS_DRIVER
+    #ifdef DEBUG_ISR
+      PORTC ^= bit(PC3);
+    #endif
+
+    //
+    // This block takes ~50uS to execute when motor is stepping
+    //
+    //
     g_motor2->tick();
 
-    if (!g_motor1->is_moving() && !g_motor2->is_moving()) {
-      g_config.position_m1 = g_motor1->get_current_position();
-      g_config.position_m2 = g_motor2->get_current_position();
-      eeprom_save(&g_config);
-    }
-  #elif defined(MOTOR1_HAS_DRIVER)
-    g_motor1->tick();
+    // previous motor state
+    static bool pstate2 = g_motor2->is_moving();
 
-    if (!g_motor1->is_moving()) {
-      g_config.position_m1 = g_motor1->get_current_position();
-      eeprom_save(&g_config);
-    }
-  #elif defined(MOTOR2_HAS_DRIVER)
-    g_motor2->tick();
+    // current motor state
+    bool cstate2 = g_motor2->is_moving();
 
-    if (!g_motor2->is_moving()) {
-      g_config.position_m2 = g_motor2->get_current_position();
-      eeprom_save(&g_config);
+    if(cstate2 != pstate2) {
+      if(cstate2 == false) {
+        g_config.position_m2 = g_motor2->get_current_position();
+        eeprom_save(&g_config);
+      }
+      pstate2 = cstate2;
     }
+
+    #ifdef DEBUG_ISR
+      PORTC ^= bit(PC3);
+    #endif
+  #endif
+
+  #ifdef DEBUG_ISR
+    PORTB ^= bit(PB5);
   #endif
 }
