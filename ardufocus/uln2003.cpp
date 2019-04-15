@@ -147,10 +147,10 @@ void uln2003::step()
 {
   const uint8_t byte = pgm_read_byte( &(*(p_stepping_tbl + m_sequence)) );
 
-  CRITICAL_SECTION_START
-  IO::write(m_pinout.A, ((byte >> 3) & 0x1) ? HIGH : LOW);
-  IO::write(m_pinout.B, ((byte >> 2) & 0x1) ? HIGH : LOW);
-  IO::write(m_pinout.C, ((byte >> 1) & 0x1) ? HIGH : LOW);
-  IO::write(m_pinout.D, ((byte     ) & 0x1) ? HIGH : LOW);
-  CRITICAL_SECTION_END
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+    IO::write(m_pinout.A, ((byte >> 3) & 0x1) ? HIGH : LOW);
+    IO::write(m_pinout.B, ((byte >> 2) & 0x1) ? HIGH : LOW);
+    IO::write(m_pinout.C, ((byte >> 1) & 0x1) ? HIGH : LOW);
+    IO::write(m_pinout.D, ((byte     ) & 0x1) ? HIGH : LOW);
+  }
 }

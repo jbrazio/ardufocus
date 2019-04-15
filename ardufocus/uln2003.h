@@ -20,17 +20,11 @@
 #ifndef __ULN2003_H__
 #define __ULN2003_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-
-#include "version.h"
 #include "config.h"
 
+#include <stdint.h>
 #include "lookuptable.h"
 #include "stepper.h"
-#include "macro.h"
-#include "utility.h"
-#include "io.h"
 
 class uln2003: public stepper
 {

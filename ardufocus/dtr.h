@@ -20,11 +20,8 @@
 #ifndef __DTR_RESET_H__
 #define __DTR_RESET_H__
 
-#include "version.h"
-#include "config.h"
-
-#include "io.h"
 #include "eeprom.h"
+#include "io.h"
 
 extern eeprom_map_t g_config;
 

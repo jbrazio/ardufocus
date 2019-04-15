@@ -20,11 +20,11 @@
 #ifndef __API_H__
 #define __API_H__
 
+#include "config.h"
+
 #include <stdint.h>
 #include <avr/wdt.h>
 #include <util/delay.h>
-
-#include "config.h"
 #include "analog.h"
 #include "stepper.h"
 #include "dtr.h"

@@ -20,17 +20,12 @@
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
+#include "config.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
-
-#include "version.h"
-#include "config.h"
-
-#include "hal.h"
 #include "macro.h"
-#include "io.h"
 
 extern volatile uint32_t timer0_compa_count;
 

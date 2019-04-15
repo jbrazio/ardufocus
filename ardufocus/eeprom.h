@@ -20,13 +20,13 @@
 #ifndef __EEPROM_H__
 #define __EEPROM_H__
 
+#include "config.h"
+
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 #include <avr/eeprom.h>
-
-#include "version.h"
-#include "config.h"
+#include <avr/pgmspace.h>
+#include "macro.h"
 
 #define EEPROM_MAGIC_HEADER  0xaa55
 #define EEPROM_START_ADDRESS 0x0000

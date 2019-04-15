@@ -26,10 +26,10 @@
  */
 void stepper::init()
 {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_speed = 2;
     m_ovf_counter = 0;
-  CRITICAL_SECTION_END
+  }
 }
 
 
@@ -40,10 +40,8 @@ void stepper::init()
  */
 void stepper::move()
 {
-  CRITICAL_SECTION_START
-    m_ovf_counter = 0;
-    m_position.moving = true;
-  CRITICAL_SECTION_END
+  m_ovf_counter = 0;
+  m_position.moving = true;
 }
 
 
@@ -54,10 +52,7 @@ void stepper::move()
  */
 bool stepper::is_moving()
 {
-  CRITICAL_SECTION_START
-    const bool b = (m_position.moving);
-  CRITICAL_SECTION_END
-
+  const bool b = (m_position.moving);
   return b;
 }
 
@@ -69,10 +64,10 @@ bool stepper::is_moving()
  */
 void stepper::halt()
 {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.target = m_position.current;
     m_position.moving = false;
-  CRITICAL_SECTION_END
+  }
 }
 
 
@@ -83,10 +78,7 @@ void stepper::halt()
  */
 uint32_t stepper::get_current_position()
 {
-  CRITICAL_SECTION_START
-    const uint32_t c = m_position.current;
-  CRITICAL_SECTION_END
-
+  const uint32_t c = m_position.current;
   return c;
 }
 
@@ -98,10 +90,10 @@ uint32_t stepper::get_current_position()
  *
  */
 void stepper::set_current_position(const uint32_t& target) {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.current = target;
     m_position.target  = target;
-  CRITICAL_SECTION_END
+  }
 }
 
 
@@ -112,10 +104,7 @@ void stepper::set_current_position(const uint32_t& target) {
  */
 uint16_t stepper::get_speed()
 {
-  CRITICAL_SECTION_START
-    const uint16_t s = m_speed;
-  CRITICAL_SECTION_END
-
+  const uint16_t s = m_speed;
   return s;
 }
 
@@ -127,9 +116,9 @@ uint16_t stepper::get_speed()
  */
 void stepper::set_speed(const uint16_t& target)
 {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_speed = target;
-  CRITICAL_SECTION_END
+  }
 }
 
 
@@ -140,10 +129,7 @@ void stepper::set_speed(const uint16_t& target)
  */
 uint32_t stepper::get_target_position()
 {
-  CRITICAL_SECTION_START
-    const uint32_t t = m_position.target;
-  CRITICAL_SECTION_END
-
+  const uint32_t t = m_position.target;
   return t;
 }
 
@@ -155,7 +141,7 @@ uint32_t stepper::get_target_position()
  *
  */
 void stepper::set_target_position(const uint32_t& target) {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.target = target;
 
     #ifdef HAS_ACCELERATION
@@ -185,7 +171,7 @@ void stepper::set_target_position(const uint32_t& target) {
         #endif
       }
     #endif
-  CRITICAL_SECTION_END
+  }
 }
 
 
@@ -263,12 +249,12 @@ void stepper::tick()
  */
 void stepper::update_position(const int8_t &direction)
 {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.current += direction;          // Update the global position
 
     #ifdef HAS_ACCELERATION
       ++m_position.relative;  // Update the relative position
       update_freq();          // Update the stepping frequency
     #endif
-  CRITICAL_SECTION_END
+  }
 }

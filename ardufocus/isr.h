@@ -20,16 +20,11 @@
 #ifndef __ISR_H__
 #define __ISR_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <avr/interrupt.h>
-
-#include "version.h"
 #include "config.h"
 
-#include "eeprom.h"
-#include "analog.h"
+#include <avr/interrupt.h>
 #include "stepper.h"
+#include "eeprom.h"
 
 #ifdef MOTOR1_HAS_DRIVER
 extern stepper* g_motor1;

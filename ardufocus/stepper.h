@@ -20,16 +20,13 @@
 #ifndef __STEPPER_H__
 #define __STEPPER_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-
-#include "version.h"
 #include "config.h"
 
-#include "eeprom.h"
-#include "utility.h"
+#include <stdint.h>
+#include <util/atomic.h>
 #include "macro.h"
-#include "lookuptable.h"
+#include "io.h"
+#include "utility.h"
 
 class stepper
 {

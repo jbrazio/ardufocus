@@ -20,24 +20,15 @@
 #ifndef __ARDUFOCUS_H__
 #define __ARDUFOCUS_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <math.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <avr/wdt.h>
-
-#include "version.h"
 #include "config.h"
 
+#include <avr/interrupt.h>
+#include <avr/wdt.h>
 #include "eeprom.h"
-#include "analog.h"
-#include "utility.h"
-
-#include "motordrv.h"
-#include "stepper.h"
-
-#include "moonlite.h"
 #include "dtr.h"
+#include "stepper.h"
+#include "motordrv.h"
+#include "analog.h"
+#include "moonlite.h"
 
 #endif

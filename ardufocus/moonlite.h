@@ -24,18 +24,13 @@
 #define CMD_END_CHAR    0x23 // #
 #define CMD_MAX_LEN      13u
 
-#include <stdint.h>
-#include <stdlib.h>
-
-#include <avr/pgmspace.h>
-#include <string.h>
-#include <stdio.h>
-
 #include "config.h"
+
+#include <stdio.h>
+#include <string.h>
+#include "protocol.h"
 #include "serial.h"
 #include "version.h"
-#include "protocol.h"
-#include "utility.h"
 
 class moonlite: protected protocol, protected serial {
   public:
@@ -46,11 +41,8 @@ class moonlite: protected protocol, protected serial {
     void setup() {
       serial::setup();
 
-      // On low memory devices do not print the serial banner
-      #if !defined(__AVR_ATmega168__) && !defined(__AVR_ATmega168P__)
       serial::write_P(PSTR("Ardufocus " ARDUFOCUS_VERSION "-" ARDUFOCUS_BRANCH " ready.\n"));
       serial::write_P(PSTR("Visit " ARDUFOCUS_URL " for updates.\n\n"));
-      #endif
     }
 
     void receive() {

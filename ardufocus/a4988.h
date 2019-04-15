@@ -20,14 +20,11 @@
 #ifndef __A4988_H__
 #define __A4988_H__
 
-#include <stdint.h>
-
-#include "version.h"
 #include "config.h"
 
 #include "stepper.h"
+#include "macro.h"
 #include "utility.h"
-#include "io.h"
 
 class a4988: public stepper
 {

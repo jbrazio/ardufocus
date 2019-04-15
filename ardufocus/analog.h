@@ -20,12 +20,11 @@
 #ifndef __ADC_H__
 #define __ADC_H__
 
-#include <stdint.h>
-#include <avr/interrupt.h>
-
-#include "version.h"
 #include "config.h"
 
+#include <stdlib.h>
+#include <avr/interrupt.h>
+#include <util/atomic.h>
 #include "macro.h"
 #include "utility.h"
 

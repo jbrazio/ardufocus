@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 
 /**
  * @brief   Circular Queue class
@@ -62,13 +63,10 @@ public:
   {
     if (full()) return false;
 
-    const uint8_t __SREG___ = SREG;
-    cli();
-
-    m_buffer.queue[m_buffer.tail] = item;
-    m_buffer.tail = (m_buffer.tail +1) % N;
-
-    SREG = __SREG___;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+      m_buffer.queue[m_buffer.tail] = item;
+      m_buffer.tail = (m_buffer.tail +1) % N;
+    }
     return true;
   }
 
@@ -103,13 +101,10 @@ public:
    */
   bool reset()
   {
-    const uint8_t __SREG___ = SREG;
-    cli();
-
-    m_buffer.head = 0;
-    m_buffer.tail = 0;
-
-    SREG = __SREG___;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+      m_buffer.head = 0;
+      m_buffer.tail = 0;
+    }
     return true;
   }
 
@@ -131,14 +126,13 @@ public:
   {
     if (empty()) return T();
 
-    const uint8_t __SREG___ = SREG;
-    cli();
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+      const T item = m_buffer.queue[m_buffer.head];
+      m_buffer.head = (m_buffer.head +1) % N;
+      return item;
+    }
 
-    const T item = m_buffer.queue[m_buffer.head];
-    m_buffer.head = (m_buffer.head +1) % N;
-
-    SREG = __SREG___;
-    return item;
+    return T();
   }
 };
 

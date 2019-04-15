@@ -20,14 +20,7 @@
 #ifndef __HAL_H__
 #define __HAL_H__
 
-#include <stdint.h>
-#include <stdlib.h>
-
 #include <avr/pgmspace.h>
-
-#include "version.h"
-#include "config.h"
-
 #include "macro.h"
 
 enum hal_register_headers_t { HALDIR, HALOUT, HALIN, HALTMR, HALPIN };

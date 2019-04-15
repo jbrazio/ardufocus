@@ -68,7 +68,7 @@ void Analog::read(const uint8_t& channel)
 {
   if(channel > 3) { return; }
 
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     // erase any data on the buffer
     for(uint8_t i = 0; i < asizeof(Analog::s_buffer.raw); i++) {
       Analog::s_buffer.raw[i] = 0;
@@ -82,7 +82,7 @@ void Analog::read(const uint8_t& channel)
 
     // start the async analog read
     ADCSRA |= bit(ADSC) | bit(ADIE);
-  CRITICAL_SECTION_END
+  }
 }
 
 /**
@@ -92,7 +92,7 @@ void Analog::read(const uint8_t& channel)
  */
 void Analog::setup()
 {
-  CRITICAL_SECTION_START
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     // clear adc prescaler bits
     ADCSRA &= ~(bit (ADPS0) | bit (ADPS1) | bit (ADPS2));
 
@@ -112,8 +112,8 @@ void Analog::setup()
 
     // set digital input disable register to A4-A5
     DIDR0 |= bit(ADC5D) | bit(ADC4D);
+  }
 
-    // wait a bit
-    util::delay_5ms();
-  CRITICAL_SECTION_END
+  // wait a bit
+  util::delay_5ms();
 }
