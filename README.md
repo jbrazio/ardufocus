@@ -1,12 +1,16 @@
 ![Image](https://github.com/jbrazio/ardufocus/blob/master/doc/wiki/logo.png)
 
-[![Donate](https://img.shields.io/badge/buy_me-one_beer-red.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D5XZ7QFLP8LXE) [![Build Status](https://travis-ci.org/jbrazio/ardufocus.svg?branch=master)](https://travis-ci.org/jbrazio/ardufocus) [![GitHub issues](https://img.shields.io/github/issues/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/issues) [![GitHub stars](https://img.shields.io/github/stars/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/stargazers) [![GitHub forks](https://img.shields.io/github/forks/jbrazio/ardufocus.svg)](https://github.com/jbrazio/ardufocus/network) [![Download beta](https://img.shields.io/badge/download-latest_beta-yellow.svg)](https://github.com/jbrazio/ardufocus/archive/master.zip)
+[![Donate Patreon](https://img.shields.io/badge/Donate-Patreon-blue.svg?style=for-the-badge)](https://www.patreon.com/join/jbrazio?)
+[![Donate PayPal](https://img.shields.io/badge/Donate-Paypal-blue.svg?style=for-the-badge)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D5XZ7QFLP8LXE)
+[![TravisCI Status](https://img.shields.io/travis/jbrazio/ardufocus.svg?style=for-the-badge)](https://travis-ci.org/jbrazio/ardufocus)
+[![Download beta](https://img.shields.io/github/release-pre/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/archive/master.zip)
+[![GitHub stars](https://img.shields.io/github/stars/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/network)
 
 Ardufocus is a full open source [Moonlite][moonlite] compatible automatic focus controller.
 The source is still under heavy development so things move around a bit.
 
 [moonlite]: https://www.focuser.com/
-
 
 # Motivation
 After buying the CCD, filter wheel and filters I was broke but still wanted to have an automatic focuser.
