@@ -2,7 +2,7 @@
 
 [![Donate Patreon](https://img.shields.io/badge/Donate-Patreon-blue.svg?style=for-the-badge)](https://www.patreon.com/join/jbrazio?)
 [![Donate PayPal](https://img.shields.io/badge/Donate-Paypal-blue.svg?style=for-the-badge)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D5XZ7QFLP8LXE)
-[![TravisCI Status](https://img.shields.io/travis/jbrazio/ardufocus.svg?style=for-the-badge)](https://travis-ci.org/jbrazio/ardufocus)
+[![Travis (.com)](https://img.shields.io/travis/com/jbrazio/ardufocus.svg?style=for-the-badge)](https://travis-ci.com/jbrazio/ardufocus)
 [![Download beta](https://img.shields.io/github/release-pre/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/archive/master.zip)
 [![GitHub stars](https://img.shields.io/github/stars/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/network)
