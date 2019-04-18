@@ -53,7 +53,6 @@ class a4988: public stepper
      */
 
   protected:
-    uint8_t m_step = 0;
     const pinout_t m_pinout;
 
   private:

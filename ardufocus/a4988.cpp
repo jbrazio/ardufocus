@@ -55,10 +55,7 @@ void a4988::halt()
 {
 
   stepper::halt();
-
-  m_step = 0;
   m_sleep_timeout_cnt = ((m_sleep_timeout * 1000000UL) / TIMER0_TICK);
-
   IO::write(m_pinout.step, LOW);
 
   // A4988: 400ns, A8825: 1.3us
@@ -188,8 +185,7 @@ void a4988::sleep()
   if(m_sleep_when_idle && m_sleep_timeout_cnt) {
     --m_sleep_timeout_cnt;
 
-    if(!m_sleep_timeout_cnt)
-    {
+    if(!m_sleep_timeout_cnt) {
       IO::write(m_pinout.sleep, LOW);
     }
   }

@@ -73,14 +73,7 @@ void uln2003::init()
 void uln2003::halt()
 {
   stepper::halt();
-
-  if(m_sleep_when_idle)
-  {
-    IO::write(m_pinout.A, LOW);
-    IO::write(m_pinout.B, LOW);
-    IO::write(m_pinout.C, LOW);
-    IO::write(m_pinout.D, LOW);
-  }
+  m_sleep_timeout_cnt = ((m_sleep_timeout * 1000000UL) / TIMER0_TICK);
 }
 
 
@@ -152,5 +145,27 @@ void uln2003::step()
     IO::write(m_pinout.B, ((byte >> 2) & 0x1) ? HIGH : LOW);
     IO::write(m_pinout.C, ((byte >> 1) & 0x1) ? HIGH : LOW);
     IO::write(m_pinout.D, ((byte     ) & 0x1) ? HIGH : LOW);
+  }
+}
+
+
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ */
+void uln2003::sleep()
+{
+  if(m_sleep_when_idle && m_sleep_timeout_cnt) {
+    --m_sleep_timeout_cnt;
+
+    if(!m_sleep_timeout_cnt) {
+      ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        IO::write(m_pinout.A, LOW);
+        IO::write(m_pinout.B, LOW);
+        IO::write(m_pinout.C, LOW);
+        IO::write(m_pinout.D, LOW);
+      }
+    }
   }
 }

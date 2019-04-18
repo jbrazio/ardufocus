@@ -47,6 +47,7 @@ class uln2003: public stepper
   public:
     virtual void init();
     virtual void halt();
+    virtual void sleep();
     virtual void set_full_step();
     virtual void set_half_step();
     virtual speed bool step_cw();
