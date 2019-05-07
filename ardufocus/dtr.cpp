@@ -29,6 +29,7 @@ void dtr_disable() {
 
 void dtr_reset(const bool& value) {
   g_config.dtr_reset = value;
+  eeprom_save(&g_config);
 }
 
 uint8_t dtr_reset_get() {
