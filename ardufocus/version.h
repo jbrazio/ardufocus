@@ -21,7 +21,7 @@
 #define __VERSION_H__
 
 // Program version and release
-#define ARDUFOCUS_VERSION "0.2b"
+#define ARDUFOCUS_VERSION "0.2a"
 #define ARDUFOCUS_BRANCH  "master"
 #define ARDUFOCUS_URL     "https://github.com/jbrazio/ardufocus"
 
