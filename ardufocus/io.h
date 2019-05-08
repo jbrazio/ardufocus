@@ -41,9 +41,9 @@ class IO
 
   public:
     static inline void set_as_input(const uint8_t &pin) {
-      const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
-      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALDIR]));
-      volatile uint8_t *port = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALOUT]));
+      const uint8_t     mask = hal_tbl_lookup(pin, IO_BIT);
+      volatile uint8_t *mode = (volatile uint8_t *)(hal_tbl_lookup(pin, IO_DIR));
+      volatile uint8_t *port = (volatile uint8_t *)(hal_tbl_lookup(pin, IO_DATA));
 
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         *mode &= ~mask;
@@ -52,8 +52,8 @@ class IO
     }
 
     static inline void set_as_output(const uint8_t &pin) {
-      const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
-      volatile uint8_t *mode = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALDIR]));
+      const uint8_t     mask = hal_tbl_lookup(pin, IO_BIT);
+      volatile uint8_t *mode = (volatile uint8_t *)(hal_tbl_lookup(pin, IO_DIR));
 
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         *mode |= mask;
@@ -61,8 +61,8 @@ class IO
     }
 
     static inline void write(const uint8_t &pin, const uint8_t &value) {
-      const uint8_t     mask = pgm_read_word(&pin_map[pin][HALPIN]);
-      volatile uint8_t *port = (volatile uint8_t *)( pgm_read_word(&pin_map[pin][HALOUT]) );
+      const uint8_t     mask = hal_tbl_lookup(pin, IO_BIT);
+      volatile uint8_t *port = (volatile uint8_t *)(hal_tbl_lookup(pin, IO_DATA));
 
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         if(value == LOW) { *port &= ~mask; }
@@ -71,8 +71,8 @@ class IO
     }
 
     static inline uint8_t read(const uint8_t &pin) {
-        const uint8_t     mask  = pgm_read_word(&pin_map[pin][HALPIN]);
-        volatile uint8_t *port  = (volatile uint8_t *)(pgm_read_word(&pin_map[pin][HALIN]));
+        const uint8_t     mask  = hal_tbl_lookup(pin, IO_BIT);
+        volatile uint8_t *port  = (volatile uint8_t *)(hal_tbl_lookup(pin, IO_IN));
 
         if (*port & mask) return HIGH;
         return LOW;

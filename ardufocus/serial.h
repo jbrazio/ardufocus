@@ -46,19 +46,19 @@ class serial {
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         // Defines the speed at which the serial line will operate.
         // The default settings are: 8-bit, no parity, 1 stop bit.
-        const uint16_t UBRR0_value = ((F_CPU / (8L * 9600)) - 1) /2;
-        UCSR0A &= ~bit(U2X0); // baud doubler off
+        const uint16_t baud_rate = ((F_CPU / (8L * 9600)) - 1) /2;
+        USART_CSRA &= ~bit(USART_BIT_U2X); // baud doubler off
 
         // set baudrate
-        UBRR0H = UBRR0_value >> 8;
-        UBRR0L = UBRR0_value;
+        USART_BRRH = baud_rate >> 8;
+        USART_BRRL = baud_rate;
 
         // enable rx and tx
-        UCSR0B |= bit(RXEN0);
-        UCSR0B |= bit(TXEN0);
+        USART_CSRB |= bit(USART_BIT_RXEN);
+        USART_CSRB |= bit(USART_BIT_TXEN);
 
         // enable interrupt on complete reception of a byte
-        UCSR0B |= bit(RXCIE0);
+        USART_CSRB |= bit(USART_BIT_RXCIE);
       }
     }
 
@@ -68,7 +68,7 @@ class serial {
 
       // Enable Data Register Empty Interrupt
       // to make sure tx-streaming is running
-      UCSR0B |= bit(UDRIE0);
+      USART_CSRB |= bit(USART_BIT_DRIE);
 
       return 1;
     }
@@ -135,16 +135,16 @@ class serial {
 
     void flush() {
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-        while (bit_is_set(UCSR0B, UDRIE0) || bit_is_clear(UCSR0A, TXC0)) {
-          if (bit_is_set(UCSR0B, UDRIE0) && bit_is_clear(SREG, SREG_I)) {
-            if (bit_is_set(UCSR0A, UDRE0)) {
+        while (bit_is_set(USART_CSRB, USART_BIT_DRIE) || bit_is_clear(USART_CSRA, USART_BIT_TXC)) {
+          if (bit_is_set(USART_CSRB, USART_BIT_DRIE) && bit_is_clear(SREG, SREG_I)) {
+            if (bit_is_set(USART_CSRA, USART_BIT_DRE)) {
               // send a byte from the buffer
-              UDR0 = usart::buffer.tx.dequeue();
-              UCSR0A |= bit(TXC0);
+              USART_DR = usart::buffer.tx.dequeue();
+              USART_CSRA |= bit(USART_BIT_TXC);
 
               // turn off Data Register Empty Interrupt
               // to stop tx-streaming if this concludes the transfer
-              if (usart::buffer.tx.empty()) { UCSR0B &= ~bit(UDRIE0); }
+              if (usart::buffer.tx.empty()) { USART_CSRB &= ~bit(USART_BIT_DRIE); }
             }
           }
         }

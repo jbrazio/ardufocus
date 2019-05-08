@@ -24,19 +24,10 @@
 
 #include "ringbuf.h"
 #include "macro.h"
+#include "hal.h"
 
 #define SERIAL_TXBUF_SZ 39u
 #define SERIAL_RXBUF_SZ 78u
-
-#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined (__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__)
-  #ifdef __AVR_ATmega328PB__
-    #define USART_RX_VECT USART0_RX_vect
-    #define USART_TX_VECT USART0_UDRE_vect
-  #else
-    #define USART_RX_VECT USART_RX_vect
-    #define USART_TX_VECT USART_UDRE_vect
-  #endif
-#endif
 
 namespace usart {
   struct buffer_t {

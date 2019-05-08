@@ -20,26 +20,11 @@
 #ifndef __MACRO_H__
 #define __MACRO_H__
 
-//#include <avr/interrupt.h>
-//#include <avr/sfr_defs.h>
-
-//#undef CRITICAL_SECTION_START
-//#define CRITICAL_SECTION_START const uint8_t __SREG___ = SREG; cli();
-
-//#undef CRITICAL_SECTION_END
-//#define CRITICAL_SECTION_END   SREG = __SREG___;
-
 #undef NULL
 #define NULL 0
 
 #undef bit
 #define bit(b) (1UL << (b))
-
-//#undef cbi
-//#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-
-//#undef sbi
-//#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 
 #undef constrain
 #define constrain(n, l, h) ((n)<(l)?(l):((n)>(h)?(h):(n)))
@@ -51,8 +36,8 @@
 #define asizeof(a) (sizeof(a) / sizeof(*a))
 
 #define force_inline __attribute__((always_inline)) inline
-//#define silence      __attribute__((unused))
+#define silence      __attribute__((unused))
 #define speed        __attribute__((optimize("O3")))
-//#define diet         __attribute__((optimize("Os")))
+#define diet         __attribute__((optimize("Os")))
 
 #endif
