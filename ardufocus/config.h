@@ -194,7 +194,7 @@
 // means the temperature will never get updated and the last read value is always
 // returned, either it is valid or not. Enabling the following option will force
 // the temperature gathering process on every temperature read command.
-//define START_TEMP_CONVERSION_ON_EVERY_GET
+#define START_TEMP_CONVERSION_ON_EVERY_GET
 
 
 // ----------------------------------------------------------------------------
