@@ -18,7 +18,6 @@
  */
 
 #include "isr.h"
-#include "macro.h"
 
 /**
  * @brief Timer0 interrupt handler
@@ -94,4 +93,25 @@ ISR(TIMER0_COMPA_vect)
   #ifdef DEBUG_ISR
     PORTB ^= bit(PB5);
   #endif
+}
+
+/**
+ * @brief Timer2 interrupt handler
+ * @details
+ *
+ */
+ISR(TIMER2_COMPA_vect)
+{
+  static uint8_t counter = 0;
+
+  switch(counter++)
+  {
+    case NTC_ADC_CHANNEL + 10:
+      Analog::read_async(NTC_ADC_CHANNEL);
+      PORTB ^= bit(PB5);
+      break;
+
+    default:
+      if(counter > 40) { counter = 0; }
+  }
 }

@@ -23,7 +23,6 @@
 // Globals ------------------------------------------------------------------
 // --------------------------------------------------------------------------
 eeprom_map_t  g_config;
-float         g_ambient = 0.0F;
 
 #ifdef MOTOR1_HAS_DRIVER
   stepper* g_motor1 = &motor1drv;
@@ -101,10 +100,29 @@ int main(void)
 
 
   // --------------------------------------------------------------------------
+  // Timer2 ISR init routine --------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Cleanup all the relevant registers
+  TCCR2A = 0; TCCR2B = 0; TIMSK2 = 0;
+  TIFR2  = 0; TCNT2  = 0; OCR2A  = 0; OCR2B = 0;
+
+  // set waveform generation mode to CTC, top OCR0A
+  TCCR2A |= bit(WGM21);
+
+  // set clock select to clk/64
+  TCCR2B |= bit(CS22) | bit(CS21) | bit(CS20);
+
+  // output Compare A Match Interrupt Enable
+  TIMSK2 |= bit(OCIE2A);
+
+  // sets the Output Compare Register values
+  OCR2A = TIMER2_OCRA;
+
+
+  // --------------------------------------------------------------------------
   // ADC init routine ---------------------------------------------------------
   // --------------------------------------------------------------------------
   Analog::setup();
-  Analog::read(NTC_ADC_CHANNEL);
 
 
   // --------------------------------------------------------------------------

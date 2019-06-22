@@ -30,7 +30,6 @@
 #include "dtr.h"
 
 //TODO https://stackoverflow.com/questions/553682/when-can-i-use-a-forward-declaration
-extern float    g_ambient;
 
 #ifdef MOTOR1_HAS_DRIVER
 extern stepper* g_motor1;
@@ -51,7 +50,7 @@ class api {
     ~api() {;}
 
     static void update_temperature() {
-      Analog::read(NTC_ADC_CHANNEL);
+      Analog::read_async(NTC_ADC_CHANNEL);
     }
 
     static float get_temperature() {
@@ -59,7 +58,7 @@ class api {
       update_temperature();
       #endif
 
-      return util::steinhart(g_ambient);
+      return util::steinhart(Analog::read(NTC_ADC_CHANNEL));
     }
 
     static void motor_start(const motor_t& idx) {

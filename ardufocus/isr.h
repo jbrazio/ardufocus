@@ -25,6 +25,8 @@
 #include <avr/interrupt.h>
 #include "stepper.h"
 #include "eeprom.h"
+#include "analog.h"
+#include "macro.h"
 
 #ifdef MOTOR1_HAS_DRIVER
 extern stepper* g_motor1;

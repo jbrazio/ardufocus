@@ -22,6 +22,7 @@
 /**
  * @brief Static class member initialization
  */
+uint16_t Analog::s_cache[4] = { 0, 0, 0, 0 };
 Analog::buffer_t Analog::s_buffer = { 0, 255, {} };
 
 /**
@@ -52,8 +53,12 @@ ISR(ADC_vect)
     for(uint8_t i = start; i < end; i++) { sum += Analog::s_buffer.raw[i]; }
     const uint16_t avg = (uint16_t) (sum / (end - start));
 
-    // update the global var
-    g_ambient = avg;
+    // Store the average analog reading into the cache
+    Analog::s_cache[Analog::s_buffer.chan] = avg;
+    Analog::s_buffer.chan  = 255;
+
+    // Disable the async analog read ISR
+    ADCSRA &= ~(bit (ADSC) | bit (ADIE));
   }
 
   else { ADCSRA |= bit(ADSC) | bit(ADIE); }
@@ -64,9 +69,10 @@ ISR(ADC_vect)
  * @details [long description]
  *
  */
-void Analog::read(const uint8_t& channel)
+void Analog::read_async(const uint8_t& channel)
 {
   if(channel > 3) { return; }
+  if(Analog::s_buffer.chan != 255) { return; }
 
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     // erase any data on the buffer
