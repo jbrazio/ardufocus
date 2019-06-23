@@ -156,7 +156,150 @@ int main(void)
   // --------------------------------------------------------------------------
   // Loop routine -------------------------------------------------------------
   // --------------------------------------------------------------------------
-  for(;;) { comms.receive(); }
+  for(;;)
+  {
+    comms.receive();
+
+    #ifdef USE_UI_KAP
+      static motor_t motor = MOTOR_ONE;
+      static uint8_t old_motor_speed = 0;
+      static bool fixed_init_has_run = false;
+
+      if(!fixed_init_has_run)
+      {
+        // FIXME
+        // Allows the IO to be correctly setup for the user interface
+        // This should be removed from here when refactoring the class
+        fixed_init_has_run = true;
+
+        IO::set_as_input(UI_KAP_FWD_BUTTON_PIN);
+        IO::set_as_input(UI_KAP_BWD_BUTTON_PIN);
+
+        #if !defined(UI_KAP_INVERT_BUTTON_LOGIC)
+        // Activates the internal pullup resistor
+        IO::write(UI_KAP_FWD_BUTTON_PIN, HIGH);
+        IO::write(UI_KAP_BWD_BUTTON_PIN, HIGH);
+        #endif
+
+        #ifdef UI_KAP_FWD_BUTTON_LED_PIN
+        IO::set_as_output(UI_KAP_FWD_BUTTON_LED_PIN);
+        IO::write(UI_KAP_FWD_BUTTON_LED_PIN, LOW);
+        #endif
+
+        #ifdef UI_KAP_BWD_BUTTON_LED_PIN
+        IO::set_as_output(UI_KAP_BWD_BUTTON_LED_PIN);
+        IO::write(UI_KAP_BWD_BUTTON_LED_PIN, LOW);
+        #endif
+      }
+
+      // Get button state
+      bool button_fwd_state = (bool)(IO::read(UI_KAP_FWD_BUTTON_PIN) == LOW); // fwd
+      bool button_bwd_state = (bool)(IO::read(UI_KAP_BWD_BUTTON_PIN) == LOW); // back
+
+      #ifdef UI_KAP_INVERT_BUTTON_LOGIC
+      button_fwd_state ^= true;
+      button_bwd_state ^= true;
+      #endif
+
+      #ifdef UI_KAP_FWD_BUTTON_LED_PIN
+      // Visual feedback when the forward button is pressed
+      IO::write(UI_KAP_FWD_BUTTON_LED_PIN, (button_fwd_state) ? HIGH : LOW);
+      #endif
+
+      #ifdef UI_KAP_BWD_BUTTON_LED_PIN
+      // Visual feedback when the backward button is pressed
+      IO::write(UI_KAP_BWD_BUTTON_LED_PIN, (button_bwd_state) ? HIGH : LOW);
+      #endif
+
+      //
+      // TODO maybe add a button debounce routine here
+      //
+
+      // Previous button sate
+      static uint8_t button_fwd_old_state = button_fwd_state;
+      static uint8_t button_bwd_old_state = button_bwd_state;
+
+      if(!button_bwd_state)
+      {
+        if(button_fwd_state)
+        {
+          if(!button_fwd_old_state) // Initial button push
+          {
+            old_motor_speed = api::motor_get_speed(motor);
+          }
+
+          else // Button already pushed
+          {
+            uint16_t potValue = Analog::read(UI_KAP_ADC_CHANNEL);
+
+            // It's important that the "new_motor_speed" value not to
+            // be lower than 2, because at the stepper tick routine it
+            // will be divivded by two.
+            uint8_t new_motor_speed = map(potValue, 0, 1023, 2, 64);
+            api::motor_set_speed(motor, new_motor_speed);
+
+            if(! api::motor_is_moving(motor))
+            {
+              // Use an overflow hack to make to motor move forever
+              api::motor_set_target(motor, -1);
+              api::motor_start(motor);
+            }
+          }
+
+          button_fwd_old_state = button_fwd_state;
+        }
+        else
+        {
+          if(button_fwd_old_state) // Button released
+          {
+            api::motor_stop(motor);
+            api::motor_set_speed(motor, old_motor_speed);
+            button_fwd_old_state = button_fwd_state;
+          }
+        }
+      }
+
+      if(!button_fwd_state)
+      {
+        if(button_bwd_state)
+        {
+
+          if(!button_bwd_old_state) // Initial button push
+          {
+            old_motor_speed = api::motor_get_speed(motor);
+          }
+
+          else // Button already pushed
+          {
+            uint16_t potValue = Analog::read(UI_KAP_ADC_CHANNEL);
+
+            // It's important that the "new_motor_speed" value not to
+            // be lower than 2, because at the stepper tick routine it
+            // will be divivded by two.
+            uint8_t new_motor_speed = map(potValue, 0, 1023, 2, 64);
+            api::motor_set_speed(motor, new_motor_speed);
+
+            if(! api::motor_is_moving(motor))
+            {
+              api::motor_set_target(motor, 0);
+              api::motor_start(motor);
+            }
+          }
+
+          button_bwd_old_state = button_bwd_state;
+        }
+        else
+        {
+          if(button_bwd_old_state) // Button released
+          {
+            api::motor_stop(motor);
+            api::motor_set_speed(motor, old_motor_speed);
+            button_bwd_old_state = button_bwd_state;
+          }
+        }
+      }
+    #endif
+  }
 
   // Someone made an Opsie !
   // Code should not reach this

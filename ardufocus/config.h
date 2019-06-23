@@ -198,6 +198,27 @@
 
 
 // ----------------------------------------------------------------------------
+// USER INTERFACE -------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// Keys and Pot user interface
+#define USE_UI_KAP
+
+#define UI_KAP_FWD_BUTTON_PIN 16
+#define UI_KAP_BWD_BUTTON_PIN 17
+
+// Switches are designed to be pulled-up HIGH when released and LOW when being
+// pushed, this directive allows you to invert this logic.
+//#define UI_KAP_INVERT_BUTTON_LOGIC
+
+//#define UI_KAP_FWD_BUTTON_LED_PIN 13
+//#define UI_KAP_BWD_BUTTON_LED_PIN 13
+
+// Pin A0 is channel 0 (..) pin A3 is channel 3
+#define UI_KAP_ADC_CHANNEL 1
+
+
+// ----------------------------------------------------------------------------
 // DO NOT EDIT ANYTHING BELLOW THIS HEADER ------------------------------------
 // ----------------------------------------------------------------------------
 #include "assert.h"

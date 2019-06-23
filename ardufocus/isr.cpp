@@ -108,8 +108,13 @@ ISR(TIMER2_COMPA_vect)
   {
     case NTC_ADC_CHANNEL + 10:
       Analog::read_async(NTC_ADC_CHANNEL);
-      PORTB ^= bit(PB5);
       break;
+
+    #ifdef USE_UI_KAP
+    case UI_KAP_ADC_CHANNEL + 30:
+      Analog::read_async(UI_KAP_ADC_CHANNEL);
+      break;
+    #endif
 
     default:
       if(counter > 40) { counter = 0; }
