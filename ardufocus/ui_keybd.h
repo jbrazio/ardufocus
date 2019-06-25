@@ -17,22 +17,38 @@
  *
  */
 
-#ifndef __ARDUFOCUS_H__
-#define __ARDUFOCUS_H__
+#ifndef __KEYBD_H__
+#define __KEYBD_H__
 
 #include "config.h"
-
-#include <avr/interrupt.h>
-#include <avr/wdt.h>
-#include "eeprom.h"
-#include "dtr.h"
-#include "stepper.h"
-#include "motordrv.h"
 #include "analog.h"
-#include "moonlite.h"
+#include "api.h"
+#include "io.h"
 
-#ifdef USE_UI_KAP
-  #include "ui_keybd.h"
-#endif
+class Keybd
+{
+  /**
+   * Disable the creation of an instance of this object.
+   * This class should be used as a static class.
+   */
+  private:
+     Keybd() {;}
+    ~Keybd() {;}
+
+    typedef void (*callback_t)(const bool&);
+
+  private:
+    static motor_t motor;
+    static bool inited;
+
+  public:
+    static void setup();
+    static void tick();
+    static void debounce(bool&, bool&, bool&, uint8_t&, const uint8_t& );
+
+  public:
+    static callback_t event_fwd_pressed();
+    static callback_t event_bwd_pressed();
+};
 
 #endif

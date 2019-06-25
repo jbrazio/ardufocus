@@ -213,4 +213,20 @@
     #endif
 #endif
 
+// USER INTERFACE: Keyboard ---------------------------------------------------
+#if defined(USE_UI_KAP)
+  #if defined(UI_KAP_BUTTON_DEBOUNCE) && (UI_KAP_BUTTON_DEBOUNCE < 1 || UI_KAP_BUTTON_DEBOUNCE > 255)
+    #undef UI_KAP_BUTTON_DEBOUNCE
+  #endif
+
+  #if !defined(UI_KAP_BUTTON_DEBOUNCE)
+    #define UI_KAP_BUTTON_DEBOUNCE 15
+  #endif
+
+  #if !defined(UI_KAP_FWD_BUTTON_PIN) || !defined(UI_KAP_BWD_BUTTON_PIN)
+    #error KAP configuration is not valid.
+    #error Please define UI_KAP_FWD_BUTTON_PIN and UI_KAP_BWD_BUTTON_PIN
+  #endif
+#endif
+
 #endif
