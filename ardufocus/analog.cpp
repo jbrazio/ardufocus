@@ -32,6 +32,11 @@ Analog::buffer_t Analog::s_buffer = { 0, 255, {} };
  */
 ISR(ADC_vect)
 {
+  sei();
+  static bool running = false;
+  if(running) { return; }
+  running = true;
+
   // store the raw value from the ADC
   Analog::s_buffer.raw[Analog::s_buffer.n++] = ADCW;
 
@@ -62,6 +67,8 @@ ISR(ADC_vect)
   }
 
   else { ADCSRA |= bit(ADSC) | bit(ADIE); }
+
+  running = false;
 }
 
 /**
