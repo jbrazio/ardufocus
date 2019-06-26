@@ -26,6 +26,11 @@
 #define TIMER0_OCRA (((F_CPU/TIMER0_PSCL) / TIMER0_FREQ)  -1)
 #define TIMER0_TICK (1000000L  / TIMER0_FREQ) // uS
 
+#define TIMER2_PSCL 1024
+#define TIMER2_FREQ 160L // Hz
+#define TIMER2_OCRA (((F_CPU/TIMER0_PSCL) / TIMER0_FREQ)  -1)
+#define TIMER2_TICK (1000000L  / TIMER0_FREQ) // uS
+
 #define DEFAULT_MAX_SPEED    250
 #define DEFAULT_MIN_SPEED     25
 #define DEFAULT_SLEEP_TIMEOUT 15
@@ -206,6 +211,22 @@
     #ifndef NTC_MAX_RAW_VALUE
       #define NTC_MAX_RAW_VALUE 950
     #endif
+#endif
+
+// USER INTERFACE: Keyboard ---------------------------------------------------
+#if defined(USE_UI_KAP)
+  #if defined(UI_KAP_BUTTON_DEBOUNCE) && (UI_KAP_BUTTON_DEBOUNCE < 1 || UI_KAP_BUTTON_DEBOUNCE > 255)
+    #undef UI_KAP_BUTTON_DEBOUNCE
+  #endif
+
+  #if !defined(UI_KAP_BUTTON_DEBOUNCE)
+    #define UI_KAP_BUTTON_DEBOUNCE 15
+  #endif
+
+  #if !defined(UI_KAP_FWD_BUTTON_PIN) || !defined(UI_KAP_BWD_BUTTON_PIN)
+    #error KAP configuration is not valid.
+    #error Please define UI_KAP_FWD_BUTTON_PIN and UI_KAP_BWD_BUTTON_PIN
+  #endif
 #endif
 
 #endif

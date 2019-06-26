@@ -198,6 +198,44 @@
 
 
 // ----------------------------------------------------------------------------
+// USER INTERFACE -------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// This is the most basic user interface, it uses two keys to move the focuser
+// IN (FWD) and out (BWD). A third key (SWT) can be used to select the active
+// motor on a dual motor configuration.
+//#define USE_UI_KAP
+
+// Use the following setings to select the input pins connected to each one of
+// the switches. The third button is optional.
+#define UI_KAP_FWD_BUTTON_PIN 16
+#define UI_KAP_BWD_BUTTON_PIN 17
+//#define UI_KAP_SWT_BUTTON_PIN 18
+
+// We like the switches to be wired in an active-low configuration, this way you
+// don't need to use additional external resistors, we will automatically enable
+// the internal pull-ups for you. If you decide to use any other wiring logic use
+// the option bellow to reflect it.
+//
+//           ---/.---
+//  GND --- | SWITCH | --- INPUT_PIN
+//           --------
+//
+//#define UI_KAP_INVERT_BUTTON_LOGIC
+
+// The options bellow allows you to have one LED per button, the LED will light
+// up when the button is pressed. The third button (SWT) will be lit when the
+// first motor is active, and off when the second motor is active.
+//#define UI_KAP_FWD_BUTTON_LED_PIN 13
+//#define UI_KAP_BWD_BUTTON_LED_PIN 13
+//#define UI_KAP_SWT_BUTTON_LED_PIN 13
+
+// Pin A0 is channel 0 (..) pin A3 is channel 3
+// DO NOT USE CHANNEL 0, valid options are 1, 2 and 3
+#define UI_KAP_ADC_CHANNEL 1
+
+
+// ----------------------------------------------------------------------------
 // DO NOT EDIT ANYTHING BELLOW THIS HEADER ------------------------------------
 // ----------------------------------------------------------------------------
 #include "assert.h"

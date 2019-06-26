@@ -17,19 +17,35 @@
  *
  */
 
-#ifndef __ARDUFOCUS_H__
-#define __ARDUFOCUS_H__
+#ifndef __UI_H__
+#define __UI_H__
 
 #include "config.h"
 
-#include <avr/interrupt.h>
-#include <avr/wdt.h>
-#include "eeprom.h"
-#include "dtr.h"
-#include "stepper.h"
-#include "motordrv.h"
-#include "analog.h"
-#include "moonlite.h"
-#include "ui.h"
+#ifdef USE_UI_KAP
+  #include "ui_keybd.h"
+#endif
+
+namespace UI
+{
+  inline void setup()
+  {
+    #ifdef USE_UI_KAP
+      Keybd::setup();
+    #endif
+  }
+
+  inline void update_display()
+  {
+    ;
+  }
+
+  inline void fetch_key_state()
+  {
+    #ifdef USE_UI_KAP
+      Keybd::tick();
+    #endif
+  }
+}
 
 #endif

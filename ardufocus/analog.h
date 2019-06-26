@@ -25,10 +25,9 @@
 #include <stdlib.h>
 #include <avr/interrupt.h>
 #include <util/atomic.h>
+#include <avr/io.h>
 #include "macro.h"
 #include "utility.h"
-
-extern float g_ambient;
 
 class Analog
 {
@@ -41,8 +40,6 @@ class Analog
     ~Analog() {;}
 
   public:
-    // Being a bit lazy here, this buffer should be private to the class
-    // and have a set of wrappers around it.. adding it to the TODO list.
     static struct buffer_t
     {
       uint8_t  n;
@@ -50,20 +47,12 @@ class Analog
       uint16_t raw[128];
     } s_buffer;
 
-  public:
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     */
-    static void read(const uint8_t&);
+    static uint16_t s_cache[4];
 
-    /**
-     * @brief [brief description]
-     * @details [long description]
-     *
-     */
+  public:
     static void setup();
+    static void read_async(const uint8_t&);
+    static uint16_t read(const uint8_t& channel) { return ((channel > 3) ? 0 : s_cache[channel]); }
 };
 
 #endif

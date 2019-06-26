@@ -36,6 +36,8 @@
  * any hosted project we do recommend a 5 minute reading of "Understanding
  * the GitHub Flow" from <https://guides.github.com/introduction/flow/>.
  *
+ * Visit our website at https://ardufocus.com !
+ *
  * -- the team
  *
  */
