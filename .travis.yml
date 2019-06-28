@@ -41,14 +41,14 @@ script:
   # Test basic A4988 driver ---------------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-ntc
   - config-footer
   - platformio run -e debug
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-ntc
   - config-footer
@@ -56,7 +56,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-ntc
@@ -65,7 +65,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-opt-add MOTOR1_COMPRESS_STEPS
@@ -75,7 +75,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-opt-add MOTOR1_COMPRESS_STEPS
@@ -87,14 +87,14 @@ script:
   # Test basic DRV8825 driver ---------------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-ntc
   - config-footer
   - platformio run -e debug
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-ntc
   - config-footer
@@ -102,7 +102,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-ntc
@@ -111,7 +111,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-opt-add MOTOR1_COMPRESS_STEPS
@@ -121,7 +121,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add MOTOR1_INVERT_DIRECTION
   - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
   - config-opt-add MOTOR1_COMPRESS_STEPS
@@ -179,7 +179,7 @@ script:
   # Test A4988 with acceleration ----------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_LINEAR_ACCEL
   - config-ntc
   - config-footer
@@ -187,7 +187,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_TRAPEZOID_ACCEL
   - config-ntc
   - config-footer
@@ -195,7 +195,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_SMOOTHSTEP_ACCEL
   - config-ntc
   - config-footer
@@ -204,7 +204,7 @@ script:
   # Test DRV8825 with acceleration ----------------------------------------------
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_LINEAR_ACCEL
   - config-ntc
   - config-footer
@@ -212,7 +212,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_TRAPEZOID_ACCEL
   - config-ntc
   - config-footer
@@ -220,7 +220,7 @@ script:
   #
   - config-header
   - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "12, 11, 10, 8, 7, 6"
+  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
   - config-opt-add USE_SMOOTHSTEP_ACCEL
   - config-ntc
   - config-footer
