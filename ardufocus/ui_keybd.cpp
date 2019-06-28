@@ -138,12 +138,10 @@ void Keybd::tick()
         if(! api::motor_is_moving(motor)) {
           switch(motor) {
             case MOTOR_ONE:
-            comms.reply("1");
               motor = MOTOR_TWO;
               break;
 
             case MOTOR_TWO:
-            comms.reply("2");
               motor = MOTOR_ONE;
               break;
           }
