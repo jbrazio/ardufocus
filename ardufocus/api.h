@@ -115,24 +115,6 @@ class api {
       return 0;
     }
 
-    static uint8_t motor_get_mode(const motor_t& idx) {
-      switch(idx) {
-        case MOTOR_ONE:
-          #ifdef MOTOR1_HAS_DRIVER
-          return g_motor1->get_step_mode();
-          #endif
-          break;
-
-        case MOTOR_TWO:
-          #ifdef MOTOR2_HAS_DRIVER
-          return g_motor2->get_step_mode();
-          #endif
-          break;
-      }
-
-      return 0;
-    }
-
     static uint8_t motor_is_moving(const motor_t& idx) {
       switch(idx) {
         case MOTOR_ONE:
@@ -199,44 +181,6 @@ class api {
         case MOTOR_TWO:
           #ifdef MOTOR2_HAS_DRIVER
           g_motor2->set_speed(value);
-          #endif
-          break;
-
-        default:
-          return;
-      }
-    }
-
-    static void motor_set_mode_full(const motor_t& idx) {
-      switch(idx) {
-        case MOTOR_ONE:
-          #ifdef MOTOR1_HAS_DRIVER
-          g_motor1->set_full_step();
-          #endif
-          break;
-
-        case MOTOR_TWO:
-          #ifdef MOTOR2_HAS_DRIVER
-          g_motor2->set_full_step();
-          #endif
-          break;
-
-        default:
-          return;
-      }
-    }
-
-    static void motor_set_mode_half(const motor_t& idx) {
-      switch(idx) {
-        case MOTOR_ONE:
-          #ifdef MOTOR1_HAS_DRIVER
-          g_motor1->set_half_step();
-          #endif
-          break;
-
-        case MOTOR_TWO:
-          #ifdef MOTOR2_HAS_DRIVER
-          g_motor2->set_half_step();
           #endif
           break;
 

@@ -100,8 +100,8 @@
 #endif
 
 #ifdef MOTOR1_USE_A4988_DRIVER
-  //                    MS1, MS2, MS3, SLEEP,  STEP, DIR
-  #define MOTOR1_PINOUT  12,  11,  10,     8,     7,   6
+  //                    SLEEP,  STEP, DIR
+  #define MOTOR1_PINOUT     6,     5,   4
 #endif
 
 // Activate the following directive if you'd like to invert the motor rotation
@@ -128,16 +128,76 @@
 // Specify a custom speed profile for you motor model and driver combo.
 // The units are in steps/sec.
 //
-// Usually a motor such as the 28BYJ-48 need lower speed limits:
+// 28BYJ-48 using an ULN2003 driver:
+//  - Max speed: 100
+//  - Min speed:   5
+//
+// 28BYJ-48 or NEMA17 using an A4988 driver:
 //  - Max speed: 250
-//  - Min speed: 25
+//  - Min speed:  10
 //
-// NEMA17 motors allow you to use higher speed limits:
-//  - Max speed: 1000
-//  - Min speed: 250
+#define MOTOR1_MAX_SPEED 250
+#define MOTOR1_MIN_SPEED  10
+
+
+// ----------------------------------------------------------------------------
+// MOTOR #2 CONFIGURATION -----------------------------------------------------
+// ----------------------------------------------------------------------------
 //
-#define MOTOR1_MAX_SPEED 150
-#define MOTOR1_MIN_SPEED  25
+// You should only enable *ONE* of the following drivers
+// The ULN2003 shall be used with the unmodded version of 28BYJ-48 or any other
+// Unipolar stepper motor. The A4988 driver should be used with Bipolar stepper
+// motors or the modded version of the 28BYJ-48 (see the doc/ folder).
+//#define MOTOR2_USE_A4988_DRIVER
+//#define MOTOR2_USE_DRV8825_DRIVER
+//#define MOTOR2_USE_ULN2003_DRIVER
+
+// Driver pin-out definition
+// Define bellow the pin-out for your specific driver.
+#ifdef MOTOR2_USE_ULN2003_DRIVER
+  //                    IN1, IN2, IN3, IN4
+  #define MOTOR2_PINOUT   2,   3,   4,   5
+#endif
+
+#ifdef MOTOR2_USE_A4988_DRIVER
+  //                    SLEEP,  STEP, DIR
+  #define MOTOR2_PINOUT     9,     8,   7
+#endif
+
+// Activate the following directive if you'd like to invert the motor rotation
+// changing the focus direction.
+//#define MOTOR2_INVERT_DIRECTION
+
+// When active Ardufocus will cut the stepper motor current when idle, in theory
+// this could lead to less accuracy between movements but will keep the motor
+// cool. When disabling this flag make sure your motor does not overheat.
+#define MOTOR2_SLEEP_WHEN_IDLE
+
+// When the previous directive is active, allows you to control the amount of
+// time the driver will wait, after stopping, before powering down the motor.
+// The idea behind is the system needs full accuracy between the AF point
+// sequence but can be powered down between AF runs. Thus you should set this
+// to wait a bit more than the time your system needs to take and measure each
+// AF point.
+#define MOTOR2_SLEEP_TIMEOUT 15
+
+
+// ----------------------------------------------------------------------------
+// SPEED PROFILE --------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// Specify a custom speed profile for you motor model and driver combo.
+// The units are in steps/sec.
+//
+// 28BYJ-48 using an ULN2003 driver:
+//  - Max speed: 100
+//  - Min speed:   5
+//
+// 28BYJ-48 or NEMA17 using an A4988 driver:
+//  - Max speed: 250
+//  - Min speed:  10
+//
+#define MOTOR2_MAX_SPEED 250
+#define MOTOR2_MIN_SPEED  10
 
 
 // ----------------------------------------------------------------------------
@@ -208,8 +268,8 @@
 
 // Use the following setings to select the input pins connected to each one of
 // the switches. The third button is optional.
-#define UI_KAP_FWD_BUTTON_PIN 16
-#define UI_KAP_BWD_BUTTON_PIN 17
+#define UI_KAP_FWD_BUTTON_PIN 2
+#define UI_KAP_BWD_BUTTON_PIN 3
 //#define UI_KAP_SWT_BUTTON_PIN 18
 
 // We like the switches to be wired in an active-low configuration, this way you

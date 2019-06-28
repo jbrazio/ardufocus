@@ -48,7 +48,6 @@ class stepper
     };
 
   protected:
-    uint8_t m_mode;                  // Stepping mode (1/1, 1/2, ..)
     volatile uint16_t m_speed;       // Stepping speed
     volatile position_t m_position;  // Absolute motor position
     volatile uint16_t m_ovf_counter; // Overflow counter
@@ -74,11 +73,6 @@ class stepper
     virtual void halt();
 
     virtual inline void sleep()                        { ; }
-    virtual inline void set_full_step()                { ; }
-    virtual inline void set_half_step()                { ; }
-
-    virtual inline uint8_t get_step_mode()             { return m_mode;             }
-
     virtual inline bool step_cw()                      { return false;              }
     virtual inline bool step_ccw()                     { return false;              }
 

@@ -98,10 +98,6 @@ class moonlite: protected protocol, protected serial {
               sprintf_P(buffer, PSTR("%02X"), motor_get_speed(motor));
               break;
 
-            case 'H':
-              sprintf_P(buffer, PSTR("%02X"), motor_get_mode(motor));
-              break;
-
             case 'I':
               sprintf_P(buffer, PSTR("%02X"), motor_is_moving(motor));
               break;
@@ -149,14 +145,6 @@ class moonlite: protected protocol, protected serial {
           switch(str[1 + offset]) {
             case 'D':
               motor_set_speed(motor, util::hex2l(buffer));
-              break;
-
-            case 'F':
-              motor_set_mode_full(motor);
-              break;
-
-            case 'H':
-              motor_set_mode_half(motor);
               break;
 
             case 'N':

@@ -19,11 +19,6 @@
 
 #include "stepper.h"
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::init()
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
@@ -33,35 +28,18 @@ void stepper::init()
 }
 
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::move()
 {
   m_ovf_counter = 0;
   m_position.moving = true;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool stepper::is_moving()
 {
   const bool b = (m_position.moving);
   return b;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::halt()
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
@@ -70,25 +48,12 @@ void stepper::halt()
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 uint32_t stepper::get_current_position()
 {
   const uint32_t c = m_position.current;
   return c;
 }
 
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::set_current_position(const uint32_t& target) {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.current = target;
@@ -96,24 +61,12 @@ void stepper::set_current_position(const uint32_t& target) {
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 uint16_t stepper::get_speed()
 {
   const uint16_t s = m_speed;
   return s;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::set_speed(const uint16_t& target)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
@@ -121,25 +74,12 @@ void stepper::set_speed(const uint16_t& target)
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 uint32_t stepper::get_target_position()
 {
   const uint32_t t = m_position.target;
   return t;
 }
 
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::set_target_position(const uint32_t& target) {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     m_position.target = target;
@@ -174,12 +114,6 @@ void stepper::set_target_position(const uint32_t& target) {
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::tick()
 {
   // Movement guard
@@ -209,13 +143,7 @@ void stepper::tick()
   else { halt(); }
 }
 
-
 #ifdef HAS_ACCELERATION
-  /**
-   * @brief [brief description]
-   * @details [long description]
-   *
-   */
   void stepper::update_freq()
   {
     if (m_position.distance >= ACCEL_MIN_STEPS)
@@ -242,11 +170,6 @@ void stepper::tick()
   }
 #endif
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void stepper::update_position(const int8_t &direction)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {

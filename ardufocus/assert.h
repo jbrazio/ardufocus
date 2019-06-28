@@ -58,6 +58,10 @@
   #define MOTOR1_USE_A4988_DRIVER
 #endif
 
+#if defined(MOTOR2_USE_DRV8825_DRIVER)
+  #define MOTOR2_USE_A4988_DRIVER
+#endif
+
 // Duplicate driver check -----------------------------------------------------
 #if defined(MOTOR1_USE_A4988_DRIVER) && defined(MOTOR1_USE_ULN2003_DRIVER)
   #error More than one stepper driver selected for motor #1
@@ -77,12 +81,12 @@
   // Motor 2 is optional
 #endif
 
-// DRV8825 driver hack --------------------------------------------------------
-#if defined(MOTOR2_USE_DRV8825_DRIVER)
-  #define MOTOR2_USE_A4988_DRIVER
+#if !defined(MOTOR1_HAS_DRIVER) && !defined(MOTOR2_HAS_DRIVER)
+  #error At least ONE motor must be defined.
+  #error Please review the config.h file.
 #endif
 
-// Optional motor 2 -----------------------------------------------------------
+// Driver and/or Pinout validation  -------------------------------------------
 #if !defined(MOTOR1_HAS_DRIVER) && defined(MOTOR1_PINOUT)
   #error No motor pinout defined for motor #1.
   #error Please review the config.h file.
@@ -99,10 +103,6 @@
   #error Please review the config.h file.
 #endif
 
-#if !defined(MOTOR1_HAS_DRIVER) && !defined(MOTOR2_HAS_DRIVER)
-  #error At least ONE motor must be defined.
-  #error Please review the config.h file.
-#endif
 
 // High resolution mode -------------------------------------------------------
 #if defined(MOTOR1_HIGH_RESOLUTION) || defined(MOTOR2_HIGH_RESOLUTION)

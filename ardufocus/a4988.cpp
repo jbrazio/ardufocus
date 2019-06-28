@@ -19,25 +19,14 @@
 
 #include "a4988.h"
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void a4988::init()
 {
   stepper::init();
 
-  IO::set_as_output(m_pinout.ms1);
-  IO::set_as_output(m_pinout.ms2);
-  IO::set_as_output(m_pinout.ms3);
   IO::set_as_output(m_pinout.step);
   IO::set_as_output(m_pinout.sleep);
   IO::set_as_output(m_pinout.direction);
 
-  IO::write(m_pinout.ms1,        LOW);
-  IO::write(m_pinout.ms2,        LOW);
-  IO::write(m_pinout.ms3,        LOW);
   IO::write(m_pinout.step,       LOW);
   IO::write(m_pinout.direction,  LOW);
 
@@ -45,12 +34,6 @@ void a4988::init()
   IO::write(m_pinout.sleep, (m_sleep_when_idle) ? LOW : HIGH);
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void a4988::halt()
 {
 
@@ -62,46 +45,6 @@ void a4988::halt()
   util::delay_2us();
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-void a4988::set_full_step()
-{
-  m_mode = 0x00;
-  IO::write(m_pinout.ms1, LOW);
-  IO::write(m_pinout.ms2, LOW);
-  IO::write(m_pinout.ms3, LOW);
-
-  // A4988: 400ns, A8825: 1.3us
-  util::delay_2us();
-}
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-void a4988::set_half_step()
-{
-  m_mode = 0xFF;
-  IO::write(m_pinout.ms1, HIGH);
-  IO::write(m_pinout.ms2, LOW);
-  IO::write(m_pinout.ms3, LOW);
-
-  // A4988: 400ns, A8825: 1.3us
-  util::delay_2us();
-}
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool a4988::step_cw()
 {
   switch(IO::read(m_pinout.direction))
@@ -119,12 +62,6 @@ bool a4988::step_cw()
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool a4988::step_ccw()
 {
   switch(IO::read(m_pinout.direction))
@@ -142,12 +79,6 @@ bool a4988::step_ccw()
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool a4988::step()
 {
   if(m_sleep_when_idle && !IO::read(m_pinout.sleep)) {
@@ -174,12 +105,6 @@ bool a4988::step()
   return true;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void a4988::sleep()
 {
   if(m_sleep_when_idle && m_sleep_timeout_cnt) {

@@ -20,7 +20,7 @@
 #include "uln2003.h"
 
 // FIXME TODO
-// When this clas is active the linker was screaming:
+// When this class is active the linker was screaming:
 // undefined reference to `__cxa_pure_virtual'
 
 extern "C" void __cxa_pure_virtual(void) __attribute__ ((__noreturn__));
@@ -40,18 +40,13 @@ void __cxa_deleted_virtual(void) {
 
 // EOF
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void uln2003::init()
 {
   stepper::init();
 
-  m_sequence = 0;
-  set_full_step();
+  m_sequence     = 0;
+  m_stepping_sz  = lookup::uln2003_unipolar_full_sz;
+  p_stepping_tbl = lookup::uln2003_unipolar_full;
 
   IO::set_as_output(m_pinout.A);
   IO::set_as_output(m_pinout.B);
@@ -64,50 +59,12 @@ void uln2003::init()
   IO::write(m_pinout.D, LOW);
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void uln2003::halt()
 {
   stepper::halt();
   m_sleep_timeout_cnt = ((m_sleep_timeout * 1000000UL) / TIMER0_TICK);
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-void uln2003::set_full_step()
-{
-  m_mode         = 0x00;
-  m_stepping_sz  = lookup::uln2003_unipolar_full_sz;
-  p_stepping_tbl = lookup::uln2003_unipolar_full;
-}
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
-void uln2003::set_half_step()
-{
-  m_mode         = 0xFF;
-  m_stepping_sz  = lookup::uln2003_unipolar_half_sz;
-  p_stepping_tbl = lookup::uln2003_unipolar_half;
-}
-
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool uln2003::step_cw()
 {
   step();
@@ -116,12 +73,6 @@ bool uln2003::step_cw()
   return true;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 bool uln2003::step_ccw()
 {
   step();
@@ -130,12 +81,6 @@ bool uln2003::step_ccw()
   return true;
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void uln2003::step()
 {
   const uint8_t byte = pgm_read_byte( &(*(p_stepping_tbl + m_sequence)) );
@@ -148,12 +93,6 @@ void uln2003::step()
   }
 }
 
-
-/**
- * @brief [brief description]
- * @details [long description]
- *
- */
 void uln2003::sleep()
 {
   if(m_sleep_when_idle && m_sleep_timeout_cnt) {
