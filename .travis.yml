@@ -23,8 +23,8 @@ python:
     - "2.7"
 
 before_install:
-  - chmod +x ${TRAVIS_BUILD_DIR}/buildroot/bin/*
-  - export PATH=${TRAVIS_BUILD_DIR}/buildroot/bin/:${PATH}
+  - chmod -Rv +x ${TRAVIS_BUILD_DIR}/bin
+  - export PATH=${TRAVIS_BUILD_DIR}/bin/:${PATH}
 
 install:
   - pip install -U platformio
@@ -33,220 +33,719 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
 
 script:
-  #- set -e
+  # ONE A4988 driver ----------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh 1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test default config
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test basic A4988 driver ---------------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-opt-add START_TEMP_CONVERSION_ON_EVERY_GET
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test basic DRV8825 driver ---------------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # ONE DRV8825 driver --------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-opt-add START_TEMP_CONVERSION_ON_EVERY_GET
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test basic ULN2003 driver -------------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  #- config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add MOTOR1_INVERT_DIRECTION
-  - config-opt-add MOTOR1_SLEEP_WHEN_IDLE
-  #- config-opt-add MOTOR1_COMPRESS_STEPS
-  - config-opt-add START_TEMP_CONVERSION_ON_EVERY_GET
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh  1
+  - config-motor-invert.sh 1
+  - config-motor-sleep.sh  1
+  - config-motor-speed.sh  1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # ONE ULN2003 driver --------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test A4988 with acceleration ----------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_LINEAR_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_TRAPEZOID_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_A4988_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_SMOOTHSTEP_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test DRV8825 with acceleration ----------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_LINEAR_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_TRAPEZOID_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_DRV8825_DRIVER
-  - config-opt-add MOTOR1_PINOUT "6, 5, 4"
-  - config-opt-add USE_SMOOTHSTEP_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  # Test ULN2003 with acceleration --------------------------------------------
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add USE_LINEAR_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # TWO A4988 driver ----------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add USE_TRAPEZOID_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
   #
-  - config-header
-  - config-opt-add MOTOR1_USE_ULN2003_DRIVER
-  - config-opt-add MOTOR1_PINOUT "2, 3, 4, 5"
-  - config-opt-add USE_SMOOTHSTEP_ACCEL
-  - config-ntc
-  - config-footer
-  - platformio run -e debug
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh  2
+  - config-motor-invert.sh 2
+  - config-motor-sleep.sh  2
+  - config-motor-speed.sh  2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # TWO DRV8825 driver --------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-drv8825.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # TWO ULN2003 driver --------------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-footer.sh2
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_TRAPEZOID_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+    #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # TWO MOTOR TEST MATRIX -----------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh   1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-a4988.sh   2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh   1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # TWO MOTOR WITH KAP TEST MATRIX --------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh   1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-a4988.sh   2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh   1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+  #
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-uln2003.sh 1
+  - config-motor-invert.sh  1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-uln2003.sh 2
+  - config-motor-invert.sh  2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-kap.sh
+  - config-kap-invert.sh
+  - config-kap-led.sh
+  - config-kap-swt.sh
+  - config-footer.sh
+  - platformio run -e debug -e debug168
+
+  # OFICIAL PCB 2019-05-rev1 --------------------------------------------------
+  - config-header.sh
+  - config-ntc.sh
+  - config-motor-a4988.sh   1
+  - config-motor-sleep.sh   1
+  - config-motor-speed.sh   1
+  - config-motor-a4988.sh   2
+  - config-motor-sleep.sh   2
+  - config-motor-speed.sh   2
+  - config-opt-add.sh USE_SMOOTHSTEP_ACCEL true
+  - config-footer.sh
+  - platformio run -e debug -e debug168

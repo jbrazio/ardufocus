@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+
 cat << EOF >> ardufocus/config.h
-#define ${1} ${2}
+#define UI_KAP_SWT_BUTTON_PIN 18
 EOF
 
 exit 0
