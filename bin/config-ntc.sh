@@ -5,7 +5,6 @@ cat << EOF >> ardufocus/config.h
 #define NTC_BCOEFFICIENT    3950.0F
 #define NTC_NOMINAL_VAL    10000.0F
 #define NTC_RESISTOR_VAL   10000.0F
-
 #define NTC_MIN_RAW_VALUE  50
 #define NTC_MAX_RAW_VALUE 950
 EOF

@@ -542,7 +542,7 @@ script:
   - config-header.sh
   - config-ntc.sh
   - config-motor-uln2003.sh 2
-  - config-footer.sh2
+  - config-footer.sh        2
   - platformio run -e debug -e debug168
   #
   - config-header.sh
