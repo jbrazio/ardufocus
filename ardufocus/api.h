@@ -54,10 +54,6 @@ class api {
     }
 
     static float get_temperature() {
-      #ifdef START_TEMP_CONVERSION_ON_EVERY_GET
-      update_temperature();
-      #endif
-
       return util::steinhart(Analog::read(NTC_ADC_CHANNEL));
     }
 

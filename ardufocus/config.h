@@ -248,14 +248,6 @@
 #define NTC_MIN_RAW_VALUE  50 // min value to be considered a valid reading (xxxC)
 #define NTC_MAX_RAW_VALUE 950 // max value to be considered a valid reading (-23C)
 
-// According to the Moonlite protocol the temperature probe should only be read
-// when the command ":C#" is received but some applications, such as SGP, seems
-// not to respect this and only call the get temperature command ":GT#" which
-// means the temperature will never get updated and the last read value is always
-// returned, either it is valid or not. Enabling the following option will force
-// the temperature gathering process on every temperature read command.
-#define START_TEMP_CONVERSION_ON_EVERY_GET
-
 
 // ----------------------------------------------------------------------------
 // USER INTERFACE -------------------------------------------------------------
