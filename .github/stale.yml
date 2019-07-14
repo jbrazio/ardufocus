@@ -6,9 +6,7 @@ daysUntilClose: 7
 
 # Issues with these labels will never be considered stale
 exemptLabels:
-  - bug
-  - enhancement
-  - help wanted
+  - mustfix
 
 # Label to use when marking an issue as stale
 staleLabel: stale
