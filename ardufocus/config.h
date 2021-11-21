@@ -136,7 +136,7 @@
 //  - Max speed: 1000
 //  - Min speed: 250
 //
-#define MOTOR1_MAX_SPEED 150
+#define MOTOR1_MAX_SPEED 250:
 #define MOTOR1_MIN_SPEED  25
 
 
@@ -204,10 +204,12 @@
 // This is the most basic user interface, it uses two keys to move the focuser
 // IN (FWD) and out (BWD). A third key (SWT) can be used to select the active
 // motor on a dual motor configuration.
-//#define USE_UI_KAP
+#define USE_UI_KAP
 
 // Use the following setings to select the input pins connected to each one of
 // the switches. The third button is optional.
+// 16 = A2 on Arduino Nano
+// 17 = A3 on Arduino Nano
 #define UI_KAP_FWD_BUTTON_PIN 16
 #define UI_KAP_BWD_BUTTON_PIN 17
 //#define UI_KAP_SWT_BUTTON_PIN 18
@@ -221,13 +223,14 @@
 //  GND --- | SWITCH | --- INPUT_PIN
 //           --------
 //
+// So, if you want to use active high logic on the input button switches, define this:
 //#define UI_KAP_INVERT_BUTTON_LOGIC
 
 // The options bellow allows you to have one LED per button, the LED will light
 // up when the button is pressed. The third button (SWT) will be lit when the
 // first motor is active, and off when the second motor is active.
-//#define UI_KAP_FWD_BUTTON_LED_PIN 13
-//#define UI_KAP_BWD_BUTTON_LED_PIN 13
+#define UI_KAP_FWD_BUTTON_LED_PIN 3
+#define UI_KAP_BWD_BUTTON_LED_PIN 4
 //#define UI_KAP_SWT_BUTTON_LED_PIN 13
 
 // Pin A0 is channel 0 (..) pin A3 is channel 3
