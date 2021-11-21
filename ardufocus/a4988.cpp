@@ -36,11 +36,11 @@ void a4988::init()
   IO::set_as_output(m_pinout.sleep);
   IO::set_as_output(m_pinout.direction);
 
-  // Step resolution: Full step
-  IO::write(m_pinout.ms1,        LOW);
-  IO::write(m_pinout.ms2,        LOW);
-  IO::write(m_pinout.ms3,        LOW);
-
+  // Step resolution: Sixteenth step
+  IO::write(m_pinout.ms1,        HIGH);
+  IO::write(m_pinout.ms2,        HIGH);
+  IO::write(m_pinout.ms3,        HIGH);
+  
   IO::write(m_pinout.step,       LOW);
   IO::write(m_pinout.direction,  LOW);
 
@@ -73,7 +73,7 @@ void a4988::halt()
  */
 void a4988::set_full_step()
 {
-  m_mode = 0x00;
+  m_mode = 1;
   IO::write(m_pinout.ms1, LOW);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
@@ -90,7 +90,7 @@ void a4988::set_full_step()
  */
 void a4988::set_half_step()
 {
-  m_mode = 0xFF;
+  m_mode = 2;
   IO::write(m_pinout.ms1, HIGH);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
@@ -106,7 +106,7 @@ void a4988::set_half_step()
  */
 void a4988::set_quarter_step()
 {
-  m_mode = 0xFF;
+  m_mode = 4;
   IO::write(m_pinout.ms1, LOW);
   IO::write(m_pinout.ms2, HIGH);
   IO::write(m_pinout.ms3, LOW);
@@ -120,9 +120,9 @@ void a4988::set_quarter_step()
  * @details Use the microstepping resolutions pins to configure a "half step" per pulse resolution.
  *
  */
-void a4988::set_eigth_step()
+void a4988::set_eighth_step()
 {
-  m_mode = 0xFF;
+  m_mode = 8;
   IO::write(m_pinout.ms1, HIGH);
   IO::write(m_pinout.ms2, HIGH);
   IO::write(m_pinout.ms3, LOW);
@@ -138,7 +138,7 @@ void a4988::set_eigth_step()
  */
 void a4988::set_sixteenth_step()
 {
-  m_mode = 0xFF;
+  m_mode = 16;
   IO::write(m_pinout.ms1, HIGH);
   IO::write(m_pinout.ms2, HIGH);
   IO::write(m_pinout.ms3, HIGH);

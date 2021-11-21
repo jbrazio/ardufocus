@@ -73,7 +73,7 @@ class a4988: public stepper
     virtual void set_full_step();
     virtual void set_half_step();
     virtual void set_quarter_step();
-    virtual void set_eigth_step();
+    virtual void set_eighth_step();
     virtual void set_sixteenth_step();
     virtual speed bool step_cw();
     virtual speed bool step_ccw();
