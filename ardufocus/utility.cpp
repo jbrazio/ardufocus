@@ -40,6 +40,20 @@ float util::steinhart(const uint16_t& raw)
   return steinhart;
 }
 
+/**
+ * @brief Converts raw ADC data to degrees C
+ * @details Used for LM335
+ *
+ */
+float util::lm335(const uint16_t& raw)
+{
+  float value = constrain(raw, 1, 1022);  // adu
+  value = value * 5000.0f / 1024.0f;      // mV
+  value = value / 10.0f;                  // deg K
+  value = value - 273.15f;                // deg C
+  return value;
+}
+
 #ifdef HAS_ACCELERATION
   /**
    * @brief Linear interpolation function

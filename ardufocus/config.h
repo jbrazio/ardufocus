@@ -179,6 +179,10 @@
 // ----------------------------------------------------------------------------
 // TEMPERATURE SENSOR ---------------------------------------------------------
 // ----------------------------------------------------------------------------
+
+// Uncomment to use LM335 for reading temperature
+//#define TEMP_USE_LM335
+
 #define NTC_ADC_CHANNEL          0
 #define NTC_NOMINAL_TEMP      25.0F
 #define NTC_BCOEFFICIENT    3950.0F

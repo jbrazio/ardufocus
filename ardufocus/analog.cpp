@@ -83,8 +83,18 @@ void Analog::read_async(const uint8_t& channel)
     Analog::s_buffer.n = 0;
     Analog::s_buffer.chan = channel;
 
-    // select the internal 1.1V aref and the target analog channel
-    ADMUX = bit (REFS1) | bit (REFS0) | (channel & 0x07);
+    // select the target analog channel
+    volatile uint8_t admux = channel & 0x07;
+    // now select the correct reference voltage
+  #ifdef TEMP_USE_LM335
+    // 5V reference for LM335
+    admux |= bit (REFS0);
+  #else
+    // 1.1V reference for the default NTC resistor
+    admux |= bit (REFS1) | bit (REFS0)
+  #endif
+    // write admux value
+    ADMUX = admux;
 
     // start the async analog read
     ADCSRA |= bit(ADSC) | bit(ADIE);

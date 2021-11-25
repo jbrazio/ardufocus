@@ -32,6 +32,7 @@ extern volatile uint32_t timer0_compa_count;
 namespace util
 {
   float steinhart(const uint16_t&);
+  float lm335(const uint16_t&);
 
   inline uint16_t  hex2l(const char* str) { return ( strtol(str, NULL, 16)); }
   inline uint32_t hex2ul(const char* str) { return (strtoul(str, NULL, 16)); }

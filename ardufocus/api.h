@@ -58,7 +58,11 @@ class api {
       update_temperature();
       #endif
 
+      #ifdef TEMP_USE_LM335
+      return util::lm335(Analog::read(NTC_ADC_CHANNEL));
+      #else
       return util::steinhart(Analog::read(NTC_ADC_CHANNEL));
+      #endif
     }
 
     static void motor_start(const motor_t& idx) {
