@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cat << EOF >> ardufocus/config.h
+cat << EOF > ardufocus/config.h
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
@@ -16,6 +16,5 @@ cat << EOF >> ardufocus/config.h
 EOF
 
 cat ardufocus/config.h
-platformio run -e debug -e debug168
-platformio run -e debug -e debug168
+platformio run -e debug328 -e debug168
 exit $?

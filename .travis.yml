@@ -1,5 +1,6 @@
-sudo: false
 language: python
+dist: xenial
+os: linux
 
 python:
     - "3.6"
@@ -17,4 +18,3 @@ before_script:
 script:
   # OFICIAL PCB 2019-05-rev1 --------------------------------------------------
   - config-pcb-2019-05-rev1
-  - platformio run -e debug -e debug168
