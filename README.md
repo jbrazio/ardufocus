@@ -1,7 +1,5 @@
 ![Image](https://ardufocus.com/assets/images/layout/logo-github.png)
 
-[![Donate Patreon](https://img.shields.io/badge/Donate-Patreon-blue.svg?style=for-the-badge)](https://www.patreon.com/join/jbrazio?)
-[![Donate PayPal](https://img.shields.io/badge/Donate-Paypal-blue.svg?style=for-the-badge)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D5XZ7QFLP8LXE)
 [![Travis (.com)](https://img.shields.io/travis/com/jbrazio/ardufocus.svg?style=for-the-badge)](https://travis-ci.com/jbrazio/ardufocus)
 [![Download beta](https://img.shields.io/github/release-pre/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/archive/master.zip)
 [![GitHub stars](https://img.shields.io/github/stars/jbrazio/ardufocus.svg?style=for-the-badge)](https://github.com/jbrazio/ardufocus/stargazers)
@@ -26,3 +24,8 @@ Ardufocus PCB schematics are licensed under [CC BY-NC-SA 4.0](https://creativeco
 ### For documentation, tutorials and howto visit [ardufocus.com](https://ardufocus.com).
 
 ----
+
+**Support this project**
+- Paypal: jbrazio@gmail.com
+- Bitcoin: bc1qfkl2zgdjpn6993xma4pl5yhr5cdunu9sa0g8vp
+- Ethereum: 0xdfDfFAf0EF66fC896F0907c8C09180a5c74eE8fA

@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,28 +31,28 @@
 
 class Analog
 {
-  /**
-   * Disable the creation of an instance of this object.
-   * This class should be used as a static class.
-   */
-  private:
-     Analog() {;}
-    ~Analog() {;}
+private:
+	/**
+	 * Disable the creation of an instance of this object.
+	 * This class should be used as a static class.
+	 */
+	Analog() { ; }
+	~Analog() { ; }
 
-  public:
-    static struct buffer_t
-    {
-      uint8_t  n;
-      uint8_t  chan;
-      uint16_t raw[128];
-    } s_buffer;
+public:
+	static struct buffer_t
+	{
+		uint8_t  n;
+		uint8_t  chan;
+		uint16_t raw[128];
+	} s_buffer;
 
-    static uint16_t s_cache[4];
+	static uint16_t s_cache[4];
 
-  public:
-    static void setup();
-    static void read_async(const uint8_t&);
-    static uint16_t read(const uint8_t& channel) { return ((channel > 3) ? 0 : s_cache[channel]); }
+public:
+	static void setup();
+	static void read_async(const uint8_t&);
+	static uint16_t read(const uint8_t& channel) { return ((channel > 3) ? 0 : s_cache[channel]); }
 };
 
 #endif

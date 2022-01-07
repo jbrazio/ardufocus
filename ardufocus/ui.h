@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,29 +23,29 @@
 #include "config.h"
 
 #ifdef USE_UI_KAP
-  #include "ui_keybd.h"
+#include "ui_keybd.h"
 #endif
 
 namespace UI
 {
-  inline void setup()
-  {
-    #ifdef USE_UI_KAP
-      Keybd::setup();
-    #endif
-  }
+	inline void setup()
+	{
+#ifdef USE_UI_KAP
+		Keybd::setup();
+#endif
+	}
 
-  inline void update_display()
-  {
-    ;
-  }
+	inline void update_display()
+	{
+		;
+	}
 
-  inline void fetch_key_state()
-  {
-    #ifdef USE_UI_KAP
-      Keybd::tick();
-    #endif
-  }
+	inline void fetch_key_state()
+	{
+#ifdef USE_UI_KAP
+		Keybd::tick();
+#endif
+	}
 }
 
 #endif

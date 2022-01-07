@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,22 +32,22 @@
 #define EEPROM_START_ADDRESS 0x0000
 
 struct eeprom_map_t {
-  uint16_t header;      // 00
-  uint32_t position_m1; // 02
-  uint32_t position_m2; // 06
-  bool     dtr_reset;   // 10
+	uint16_t header;      // 00
+	uint32_t position_m1; // 02
+	uint32_t position_m2; // 06
+	bool     dtr_reset;   // 10
 };
 
 extern eeprom_map_t g_config;
 
 #ifdef USE_EEPROM
-  void eeprom_init(eeprom_map_t *);
-  void eeprom_load(eeprom_map_t *);
-  void eeprom_save(eeprom_map_t *);
+void eeprom_init(eeprom_map_t*);
+void eeprom_load(eeprom_map_t*);
+void eeprom_save(eeprom_map_t*);
 #else
-  inline void eeprom_init(eeprom_map_t * ptr) { memset(ptr, 0, sizeof(eeprom_map_t)); }
-  inline void eeprom_load(eeprom_map_t *) { ; }
-  inline void eeprom_save(eeprom_map_t *) { ; }
+inline void eeprom_init(eeprom_map_t* ptr) { memset(ptr, 0, sizeof(eeprom_map_t)); }
+inline void eeprom_load(eeprom_map_t*) { ; }
+inline void eeprom_save(eeprom_map_t*) { ; }
 #endif
 
 #endif

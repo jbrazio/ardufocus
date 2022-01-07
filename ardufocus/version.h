@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #ifndef __VERSION_H__
 #define __VERSION_H__
 
-// Program version and release
+ // Program version and release
 #define ARDUFOCUS_VERSION "0.3a"
 #define ARDUFOCUS_BRANCH  "master"
 #define ARDUFOCUS_URL     "https://github.com/jbrazio/ardufocus"

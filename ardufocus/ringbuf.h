@@ -25,115 +25,115 @@
 #include <avr/interrupt.h>
 #include <util/atomic.h>
 
-/**
- * @brief   Circular Queue class
- * @details Implementation of the classic ring buffer data structure
- */
+ /**
+  * @brief   Circular Queue class
+  * @details Implementation of the classic ring buffer data structure
+  */
 template<typename T, uint8_t N> class Ringbuf
 {
 private:
-  /**
-   * @brief   Buffer structure
-   * @details This structure consolidates all the overhead required to handle
-   *          a circular queue such as the pointers and the buffer vector.
-   */
-  struct {
-    T queue[N];
-    uint8_t head;
-    volatile uint8_t tail;
-  } m_buffer;
+	/**
+	 * @brief   Buffer structure
+	 * @details This structure consolidates all the overhead required to handle
+	 *          a circular queue such as the pointers and the buffer vector.
+	 */
+	struct {
+		T queue[N];
+		uint8_t head;
+		volatile uint8_t tail;
+	} m_buffer;
 
 public:
-  /**
-   * @brief   Class constructor
-   * @details This class requires two template parameters, T defines the type
-   *          of item this queue will handle and N defines the maximum number of
-   *          items that can be stored on the queue.
-   */
-  Ringbuf() { reset(); }
+	/**
+	 * @brief   Class constructor
+	 * @details This class requires two template parameters, T defines the type
+	 *          of item this queue will handle and N defines the maximum number of
+	 *          items that can be stored on the queue.
+	 */
+	Ringbuf() { reset(); }
 
-  /**
-   * @brief   Adds an item to the queue
-   * @details Adds an item to the queue on the location pointed by the buffer_t
-   *          tail variable. Returns false if no queue space is available.
-   * @param   item Item to be added to the queue
-   * @return  true if the operation was successful
-   */
-  bool enqueue(T const &item)
-  {
-    if (full()) return false;
+	/**
+	 * @brief   Adds an item to the queue
+	 * @details Adds an item to the queue on the location pointed by the buffer_t
+	 *          tail variable. Returns false if no queue space is available.
+	 * @param   item Item to be added to the queue
+	 * @return  true if the operation was successful
+	 */
+	bool enqueue(T const& item)
+	{
+		if (full()) return false;
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-      m_buffer.queue[m_buffer.tail] = item;
-      m_buffer.tail = (m_buffer.tail +1) % N;
-    }
-    return true;
-  }
+		ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+			m_buffer.queue[m_buffer.tail] = item;
+			m_buffer.tail = (m_buffer.tail + 1) % N;
+		}
+		return true;
+	}
 
-  /**
-   * @brief   Checks if the queue has no items
-   * @details Returns true if there are no items on the queue, false otherwise.
-   * @return  true if queue is empty
-   */
-  inline bool empty() { return (m_buffer.head == m_buffer.tail); }
+	/**
+	 * @brief   Checks if the queue has no items
+	 * @details Returns true if there are no items on the queue, false otherwise.
+	 * @return  true if queue is empty
+	 */
+	inline bool empty() { return (m_buffer.head == m_buffer.tail); }
 
-  /**
-   * @brief   Checks if the queue is full
-   * @details Returns true if the queue is full, false otherwise.
-   * @return  true if queue is full
-   */
-  inline bool full() { return (m_buffer.head == (m_buffer.tail +1) % N); }
+	/**
+	 * @brief   Checks if the queue is full
+	 * @details Returns true if the queue is full, false otherwise.
+	 * @return  true if queue is full
+	 */
+	inline bool full() { return (m_buffer.head == (m_buffer.tail + 1) % N); }
 
-  /**
-   * @brief   Gets the next element from the queue without removing it
-   * @details Returns the next element in the queue without removing it
-   *          or updating the pointers.
-   * @return  first elements in the queue
-   */
-  inline T peek() { return m_buffer.queue[m_buffer.head]; }
+	/**
+	 * @brief   Gets the next element from the queue without removing it
+	 * @details Returns the next element in the queue without removing it
+	 *          or updating the pointers.
+	 * @return  first elements in the queue
+	 */
+	inline T peek() { return m_buffer.queue[m_buffer.head]; }
 
-  /**
-   * @brief   Reset the queue position
-   * @details The head and tail pointer will be reset to the start position thus
-   *          the queue will become empty. Please be aware that the data will not
-   *          be removed from memory.
-   * @return  true if the operation was successful
-   */
-  bool reset()
-  {
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-      m_buffer.head = 0;
-      m_buffer.tail = 0;
-    }
-    return true;
-  }
+	/**
+	 * @brief   Reset the queue position
+	 * @details The head and tail pointer will be reset to the start position thus
+	 *          the queue will become empty. Please be aware that the data will not
+	 *          be removed from memory.
+	 * @return  true if the operation was successful
+	 */
+	bool reset()
+	{
+		ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+			m_buffer.head = 0;
+			m_buffer.tail = 0;
+		}
+		return true;
+	}
 
-  /**
-   * @brief   Gets the number of elements on the queue
-   * @details Returns the number of elements in the underlying container,
-   *          that is, the number of elements in queue[].
-   * @return  the number of elements in the container
-   */
-  inline uint8_t size() { return (m_buffer.tail - m_buffer.head); }
+	/**
+	 * @brief   Gets the number of elements on the queue
+	 * @details Returns the number of elements in the underlying container,
+	 *          that is, the number of elements in queue[].
+	 * @return  the number of elements in the container
+	 */
+	inline uint8_t size() { return (m_buffer.tail - m_buffer.head); }
 
-  /**
-   * @brief   Removes and returns a element from the queue
-   * @details Removes the oldest element on the queue, pointed to by the
-   *          buffer_t head field. The element is returned to the caller.
-   * @return  type T element
-   */
-  T dequeue()
-  {
-    if (empty()) return T();
+	/**
+	 * @brief   Removes and returns a element from the queue
+	 * @details Removes the oldest element on the queue, pointed to by the
+	 *          buffer_t head field. The element is returned to the caller.
+	 * @return  type T element
+	 */
+	T dequeue()
+	{
+		if (empty()) return T();
 
-    ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
-      const T item = m_buffer.queue[m_buffer.head];
-      m_buffer.head = (m_buffer.head +1) % N;
-      return item;
-    }
+		ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+			const T item = m_buffer.queue[m_buffer.head];
+			m_buffer.head = (m_buffer.head + 1) % N;
+			return item;
+		}
 
-    return T();
-  }
+		return T();
+	}
 };
 
 #endif

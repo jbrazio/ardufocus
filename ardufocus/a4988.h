@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,45 +26,45 @@
 #include "macro.h"
 #include "utility.h"
 
-class a4988: public stepper
+class a4988 : public stepper
 {
-  public:
-    struct pinout_t
-    {
-      pin_t sleep, step, direction;
-    };
+public:
+	struct pinout_t
+	{
+		pin_t sleep, step, direction;
+	};
 
-    /*
-     *
-     *   A4988 STEP STICK PINOUT
-     *
-     *       .-----------.
-     * !ENA |o           o| VMOT
-     *  MS1 |o  -----    o| GND
-     *  MS2 |o |     |   o| 2B
-     *  MS3 |o |     |   o| 2A
-     * !RST |o  -----    o| 1A
-     * !SLP |o      ---  o| 1B
-     *  STP |o     | O | o| VDD
-     *  DIR |o      ---  o| GND
-     *       `-----------´
-     *
-     */
+	/*
+	 *
+	 *   A4988 STEP STICK PINOUT
+	 *
+	 *       .-----------.
+	 * !ENA |o           o| VMOT
+	 *  MS1 |o  -----    o| GND
+	 *  MS2 |o |     |   o| 2B
+	 *  MS3 |o |     |   o| 2A
+	 * !RST |o  -----    o| 1A
+	 * !SLP |o      ---  o| 1B
+	 *  STP |o     | O | o| VDD
+	 *  DIR |o      ---  o| GND
+	 *       `-----------´
+	 *
+	 */
 
-  protected:
-    const pinout_t m_pinout;
+protected:
+	const pinout_t m_pinout;
 
-  private:
-    force_inline speed bool step();
+private:
+	force_inline speed bool step();
 
-  public:
-    virtual void init();
-    virtual void halt();
-    virtual void sleep();
-    virtual speed bool step_cw();
-    virtual speed bool step_ccw();
+public:
+	virtual void init();
+	virtual void halt();
+	virtual void sleep();
+	virtual speed bool step_cw();
+	virtual speed bool step_ccw();
 
-    inline a4988(pinout_t const& pinout) : m_pinout({ pinout }) { ; }
+	inline a4988(pinout_t const& pinout) : m_pinout({ pinout }) { ; }
 };
 
 #endif

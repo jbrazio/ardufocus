@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@
 #include "dtr.h"
 
 void dtr_disable() {
-  #ifdef ENABLE_DTR_RESET
-    if (g_config.dtr_reset == false) {
-      IO::set_as_output(DTR_RESET_PINOUT);
-    }
-  #endif
+#ifdef ENABLE_DTR_RESET
+	if (g_config.dtr_reset == false) {
+		IO::set_as_output(DTR_RESET_PINOUT);
+	}
+#endif
 }
 
 void dtr_reset(const bool& value) {
-  g_config.dtr_reset = value;
-  eeprom_save(&g_config);
+	g_config.dtr_reset = value;
+	eeprom_save(&g_config);
 }
 
 uint8_t dtr_reset_get() {
-  return (g_config.dtr_reset) ? 1 : 0;
+	return (g_config.dtr_reset) ? 1 : 0;
 }

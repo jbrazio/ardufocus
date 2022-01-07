@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+cat << EOF >> ardufocus/config.h
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#define BOARD_OFFICIAL_PCB
+#define ENABLE_THE_SECOND_MOTOR_OUTPUT
+#define ENABLE_MANUAL_MOTOR_CONTROL
+#define ENABLE_HIGH_RESOLUTION_MODE
+#define ENABLE_MOTOR1_INVERT_DIRECTION
+#define ENABLE_MOTOR2_INVERT_DIRECTION
+
+#include "assert.h"
+#endif
+EOF
+
+cat ardufocus/config.h
+platformio run -e debug -e debug168
+platformio run -e debug -e debug168
+exit $?

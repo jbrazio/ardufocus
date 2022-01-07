@@ -1,6 +1,6 @@
 /**
  * Ardufocus - Moonlite compatible focuser
- * Copyright (C) 2017-2019 João Brázio [joao@brazio.org]
+ * Copyright (C) 2017-2022 João Brázio [joao@brazio.org]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,23 +24,23 @@
 #include "config.h"
 
 #if defined(MOTOR1_USE_A4988_DRIVER) || defined(MOTOR2_USE_A4988_DRIVER)
-  #include "a4988.h"
+#include "a4988.h"
 #endif
 
 #if defined(MOTOR1_USE_ULN2003_DRIVER) || defined(MOTOR2_USE_ULN2003_DRIVER)
-  #include "uln2003.h"
+#include "uln2003.h"
 #endif
 
 #if defined(MOTOR1_USE_A4988_DRIVER)
-  a4988   motor1drv({ MOTOR1_PINOUT });
+a4988   motor1drv({ MOTOR1_PINOUT });
 #elif defined(MOTOR1_USE_ULN2003_DRIVER)
-  uln2003 motor1drv({ MOTOR1_PINOUT });
+uln2003 motor1drv({ MOTOR1_PINOUT });
 #endif
 
 #if defined(MOTOR2_USE_A4988_DRIVER)
-  a4988   motor2drv({ MOTOR2_PINOUT });
+a4988   motor2drv({ MOTOR2_PINOUT });
 #elif defined(MOTOR2_USE_ULN2003_DRIVER)
-  uln2003 motor2drv({ MOTOR2_PINOUT });
+uln2003 motor2drv({ MOTOR2_PINOUT });
 #endif
 
 #endif
