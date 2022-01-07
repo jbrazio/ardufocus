@@ -2,7 +2,7 @@ sudo: false
 language: python
 
 python:
-    - "3.10"
+    - "3.6"
 
 before_install:
   - chmod -Rv +x ${TRAVIS_BUILD_DIR}/bin
