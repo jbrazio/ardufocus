@@ -38,6 +38,8 @@ struct eeprom_map_t {
   bool     dtr_reset;   // 10
   uint16_t speed_m1;
   uint16_t speed_m2;
+  bool     half_step_m1;
+  bool     half_step_m2;
 };
 
 extern eeprom_map_t g_config;
