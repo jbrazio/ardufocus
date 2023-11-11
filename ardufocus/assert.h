@@ -213,6 +213,19 @@
     #endif
 #endif
 
+// Microstepping behaviour sanity checks
+#if !(STEPPER_FULLSTEP_MICRORES == 1 || STEPPER_FULLSTEP_MICRORES == 2 || STEPPER_FULLSTEP_MICRORES == 4 || STEPPER_FULLSTEP_MICRORES == 8)
+    #error The STEPPER_FULLSTEP_MICRORES must be 1,2,4 or 8. 
+#endif 
+
+#if (STEPPER_FULLSTEP_MICRORES > 1) && defined(MOTOR1_HAS_DRIVER) && !defined(MOTOR1_USE_A4988_DRIVER)
+    #error STEPPER_FULLSTEP_MICRORES > 1 is only supported by the A4988 driver. Check MOTOR1 driver.
+#endif
+
+#if (STEPPER_FULLSTEP_MICRORES > 1) && defined(MOTOR2_HAS_DRIVER) && !defined(MOTOR2_USE_A4988_DRIVER)
+    #error STEPPER_FULLSTEP_MICRORES > 1 is only supported by the A4988 driver. Check MOTOR2 driver.
+#endif 
+
 // USER INTERFACE: Keyboard ---------------------------------------------------
 #if defined(USE_UI_KAP)
   #if defined(UI_KAP_BUTTON_DEBOUNCE) && (UI_KAP_BUTTON_DEBOUNCE < 1 || UI_KAP_BUTTON_DEBOUNCE > 255)
