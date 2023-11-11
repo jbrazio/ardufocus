@@ -50,6 +50,8 @@ ISR(TIMER0_COMPA_vect)
     if(cstate1 != pstate1) {
       if(cstate1 == false) {
         g_config.position_m1 = g_motor1->get_current_position();
+        g_config.speed_m1 = g_motor1->get_speed();
+        g_config.half_step_m1 = (g_motor1->get_step_mode() == 0xFF);
         eeprom_save(&g_config);
       }
       pstate1 = cstate1;
@@ -80,6 +82,8 @@ ISR(TIMER0_COMPA_vect)
     if(cstate2 != pstate2) {
       if(cstate2 == false) {
         g_config.position_m2 = g_motor2->get_current_position();
+        g_config.speed_m2 = g_motor2->get_speed();
+        g_config.half_step_m2 = (g_motor2->get_step_mode() == 0xFF);
         eeprom_save(&g_config);
       }
       pstate2 = cstate2;

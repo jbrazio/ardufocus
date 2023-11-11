@@ -141,6 +141,8 @@ int main(void)
     g_motor1->set_max_speed(MOTOR1_MAX_SPEED);
     g_motor1->set_min_speed(MOTOR1_MIN_SPEED);
     g_motor1->init();
+    if (g_config.speed_m1 != 0) { g_motor1->set_speed(g_config.speed_m1); }
+    if (g_config.half_step_m1) { g_motor1->set_half_step(); }
   #endif
 
   #ifdef MOTOR2_HAS_DRIVER
@@ -150,6 +152,8 @@ int main(void)
     g_motor2->set_max_speed(MOTOR2_MAX_SPEED);
     g_motor2->set_min_speed(MOTOR2_MIN_SPEED);
     g_motor2->init();
+    if (g_config.speed_m2 != 0) { g_motor2->set_speed(g_config.speed_m2); }
+    if (g_config.half_step_m2) { g_motor2->set_half_step(); }
   #endif
 
 
