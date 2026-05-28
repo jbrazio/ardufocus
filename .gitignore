@@ -1,3 +1,5 @@
+.vscode
+.pio
 .pioenvs
 .piolibdeps
 ardufocus/localcfg.h

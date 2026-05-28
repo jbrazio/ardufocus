@@ -1,0 +1,44 @@
+/**
+ * orange (themes/_orange.scss)
+ */
+
+/* ----- Hero subheader ----- */
+.orange {
+  .hero-subheader {
+    background-color: $color-theme-orange;
+  }
+}
+
+/* ----- Nav grid ----- */
+/*.orange {
+  .nav-grid__item {
+    background-color: $color-theme-orange;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: $color-theme-orange;
+    }
+  }
+}*/
+
+/* ----- Section ----- */
+.orange {
+  .section--darker-theme-color-bg {
+    background-color: darken($color-theme-orange, 3%);
+  }
+}
+
+/* ----- Page nav ----- */
+.orange {
+  .page-nav {
+    background-color: $color-theme-orange;
+  }
+}
+
+/* ----- Error 404 ----- */
+.orange {
+  &.error-404 {
+    background-color: $color-theme-orange;
+  }
+}

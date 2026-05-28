@@ -1,0 +1,45 @@
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:site_name" content="{{ site.title | strip_html | strip_newlines }}">
+
+<meta property="og:title" content="{% if page.title %}{{ site.title | strip_html | strip_newlines }} | {% if site.title == page.title %}Homepage{% else %}{{ page.title | strip_html | strip_newlines }}{% endif %}{% else %}{{ site.title | strip_html | strip_newlines }}{% endif %}">
+<meta property="og:description" content="{% if page.description %}{{ page.description | strip_html | strip_newlines }}{% else %}{{ site.description | strip_html | strip_newlines }}{% endif %}">
+
+{% if page.date %}
+<meta property="og:type" content="article">
+<meta property="article:author" content="{{ site.doks.social.about }}">
+<meta property="article:publisher" content="{{ site.doks.social.about }}">
+<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+  {% if page.categories %}
+    {% for category in page.categories limit:1 %}
+<meta property="article:section" content="{{ category }}">
+    {% endfor %}
+  {% endif %}
+{% if page.keywords %}
+  {% for tag in page.keywords %}
+<meta property="article:tag" content="{{ tag }}">
+  {% endfor %}
+{% endif %}
+{% else %}
+<meta property="og:type" content="website">
+{% endif %}
+
+{% if page.image %}
+<meta property="og:image" content="{{ page.image | absolute_url }}">
+{% else %}
+<meta property="og:image" content="{{ '/assets/images/layout/logo-social.png' | absolute_url }}">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+{% endif %}
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="{% if page.title %}{{ site.title | strip_html | strip_newlines }} | {% if site.title == page.title %}Homepage{% else %}{{ page.title | strip_html | strip_newlines }}{% endif %}{% else %}{{ site.title | strip_html | strip_newlines }}{% endif %}">
+<meta property="twitter:description" content="{% if page.description %}{{ page.description | strip_html | strip_newlines }}{% else %}{{ site.description | strip_html | strip_newlines }}{% endif %}">
+<meta property="twitter:creator" content="{% if site.doks.social.twitter %}{{ site.doks.social.twitter }}{% endif %}">
+{% if page.image %}
+<meta property="twitter:image:src" content="{{ page.image | absolute_url }}">
+{% else %}
+<meta property="twitter:image:src" content="{{ '/assets/images/layout/logo-social.png' | absolute_url }}">
+<meta property="twitter:image:width" content="1280">
+<meta property="twitter:image:height" content="640">
+{% endif %}

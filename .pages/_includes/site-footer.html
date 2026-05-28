@@ -1,0 +1,41 @@
+{% if site.doks.footer.content.logo.image or site.doks.footer.content.logo.text or site.doks.footer.content.copyright or site.doks.footer.social_list %}
+	<footer class="site-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					{% if site.doks.footer.content.logo.text %}
+						<a href="{{ '/' | relative_url }}" class="site-footer__logo">{{ site.doks.footer.content.logo.text }}</a>
+					{% elsif site.doks.footer.content.logo.image %}
+						<a href="{{ '/' | relative_url }}" class="site-footer__logo">
+							<img src="{{ '/assets/images/layout/logo-footer.png' | relative_url }}">
+						</a><!-- /.site-footer__logo -->
+					{% endif %}
+						<hr>
+					{% if site.doks.footer.content.copyright %}
+						<p class="site-footer__copyright">Copyright &copy; {{ site.doks.footer.content.copyright.start }}-{{ "now" | date: "%Y" }} {{ site.doks.footer.content.copyright.owner }}. All rights reserved.</p>
+					{% endif %}
+						<p class="site-footer__build">{{ jekyll.environment | capitalize }} build {% if jekyll.environment == 'production' %}{{ site.github.build_revision }}{% endif %} at {{ site.time }}</p>
+				</div><!-- /.col -->
+				{% if site.doks.footer.social_list %}
+					<div class="col-sm-6 align-right">
+						<ul class="social-list">
+							{% for item in site.doks.footer.social_list %}
+								<li>
+									<a href="{{ item.profile_url }}" target="_blank" class="social-list__item social-list__item--{{ item.network_name }}">
+										<i class="icon icon--{{ item.network_name }}"></i>
+									</a>
+								</li>
+							{% endfor %}
+						</ul><!-- /.social-list -->
+					</div><!-- /.col -->
+				{% endif %}
+			</div><!-- /.row -->
+		</div><!-- /.container -->
+	</footer><!-- /.site-footer -->
+{% endif %}
+
+<script src="{{ '/assets/js/vendor/jquery.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/bootstrap/scrollspy.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/bootstrap/affix.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/matchHeight.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/scripts.min.js' | relative_url }}"></script>

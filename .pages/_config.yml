@@ -1,0 +1,95 @@
+# General settings
+title: Ardufocus
+description: The most accurate Open Source focus controller.
+
+url: https://ardufocus.com
+repository: jbrazio/ardufocus
+
+permalink: /:title/
+collections_dir: collections
+exclude: [ '.env', '.eslintrc', '.gitignore', 'CNAME', 'CHANGELOG.md', 'Gemfile', 'Gemfile.lock', 'README.md', '.git', '_compress_images_cache.yml' , 'LICENSE']
+
+# Theme settings
+doks:
+    baseurl:
+    color_theme: blue
+
+    header:
+        logo:
+            text: Ardufocus
+            image:
+        nav:
+            - item_name: Home
+              item_url: '/'
+
+            - item_name: Support
+              item_url: 'https://github.com/jbrazio/ardufocus/issues'
+              external_url: true
+
+            - item_name: Donate
+              item_url: 'https://www.patreon.com/join/jbrazio'
+              external_url: true
+    footer:
+        content:
+            logo:
+                text: Ardufocus
+                image:
+
+            copyright:
+                start: 2017
+                owner: João Brázio
+
+        social_list:
+            - network_name: github
+              profile_url: 'https://github.com/jbrazio/ardufocus'
+
+            - network_name: twitter
+              profile_url: 'https://twitter.com/jbrazio'
+
+    comments:
+        disqus_forum_shortname: ardufocus
+
+    social:
+        about: https://github.com/jbrazio
+        twitter: jbrazio
+
+# SASS settings
+sass:
+    style: compressed
+
+# Compress HTML
+compress_html:
+  clippings: all
+  profile: false
+  blanklines: false
+  comments: ["<!-- ", " -->"]
+
+ # Compress Images
+compress_images:
+  images_path: "assets/images/**/*.{gif,png,jpg,jpeg,svg}"
+
+imageoptim:
+  svgo: false
+  pngout: true
+  verbose: false
+
+# Plugins
+plugins:
+  - jekyll-compress-images
+  - jekyll-liquify
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-avatar
+  - jekyll-mentions
+  - jemoji
+
+# Content
+collections:
+  tags:
+    output: true
+
+  manual:
+    output: true
+
+  howto:
+    output: true
