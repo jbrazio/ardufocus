@@ -76,7 +76,11 @@ class stepper
     virtual inline void sleep()                        { ; }
     virtual inline void set_full_step()                { ; }
     virtual inline void set_half_step()                { ; }
+    virtual inline void set_quarter_step()             { ; }
+    virtual inline void set_eighth_step()              { ; }
+    virtual inline void set_sixteenth_step()           { ; }
 
+    virtual inline void set_step_mode(uint8_t mode)    { m_mode = mode;             }
     virtual inline uint8_t get_step_mode()             { return m_mode;             }
 
     virtual inline bool step_cw()                      { return false;              }

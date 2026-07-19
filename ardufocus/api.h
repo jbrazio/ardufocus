@@ -211,13 +211,31 @@ class api {
       switch(idx) {
         case MOTOR_ONE:
           #ifdef MOTOR1_HAS_DRIVER
-          g_motor1->set_full_step();
+          g_motor1->set_step_mode(0);
+          // We rely on the compiler to optimize away the ifs, where the condition is false.
+          if (STEPPER_FULLSTEP_MICRORES == 1) 
+            g_motor1->set_full_step();
+          if (STEPPER_FULLSTEP_MICRORES == 2)
+            g_motor1->set_half_step();
+          if (STEPPER_FULLSTEP_MICRORES == 4)
+            g_motor1->set_quarter_step();
+          if (STEPPER_FULLSTEP_MICRORES == 8)
+            g_motor1->set_eighth_step();
           #endif
           break;
 
         case MOTOR_TWO:
           #ifdef MOTOR2_HAS_DRIVER
-          g_motor2->set_full_step();
+          g_motor2->set_step_mode(0);
+          // We rely on the compiler to optimize away the ifs, where the condition is false.
+          if (STEPPER_FULLSTEP_MICRORES == 1)
+            g_motor2->set_full_step();
+          if (STEPPER_FULLSTEP_MICRORES == 2)
+            g_motor2->set_half_step();
+          if (STEPPER_FULLSTEP_MICRORES == 4)
+            g_motor2->set_quarter_step();
+          if (STEPPER_FULLSTEP_MICRORES == 8)
+            g_motor2->set_eighth_step();
           #endif
           break;
 
@@ -230,13 +248,31 @@ class api {
       switch(idx) {
         case MOTOR_ONE:
           #ifdef MOTOR1_HAS_DRIVER
-          g_motor1->set_half_step();
+          g_motor1->set_step_mode(0xff);
+          // We rely on the compiler to optimize away the ifs, where the condition is false.
+          if (STEPPER_FULLSTEP_MICRORES == 1)
+            g_motor1->set_half_step();
+          if (STEPPER_FULLSTEP_MICRORES == 2)
+            g_motor1->set_quarter_step();
+          if (STEPPER_FULLSTEP_MICRORES == 4)
+            g_motor1->set_eighth_step();
+          if (STEPPER_FULLSTEP_MICRORES == 8)
+            g_motor1->set_sixteenth_step();  
           #endif
           break;
 
         case MOTOR_TWO:
           #ifdef MOTOR2_HAS_DRIVER
-          g_motor2->set_half_step();
+          g_motor2->set_step_mode(0xff);
+          // We rely on the compiler to optimize away the ifs, where the condition is false.
+          if (STEPPER_FULLSTEP_MICRORES == 1)
+            g_motor2->set_half_step();
+          if (STEPPER_FULLSTEP_MICRORES == 2)
+            g_motor2->set_quarter_step();
+          if (STEPPER_FULLSTEP_MICRORES == 4)
+            g_motor2->set_eighth_step();
+          if (STEPPER_FULLSTEP_MICRORES == 8)
+            g_motor2->set_sixteenth_step();  
           #endif
           break;
 

@@ -20,8 +20,9 @@
 #include "a4988.h"
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief Initialize Arduino pins for A4988 step stick according to pinout in config.h
+ * @details Configure Arduino pins, so we are able to drive the stepper motor. 
+ * This routine sets the step resolution.  
  *
  */
 void a4988::init()
@@ -35,9 +36,11 @@ void a4988::init()
   IO::set_as_output(m_pinout.sleep);
   IO::set_as_output(m_pinout.direction);
 
-  IO::write(m_pinout.ms1,        LOW);
-  IO::write(m_pinout.ms2,        LOW);
-  IO::write(m_pinout.ms3,        LOW);
+  // Step resolution: Sixteenth step
+  IO::write(m_pinout.ms1,        HIGH);
+  IO::write(m_pinout.ms2,        HIGH);
+  IO::write(m_pinout.ms3,        HIGH);
+  
   IO::write(m_pinout.step,       LOW);
   IO::write(m_pinout.direction,  LOW);
 
@@ -64,13 +67,13 @@ void a4988::halt()
 
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief Set microstepping resolution: Full step
+ * @details Use the microstepping resolution pins to configure a "full step" per pulse.
  *
  */
 void a4988::set_full_step()
 {
-  m_mode = 0x00;
+  m_mode = 1;
   IO::write(m_pinout.ms1, LOW);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
@@ -81,13 +84,13 @@ void a4988::set_full_step()
 
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief Set microstepping resolution: half step
+ * @details Use the microstepping resolutions pins to configure a "half step" per pulse resolution.
  *
  */
 void a4988::set_half_step()
 {
-  m_mode = 0xFF;
+  m_mode = 2;
   IO::write(m_pinout.ms1, HIGH);
   IO::write(m_pinout.ms2, LOW);
   IO::write(m_pinout.ms3, LOW);
@@ -96,6 +99,56 @@ void a4988::set_half_step()
   util::delay_2us();
 }
 
+/**
+ * @brief Set microstepping resolution: half step
+ * @details Use the microstepping resolutions pins to configure a "half step" per pulse resolution.
+ *
+ */
+void a4988::set_quarter_step()
+{
+  m_mode = 4;
+  IO::write(m_pinout.ms1, LOW);
+  IO::write(m_pinout.ms2, HIGH);
+  IO::write(m_pinout.ms3, LOW);
+
+  // A4988: 400ns, A8825: 1.3us
+  util::delay_2us();
+}
+
+/**
+ * @brief Set microstepping resolution: half step
+ * @details Use the microstepping resolutions pins to configure a "half step" per pulse resolution.
+ *
+ */
+void a4988::set_eighth_step()
+{
+  m_mode = 8;
+  IO::write(m_pinout.ms1, HIGH);
+  IO::write(m_pinout.ms2, HIGH);
+  IO::write(m_pinout.ms3, LOW);
+
+  // A4988: 400ns, A8825: 1.3us
+  util::delay_2us();
+}
+
+/**
+ * @brief Set microstepping resolution: half step
+ * @details Use the microstepping resolutions pins to configure a "half step" per pulse resolution.
+ *
+ */
+void a4988::set_sixteenth_step()
+{
+  m_mode = 16;
+  IO::write(m_pinout.ms1, HIGH);
+  IO::write(m_pinout.ms2, HIGH);
+  IO::write(m_pinout.ms3, HIGH);
+
+  // A4988: 400ns, A8825: 1.3us
+  util::delay_2us();
+}
+
+// Disable 'implicit fall-through' warning, as the switch statements fall-through on purpose.
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
 
 /**
  * @brief [brief description]
@@ -141,11 +194,13 @@ bool a4988::step_ccw()
       return step();
   }
 }
+// Restore warnings to command line parameters.
+#pragma GCC diagnostic pop
 
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief Move the stepper motor one step.
+ * @details Writes a pulse on the output pin, to advance the motor according to the set resolution.
  *
  */
 bool a4988::step()

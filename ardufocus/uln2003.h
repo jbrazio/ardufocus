@@ -50,6 +50,10 @@ class uln2003: public stepper
     virtual void sleep();
     virtual void set_full_step();
     virtual void set_half_step();
+    // Not supported.
+    virtual inline void set_quarter_step()   { ; };
+    virtual inline void set_eighth_step()    { ; };
+    virtual inline void set_sixteenth_step() { ; };
     virtual speed bool step_cw();
     virtual speed bool step_ccw();
 

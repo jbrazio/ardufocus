@@ -3,3 +3,6 @@
 .pioenvs
 .piolibdeps
 ardufocus/localcfg.h
+.vscode
+.pio
+workspace.code-workspace
